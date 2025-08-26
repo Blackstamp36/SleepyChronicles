@@ -1,0 +1,10 @@
+name: sleepyChronicles
+version: '1.0.0'
+main: org.blackstamp.sleepyChronicles.sleepyChronicles
+api-version: '1.21'
+authors: [ Blackstamp ]
+description: Un plugin por aburrimiento
+commands:
+  sc:
+  staff:
+

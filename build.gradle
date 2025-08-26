@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
+    id 'com.gradleup.shadow' version '9.0.0-rc3'
+}
+
+group = 'org.blackstamp'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {url = "https://repo.papermc.io/repository/maven-public/" }
+    maven {url = "https://oss.sonatype.org/content/groups/public/" }
+    maven {url = "https://maven.enginehub.org/repo/" }
+    maven { url = "https://jitpack.io" }
+}
+
+dependencies {
+    paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT")
+    implementation("net.dv8tion:JDA:6.0.0-rc.2")
+    implementation 'com.github.SasuMC:sasu-reflections:1.0'
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.4.0-SNAPSHOT'
+}
+
+def targetJavaVersion = 24
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 24
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    relocate 'net.dv8tion.jda', 'org.blackstamp.sleepyChronicles.shaded.jda'
+    archiveClassifier.set('')
+    minimize()
+
+    doLast {
+        copy {
+            from shadowJar.archiveFile
+            into "C:/Users/Martin Godoy/Desktop/Cosas/server/plugins"
+        }
+    }
+}
+
+
+tasks {
+    runServer {
+        minecraftVersion("1.21")
+    }
+
+    assemble {
+        dependsOn(shadowJar)
+    }
+
+    tasks.reobfJar {
+        finalizedBy("copyReobfJarToServer")
+    }
+
+    tasks.register("copyReobfJarToServer", Copy) {
+        from shadowJar
+        into "C://Users//Martin Godoy//Desktop//Cosas//server//plugins"
+    }
+
+}

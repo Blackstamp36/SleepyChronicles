@@ -1,0 +1,39 @@
+package org.blackstamp.sleepyChronicles.listener.player;
+
+import org.blackstamp.sleepyChronicles.globalClass;
+import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.bukkit.Sound;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
+
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+
+@Registrable
+public class onInventoryClose implements Listener {
+    globalClass global = new globalClass();
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        Inventory closedInventory = e.getInventory();
+        Player p = (Player) e.getPlayer();
+
+        if (closedInventory.getType() == InventoryType.CHEST && e.getView().getOriginalTitle().equals("§dTRINKETS")) {
+            UUID uuid = p.getUniqueId();
+            global.updateTrinkets(uuid, closedInventory);
+
+            p.sendMessage(PREFIX + "§aTrinkets saved!");
+            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, 2F);
+            p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.75F, 1.25F);
+        } else if (closedInventory.getSize() == 54 && e.getView().getOriginalTitle().equals("§eITEMS")){
+            p.sendMessage(PREFIX + "§cClosing items menu..");
+            p.playSound(p.getLocation(), Sound.BLOCK_CHEST_CLOSE, 0.75F, 1.25F);
+            closedInventory.clear();
+        }
+    }
+}
