@@ -89,6 +89,8 @@ public class onTotem implements Listener {
                     int randomTotems = r.nextInt(1, 4);
                     totemDebuff(p, randomTotems, e);
                     global.removeTotemEffects(p);
+                    Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () ->
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 600,2)), 1);
 
                 } else if (currentTotems >= 30) {
                     p.sendMessage(PREFIX + "§cYour totem broke!");

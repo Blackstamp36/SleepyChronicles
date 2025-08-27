@@ -46,6 +46,7 @@ public class onDamageToP implements Listener {
                 if (perksInv.contains(trinkets.createYourWish()) && !CooldownManager.isOnCooldown(p, "your_wish")) {
                     CooldownManager.setCooldown(p, "your_wish", trinkets.createYourWish(), 300 * 1000);
                     p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 600, 3, true,false));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.INSTANT_HEALTH, 1, 1, true,false));
 
                 } else if (perksInv.contains(trinkets.createMyWish()) && CooldownManager.isOnCooldown(p, "your_wish")) {
                     CooldownManager.showTrinketCooldown(p, "your_wish");

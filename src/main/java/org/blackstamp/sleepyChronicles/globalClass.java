@@ -351,7 +351,6 @@ public class globalClass {
             p.removePotionEffect(PotionEffectType.REGENERATION);
             p.removePotionEffect(PotionEffectType.ABSORPTION);
             p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 600,2));
         }, 1);
     }
 
