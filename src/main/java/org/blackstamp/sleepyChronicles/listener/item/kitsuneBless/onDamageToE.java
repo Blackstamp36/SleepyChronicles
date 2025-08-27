@@ -23,12 +23,15 @@ public class onDamageToE implements Listener {
         if(damager instanceof Player p){
             playerData data = global.getPlayerData(p.getUniqueId());
             Inventory perksInv = data.getTrinketsAsInventory(p);
+            double originalDamage = e.getDamage();
+            double modifiedDamage;
 
             if(perksInv.contains(trinkets.createKitsuneBless())){
-                double originalDamage = e.getDamage();
-                double modifiedDamage;
-
                 modifiedDamage = originalDamage + (originalDamage * 0.15);
+                e.setDamage(modifiedDamage);
+
+            } else if(perksInv.contains(trinkets.createKitsuneHeart())){
+                modifiedDamage = originalDamage + (originalDamage * 0.30);
                 e.setDamage(modifiedDamage);
 
             }

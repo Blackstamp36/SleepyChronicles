@@ -130,7 +130,7 @@ public class trinketItems {
         lore.add(ChatColor.of("#33cc52") + "→ §a15s of Absorption II when");
         lore.add("§aon 3 hearts or less.");
         lore.add(ChatColor.of("#33cc52") + "→ §c30s of Weakness II §cupon usage.");
-        lore.add(ChatColor.of("#ebc247") + "→ 5m Cooldown.");
+        lore.add(ChatColor.of("#ebc247") + "→ 10m Cooldown.");
         meta.setDisplayName(ChatColor.of("#94b4eb") + "My Wish");
         meta.setLore(lore);
         meta.setCustomModelDataComponent(component);
@@ -323,7 +323,7 @@ public class trinketItems {
         lore.add("§8§l— " + ChatColor.of("#ebc247") + "[\uD83C\uDFA3]");
         lore.add(ChatColor.of("#33cc52") + "→ §a60s of Speed II and");
         lore.add("§aImperceptibility upon sneaking.");
-        lore.add(ChatColor.of("#ebc247") + "→ 2m30s Cooldown.");
+        lore.add(ChatColor.of("#ebc247") + "→ 2m 30s Cooldown.");
         meta.setDisplayName(ChatColor.of("#a16e45") + "Ghostly Soul");
         meta.setLore(lore);
         meta.setCustomModelDataComponent(component);

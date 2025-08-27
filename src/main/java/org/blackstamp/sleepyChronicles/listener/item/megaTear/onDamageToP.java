@@ -24,26 +24,34 @@ public class onDamageToP implements Listener {
         if(entity instanceof Player p){
             playerData data = global.getPlayerData(p.getUniqueId());
             Inventory perksInv = data.getTrinketsAsInventory(p);
+            double originalDamage = e.getDamage();
+            double modifiedDamage;
+
+            boolean isCauseFTL = damageCause.equals(EntityDamageEvent.DamageCause.FIRE)
+                    || damageCause.equals(EntityDamageEvent.DamageCause.FIRE_TICK)
+                    || damageCause.equals(EntityDamageEvent.DamageCause.LAVA);
+
+            boolean isCausePF = damageCause.equals(EntityDamageEvent.DamageCause.PROJECTILE)
+                    || damageCause.equals(EntityDamageEvent.DamageCause.FALL);
 
             if(perksInv.contains(trinkets.createMegaTear())){
-                double originalDamage = e.getDamage();
-                double modifiedDamage;
-
-                if(damageCause.equals(EntityDamageEvent.DamageCause.FIRE)
-                        || damageCause.equals(EntityDamageEvent.DamageCause.FIRE_TICK)
-                        || damageCause.equals(EntityDamageEvent.DamageCause.LAVA)){
+                if(isCauseFTL){
                     modifiedDamage = originalDamage - (originalDamage * 0.35);
                     e.setDamage(modifiedDamage);
 
-                } else if(damageCause.equals(EntityDamageEvent.DamageCause.PROJECTILE)
-                        || damageCause.equals(EntityDamageEvent.DamageCause.FALL)){
+                } else if(isCausePF){
                     modifiedDamage = originalDamage + (originalDamage * 0.50);
                     e.setDamage(modifiedDamage);
+
+                }
+            } else if(perksInv.contains(trinkets.createTearOfDivinity())){
+                if(isCauseFTL){
+                    modifiedDamage = originalDamage - (originalDamage * 0.70);
+                    e.setDamage(modifiedDamage);
+
                 }
             }
-
         }
-
     }
 }
 

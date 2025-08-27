@@ -88,7 +88,7 @@ public class onTotem implements Listener {
                 } else if (currentTotems > 7) {
                     int randomTotems = r.nextInt(1, 4);
                     totemDebuff(p, randomTotems, e);
-                    removeTotemEffects(p);
+                    global.removeTotemEffects(p);
 
                 } else if (currentTotems >= 30) {
                     p.sendMessage(PREFIX + "§cYour totem broke!");
@@ -200,14 +200,5 @@ public class onTotem implements Listener {
         deathSources.put("NULL", "Unknown");
 
         return deathSources;
-    }
-
-    private void removeTotemEffects(Player p){
-        Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            p.removePotionEffect(PotionEffectType.REGENERATION);
-            p.removePotionEffect(PotionEffectType.ABSORPTION);
-            p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 600,2));
-        }, 1);
     }
 }

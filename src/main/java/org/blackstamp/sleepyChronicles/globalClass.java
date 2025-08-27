@@ -21,7 +21,6 @@ import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.slime.seedGhostSli
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.wither_boss.mechanicalEye;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.spider.voidbornSpider;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie.paleSoul;
-import org.blackstamp.sleepyChronicles.util.CooldownManager;
 import org.blackstamp.sleepyChronicles.util.adapter.ItemStackTypeAdapter;
 import org.blackstamp.sleepyChronicles.util.adapter.ListItemStackTypeAdapter;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
@@ -48,7 +47,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.mojang.logging.LogUtils.getLogger;
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.pluginDir;
 
 public class globalClass {
@@ -274,6 +272,7 @@ public class globalClass {
         final Map<UUID, Boolean> hasBobSoul = new HashMap<>();
         final Map<UUID, Boolean> hasQuantumCore = new HashMap<>();
         final Map<UUID, Boolean> hasQuantumReactor = new HashMap<>();
+        final Map<UUID, Boolean> hasBobMiracle = new HashMap<>();
 
         trinketItems trinkets = new trinketItems();
 
@@ -281,7 +280,7 @@ public class globalClass {
             @Override
             public void run() {
                 for(Player all : Bukkit.getOnlinePlayers()) {
-                    checkImpercibility(all);
+                    checkImperceptibility(all);
 
                     UUID uuid = all.getUniqueId();
                     globalClass global = new globalClass();
@@ -295,11 +294,13 @@ public class globalClass {
                     boolean currentlyHasBobSoul = perksInv.contains(trinkets.createBobSoul());
                     boolean currentlyHasQuantumCore = perksInv.contains(trinkets.createQuantumCore());
                     boolean currentlyHasQuantumReactor = perksInv.contains(trinkets.createQuantumReactor());
+                    boolean currentlyHasBobMiracle = perksInv.contains(trinkets.createBobMiracle());
 
                     hasNullTNT.put(uuid, currentlyHasNullTNT);
                     hasBobSoul.put(uuid, currentlyHasBobSoul);
                     hasQuantumCore.put(uuid, currentlyHasQuantumCore);
                     hasQuantumReactor.put(uuid, currentlyHasQuantumReactor);
+                    hasBobMiracle.put(uuid, currentlyHasBobMiracle);
 
                     double baseHealth = 20.0;
                     double modification = 0.0;
@@ -322,13 +323,17 @@ public class globalClass {
                         all.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1, true, false));
                     }
 
+                    if (hasBobMiracle.get(uuid)) {
+                        modification += 8.0;
+                    }
+
                     all.setMaxHealth(baseHealth + modification);
                 }
             }
         }.runTaskTimer(sleepyChronicles.getter(), 0, 60);
     }
 
-    private void checkImpercibility(Player p){
+    private void checkImperceptibility(Player p){
         if(p.hasPotionEffect(PotionEffectType.WEAVING)){
             for(Player all : Bukkit.getOnlinePlayers()){
                 all.hidePlayer(p);
@@ -339,6 +344,15 @@ public class globalClass {
             }
         }
 
+    }
+
+    public void removeTotemEffects(Player p){
+        Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
+            p.removePotionEffect(PotionEffectType.REGENERATION);
+            p.removePotionEffect(PotionEffectType.ABSORPTION);
+            p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 600,2));
+        }, 1);
     }
 
     public void createTomb(Player p){
