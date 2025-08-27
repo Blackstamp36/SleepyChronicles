@@ -1,5 +1,6 @@
-package org.blackstamp.sleepyChronicles.listener.item.missingNo;
+package org.blackstamp.sleepyChronicles.listener.item.quantumCore;
 
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
 import org.blackstamp.sleepyChronicles.util.Registrable;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.Inventory;
 
@@ -21,8 +23,7 @@ public class onDamageToP implements Listener {
     trinketItems trinkets = new trinketItems();
 
     @EventHandler
-    private void onDamageToP(EntityDamageEvent e){
-        Random r = new Random();
+    private void onKnocbackToP(EntityKnockbackEvent e){
         globalClass global = new globalClass();
         Entity entity = e.getEntity();
 
@@ -30,17 +31,9 @@ public class onDamageToP implements Listener {
             playerData data = global.getPlayerData(p.getUniqueId());
             Inventory perksInv = data.getTrinketsAsInventory(p);
 
-            if(perksInv.contains(trinkets.createMissingNo()) && r.nextInt(100) <= 2){
-                e.setCancelled(true);
-                perksInv.removeItem(trinkets.createMissingNo());
-                global.updateTrinkets(p.getUniqueId(), perksInv);
-                p.sendMessage(PREFIX + "§cYour " + trinkets.createMissingNo().getItemMeta().getDisplayName() + " §cbroke!");
-                p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1,0.75F);
-            } else if(perksInv.contains(trinkets.createNullPointerException()) && r.nextInt(100) <= 4){
-                p.sendMessage(PREFIX + "§aYour " + trinkets.createNullPointerException().getItemMeta().getDisplayName() + " §asaved you!");
+            if(perksInv.contains(trinkets.createQuantumCore()) || perksInv.contains(trinkets.createQuantumReactor())){
                 e.setCancelled(true);
             }
-
         }
 
     }

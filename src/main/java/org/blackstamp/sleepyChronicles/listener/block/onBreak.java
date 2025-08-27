@@ -5,12 +5,14 @@ import org.blackstamp.sleepyChronicles.util.Registrable;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,6 +28,12 @@ public class onBreak implements Listener {
         ItemStack item = p.getInventory().getItemInMainHand();
         Damageable meta = (Damageable) item.getItemMeta();
         Random r = new Random();
+
+        if(p.hasPotionEffect(PotionEffectType.WEAVING)){
+            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.75F,0.25F);
+            e.setCancelled(true);
+            return;
+        }
 
         Material[] damageableTools = {
                 Material.DIAMOND_AXE, Material.DIAMOND_SHOVEL, Material.DIAMOND_PICKAXE, Material.DIAMOND_SWORD, Material.DIAMOND_HOE,

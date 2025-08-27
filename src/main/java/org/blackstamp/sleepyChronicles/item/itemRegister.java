@@ -101,7 +101,6 @@ public class itemRegister {
         }
 
         itemsInv.addItem(tools);
-        itemsInv.addItem(drops);
         itemsInv.addItem(usables);
         itemsInv.addItem(trinkets.trinkets);
         p.sendMessage(PREFIX + "§eOpening items menu!");

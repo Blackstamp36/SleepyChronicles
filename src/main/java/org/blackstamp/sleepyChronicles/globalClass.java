@@ -4,6 +4,7 @@ import com.destroystokyo.paper.ParticleBuilder;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Getter;
 import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking.bobCreaking;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.missingId;
@@ -20,6 +21,7 @@ import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.slime.seedGhostSli
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.wither_boss.mechanicalEye;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.spider.voidbornSpider;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie.paleSoul;
+import org.blackstamp.sleepyChronicles.util.CooldownManager;
 import org.blackstamp.sleepyChronicles.util.adapter.ItemStackTypeAdapter;
 import org.blackstamp.sleepyChronicles.util.adapter.ListItemStackTypeAdapter;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
@@ -46,12 +48,14 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.mojang.logging.LogUtils.getLogger;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.pluginDir;
 
 public class globalClass {
+    @Getter
+    public static final Map<UUID, Map<String, Long>> activeCooldowns = new HashMap<>();
+
     public HashMap<String, Integer> globalData = new HashMap<>();
-    public HashMap<String, Integer> playerTotems = new HashMap<>();
-    public HashMap<UUID, HashMap<String, Inventory>> playerInventories = new HashMap<>();
     public HashMap<UUID, PickaxeMode> playerPickaxes = new HashMap<>();
     public HashMap<UUID, Boolean> pickaxesCooldowns = new HashMap<>();
     public enum PickaxeMode {
@@ -268,6 +272,8 @@ public class globalClass {
     public void initPlayerTasks(){
         final Map<UUID, Boolean> hasNullTNT = new HashMap<>();
         final Map<UUID, Boolean> hasBobSoul = new HashMap<>();
+        final Map<UUID, Boolean> hasQuantumCore = new HashMap<>();
+        final Map<UUID, Boolean> hasQuantumReactor = new HashMap<>();
 
         trinketItems trinkets = new trinketItems();
 
@@ -275,6 +281,8 @@ public class globalClass {
             @Override
             public void run() {
                 for(Player all : Bukkit.getOnlinePlayers()) {
+                    checkImpercibility(all);
+
                     UUID uuid = all.getUniqueId();
                     globalClass global = new globalClass();
 
@@ -285,9 +293,13 @@ public class globalClass {
 
                     boolean currentlyHasNullTNT = perksInv.contains(trinkets.createNullTNT());
                     boolean currentlyHasBobSoul = perksInv.contains(trinkets.createBobSoul());
+                    boolean currentlyHasQuantumCore = perksInv.contains(trinkets.createQuantumCore());
+                    boolean currentlyHasQuantumReactor = perksInv.contains(trinkets.createQuantumReactor());
 
                     hasNullTNT.put(uuid, currentlyHasNullTNT);
                     hasBobSoul.put(uuid, currentlyHasBobSoul);
+                    hasQuantumCore.put(uuid, currentlyHasQuantumCore);
+                    hasQuantumReactor.put(uuid, currentlyHasQuantumReactor);
 
                     double baseHealth = 20.0;
                     double modification = 0.0;
@@ -302,10 +314,31 @@ public class globalClass {
                         all.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 100, 0, true, false));
                     }
 
+                    if(hasQuantumCore.get(uuid)){
+                        all.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 1, true, false));
+                    }
+
+                    if(hasQuantumReactor.get(uuid)){
+                        all.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1, true, false));
+                    }
+
                     all.setMaxHealth(baseHealth + modification);
                 }
             }
         }.runTaskTimer(sleepyChronicles.getter(), 0, 60);
+    }
+
+    private void checkImpercibility(Player p){
+        if(p.hasPotionEffect(PotionEffectType.WEAVING)){
+            for(Player all : Bukkit.getOnlinePlayers()){
+                all.hidePlayer(p);
+            }
+        } else {
+            for(Player all : Bukkit.getOnlinePlayers()){
+                all.showPlayer(p);
+            }
+        }
+
     }
 
     public void createTomb(Player p){

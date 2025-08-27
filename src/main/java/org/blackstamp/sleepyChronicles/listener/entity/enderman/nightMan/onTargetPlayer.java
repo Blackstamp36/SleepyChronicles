@@ -18,7 +18,7 @@ public class onTargetPlayer implements Listener {
         Entity entity = e.getEntity();
         if(e.getTarget() instanceof Player p){
 
-            if(entity.getScoreboardTags().contains("nightMan")){
+            if(entity.getScoreboardTags().contains("nightMan") && !p.hasPotionEffect(PotionEffectType.WEAVING)){
                 p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM,1,0.25F);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,30,0, true, false));
 

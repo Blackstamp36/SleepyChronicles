@@ -4,7 +4,6 @@ import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.itemRegister;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

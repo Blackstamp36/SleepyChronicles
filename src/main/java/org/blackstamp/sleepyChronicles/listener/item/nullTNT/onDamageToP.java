@@ -26,17 +26,25 @@ public class onDamageToP {
         if(entity instanceof Player p){
             playerData data = global.getPlayerData(p.getUniqueId());
             Inventory perksInv = data.getTrinketsAsInventory(p);
+            double originalDamage = e.getDamage();
+            double modifiedDamage;
+
+            boolean b = damageCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
+                    || damageCause.equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION);
 
             if(perksInv.contains(trinkets.createNullTNT())){
-                double originalDamage = e.getDamage();
-                double modifiedDamage;
-
-                if(damageCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
-                        || damageCause.equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)){
-                    modifiedDamage = originalDamage - (originalDamage * 0.35);
+                if(b){
+                    modifiedDamage = originalDamage - (originalDamage * 0.25);
                     e.setDamage(modifiedDamage);
 
                 }
+            } else if(perksInv.contains(trinkets.createFoundTNT())){
+                if(b){
+                    modifiedDamage = originalDamage - (originalDamage * 0.50);
+                    e.setDamage(modifiedDamage);
+
+                }
+
             }
 
         }

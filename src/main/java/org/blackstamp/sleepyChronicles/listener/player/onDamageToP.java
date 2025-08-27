@@ -18,7 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 import static org.bukkit.damage.DamageType.FALL;
 
 @Registrable
-public class onPDamage implements Listener {
+public class onDamageToP implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerDamage(EntityDamageEvent e) {
