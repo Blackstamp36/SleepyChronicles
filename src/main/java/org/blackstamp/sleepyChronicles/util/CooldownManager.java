@@ -32,6 +32,9 @@ public class CooldownManager {
         p.sendMessage(PREFIX + "§aYou used your " + item.getItemMeta().getDisplayName() + " §atrinket!");
         p.playSound(p.getLocation(), Sound.ENTITY_SKELETON_HORSE_DEATH,0.35F,0.75F);
         p.playSound(p.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_BREAK,0.75F,1.25F);
+        p.playSound(p.getLocation(), Sound.ITEM_TRIDENT_THUNDER,0.35F,0.75F);
+        p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH,0.35F,0.75F);
+        p.playSound(p.getLocation(), Sound.ITEM_MACE_SMASH_GROUND,0.35F,0.75F);
     }
 
     public static long getRemainingCooldown(Player p, String cooldownName) {
