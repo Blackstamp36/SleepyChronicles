@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
@@ -16,13 +17,15 @@ import java.util.UUID;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 
 public class staffCRegister implements CommandExecutor {
+    static itemRegister iR = new itemRegister();
+    public static Inventory itemsPageOne = iR.getItemsPageOne();
+    public static Inventory itemsPageTwo = iR.getItemsPageTwo();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player p = (Player) sender;
         UUID uuid = p.getUniqueId();
         globalClass global = new globalClass();
-        itemRegister iR = new itemRegister();
 
         if (p.isOp()) {
             if (sender != null && args.length > 0) {
@@ -46,7 +49,9 @@ public class staffCRegister implements CommandExecutor {
                         break;
 
                     case "items":
-                        iR.showItems(p);
+                        p.sendMessage(PREFIX + "§eOpening items menu!");
+                        p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 1,1.25F);
+                        p.openInventory(itemsPageOne);
                         break;
 
                     case "broadcast":

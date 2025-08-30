@@ -30,10 +30,6 @@ public class onInventoryClose implements Listener {
             p.sendMessage(PREFIX + "§aTrinkets saved!");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, 2F);
             p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.75F, 1.25F);
-        } else if (closedInventory.getSize() == 54 && e.getView().getOriginalTitle().equals("§eITEMS")){
-            p.sendMessage(PREFIX + "§cClosing items menu..");
-            p.playSound(p.getLocation(), Sound.BLOCK_CHEST_CLOSE, 0.75F, 1.25F);
-            closedInventory.clear();
         }
     }
 }

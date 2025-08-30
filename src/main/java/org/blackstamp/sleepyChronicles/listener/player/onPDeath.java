@@ -1,12 +1,5 @@
 package org.blackstamp.sleepyChronicles.listener.player;
 
-import lombok.Getter;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.Registrable;
@@ -35,9 +28,6 @@ import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 @Registrable
 public class onPDeath implements Listener {
     globalClass global = new globalClass();
-    @Getter
-    private JDA bot;
-    private TextChannel channel;
 
     Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 
@@ -57,8 +47,8 @@ public class onPDeath implements Listener {
                 "What a shame.",
                 "Was it worth it?",
                 "Not surprised.",
-                "Bad luck, I guess.",
-                "This is where it ends.",
+                "That was your chronicle.",
+                "Wake up.",
                 "It seems that you've found an end.."
         };
 
@@ -92,14 +82,14 @@ public class onPDeath implements Listener {
             finalCause = deathSources.get("NULL");
         }
 
+        global.showDiscordDeath(p, dL, finalCause, deathInWorld, p.getName() + ", " + deathMessage + ".");
+
         p.setGameMode(GameMode.SPECTATOR);
         p.getWorld().setStorm(false);
         scoreboard.getTeam("dead").addPlayer(p);
         e.setDeathMessage(PREFIX + "§c" + p.getName() + " has died! Reason: " + finalCause + "\n" +
                 "§8| §7X: " + (int) dL.getX() + ", §7Y: " + (int) dL.getY() + ", §7Z: " + (int) dL.getZ() + "; §7(" + deathInWorld + "§7)" + "\n" +
                 "§8" + p.getName() + ", " + deathMessage + ".");
-
-        showDiscordDeath(p, dL, finalCause, deathInWorld);
 
         String deathReason = finalCause;
 
@@ -176,36 +166,5 @@ public class onPDeath implements Listener {
         deathMessages.put(UUID.fromString("994702e0-1a8b-459a-9d4e-ef9d06469d0d"), "he did found the Eclipsini Bombini");
 
         return deathMessages;
-    }
-
-    private void DiscordListener() {
-        bot = JDABuilder.createDefault("MTQwMDkzNzI4NjY2NDg1MTY0MQ.GqTguW.7N8cSU-kqLxr5xC8IuAh6T5n19YmQCn4xRBSXA")
-                .setActivity(Activity.playing("Viewing deaths.."))
-                .build();
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, sleepyChronicles.getter());
-    }
-
-    private void showDiscordDeath(Player p, Location dL, String finalCause, String dimension){
-        DiscordListener();
-        Guild guild = bot.getGuildById(1393327785606512753L);
-
-        if (guild != null) { // View why is detecting the guild as "null"
-            channel = guild.getTextChannelById(1400936730550599873L);
-        } else {
-            System.out.println("No guild found! Returning.. ");
-            return;
-        }
-
-        EmbedBuilder embed = new EmbedBuilder();
-
-        embed.setColor(new Color(77, 146, 179));
-        embed.setAuthor(bot.getSelfUser().getName());
-        embed.setTitle(p.getName() + " has died!");
-        embed.addField("Death cause: ", finalCause, false);
-        embed.addField("| X: " + dL.getX() + "Y: " + dL.getY() + " Z: " + dL.getZ(), "World: " + dimension, false);
-        embed.setThumbnail("http://cravatar.eu/helmavatar/" + p.getName() + "/128");
-        channel.sendMessageEmbeds(embed.build()).queue();
-
     }
 }

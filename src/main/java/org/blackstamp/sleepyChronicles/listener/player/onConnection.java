@@ -30,11 +30,6 @@ public class onConnection implements Listener {
                 scoreboard.getTeam("player").addPlayer(p);
             }
 
-        if(p.getWorld().hasStorm()) {
-            p.sendMessage("DETECTED BOSS BAR!");
-            weather.showBar(p);
-        } // modify the teams and bossbar so the teams are only created once
-
         e.setJoinMessage("§6※ §a" + p.getName() + " §7has logged in!");
         global.pickaxesCooldowns.put(uuid, false);
     }
@@ -43,7 +38,6 @@ public class onConnection implements Listener {
     public void onQuit(PlayerQuitEvent e){
         Player p = e.getPlayer();
 
-        weather.hideBar(p);
         e.setQuitMessage("§6※ §c" + p.getName() + " §7has disconnected!");
     }
 

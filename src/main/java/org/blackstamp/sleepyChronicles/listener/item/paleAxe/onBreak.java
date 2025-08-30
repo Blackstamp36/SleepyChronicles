@@ -53,7 +53,7 @@ public class onBreak implements Listener {
                     p.sendActionBar(ChatColor.of("#cfc4c3") + "You feel lucky!");
                     p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2F);
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_BURP, 0.75F, 1.25F);
-                    p.getInventory().addItem(apples);
+                    l.getWorld().dropItemNaturally(l, apples);
 
                     }
                 }

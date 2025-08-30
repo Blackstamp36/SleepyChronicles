@@ -1,5 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.entity.bosses.mechanicalEye;
 
+import org.blackstamp.sleepyChronicles.item.drops.witherDrops;
 import org.blackstamp.sleepyChronicles.util.Registrable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Wither;
@@ -15,7 +16,10 @@ public class onEntityDeath implements Listener {
         LivingEntity entity = e.getEntity();
 
         if (entity instanceof Wither && entity.getScoreboardTags().contains("mechanicalEye")) {
+            witherDrops witherDrops = new witherDrops();
+
             e.getDrops().clear();
+            e.getDrops().add(witherDrops.createSoulOfVision());
         }
     }
 }

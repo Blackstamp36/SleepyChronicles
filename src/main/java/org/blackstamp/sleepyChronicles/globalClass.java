@@ -5,7 +5,14 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
+import org.blackstamp.sleepyChronicles.listener.player.onPDeath;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking.bobCreaking;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.missingId;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.suppressedCreeper;
@@ -33,6 +40,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,6 +60,8 @@ import static org.blackstamp.sleepyChronicles.sleepyChronicles.pluginDir;
 public class globalClass {
     @Getter
     public static final Map<UUID, Map<String, Long>> activeCooldowns = new HashMap<>();
+    @Getter
+    public static JDA discordBot;
 
     public HashMap<String, Integer> globalData = new HashMap<>();
     public HashMap<UUID, PickaxeMode> playerPickaxes = new HashMap<>();
@@ -333,6 +343,30 @@ public class globalClass {
         }.runTaskTimer(sleepyChronicles.getter(), 0, 60);
     }
 
+    public boolean isNextItem(ItemStack item) {
+        if (item == null) return false;
+        if (item.getType() != Material.LIME_DYE) return false;
+
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+
+            return meta.hasDisplayName() && meta.getDisplayName().equals("§aNext");
+        }
+        return false;
+    }
+
+    public boolean isBackItem(ItemStack item) {
+        if (item == null) return false;
+        if (item.getType() != Material.RED_DYE) return false;
+
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+
+            return meta.hasDisplayName() && meta.getDisplayName().equals("§cBack");
+        }
+        return false;
+    }
+
     private void checkImperceptibility(Player p){
         if(p.hasPotionEffect(PotionEffectType.WEAVING)){
             for(Player all : Bukkit.getOnlinePlayers()){
@@ -375,6 +409,97 @@ public class globalClass {
             skullState.setOwner(p.getName());
             skullState.update();
         }
+
+    }
+
+    public void initializeDiscordBot() {
+        if (discordBot == null) {
+            try {
+                discordBot = JDABuilder.createDefault("MTQwMDkzNzI4NjY2NDg1MTY0MQ.GropTH.WlPKLg5EHI_U7whHMxuBltsab8U2mlpog9oAMc")
+                        .setActivity(Activity.playing("Viewing deaths.."))
+                        .build();
+                discordBot.awaitReady();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendMessageLog(Player p, String message) {
+        Guild guild = discordBot.getGuildById(1393327785606512753L);
+
+        TextChannel channel;
+        if (guild != null) {
+            channel = guild.getTextChannelById(1411217744606789724L);
+        } else {
+            System.out.println("No guild found! Returning.. ");
+            return;
+        }
+
+        EmbedBuilder embed = new EmbedBuilder();
+
+        embed.addField(p.getName(), message, false);
+        channel.sendMessageEmbeds(embed.build()).queue();
+
+    }
+
+    public void showDiscordDeath(Player p, Location dL, String finalCause, String dimension, String deathMessage){
+        Guild guild = discordBot.getGuildById(1393327785606512753L);
+
+        TextChannel channel;
+        if (guild != null) {
+            channel = guild.getTextChannelById(1400936730550599873L);
+        } else {
+            System.out.println("No guild found! Returning.. ");
+            return;
+        }
+
+        EmbedBuilder embed = new EmbedBuilder();
+
+        int currentTime = Math.toIntExact(System.currentTimeMillis() / 1000);
+
+        embed.setColor(new java.awt.Color(213, 24, 24));
+        embed.setTitle(p.getName());
+        embed.addField("Death reason: 💀", finalCause, true);
+        embed.addField("Coordinates: 🧭",
+                "X: " + (int) dL.getX() + ", Y: " + (int) dL.getY() + ", Z: " + (int) dL.getZ() + " (" + dimension + ")", true);
+        embed.addField("Time: 🕛", "<t:" + currentTime + ">", true);
+        embed.addField("Death message: :eye_in_speech_bubble: ", deathMessage, true);
+        embed.setThumbnail("http://cravatar.eu/helmavatar/" + p.getName() + "/128");
+        channel.sendMessageEmbeds(embed.build()).queue();
+
+    }
+
+    public void showTotemUse(Player p, int totems, String totemName,String finalCause){
+        Guild guild = discordBot.getGuildById(1393327785606512753L);
+
+        TextChannel channel;
+        if (guild != null) {
+            channel = guild.getTextChannelById(1400936807192854653L);
+
+        } else {
+            System.out.println("No guild found! Returning.. ");
+            return;
+        }
+
+        EmbedBuilder embed = new EmbedBuilder();
+
+        int currentTime = Math.toIntExact(System.currentTimeMillis() / 1000);
+
+        embed.setColor(new java.awt.Color(245, 199, 14));
+        embed.setTitle(p.getName() + " • N°" + totems);
+        embed.addField("Caused by: 💀", finalCause, true);
+        embed.addField("Time: 🕛", "<t:" + currentTime + ">", true);
+        switch(totemName){
+            case "Wooden Totem":
+                embed.setThumbnail("https://cdn.discordapp.com/attachments/1411147147910582413/1411147410134143037/big_wooden_totem.png?ex=68b398f0&is=68b24770&hm=9e4ab4de6f22c02eeff0d736d0e20a33c031610c6104c36002c5e1093af60973&");
+                break;
+
+            default:
+                embed.setThumbnail("https://cdn.discordapp.com/attachments/1411147147910582413/1411147158199205928/image.png?ex=68b398b4&is=68b24734&hm=165c444ab637ff7bb95f053d0b23698f566b0b1a201e0fbd42172c0deafada98&");
+            break;
+        }
+        channel.sendMessageEmbeds(embed.build()).queue();
 
     }
 

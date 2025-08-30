@@ -50,7 +50,7 @@ public class onEDeath implements Listener {
                         ItemStack goldIngots = new ItemStack(Material.GOLD_INGOT);
 
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,1,2);
-                        goldIngots.setAmount(r.nextInt(0,6));
+                        goldIngots.setAmount(r.nextInt(1,6));
                         e.getDrops().add(goldIngots);
 
                     }

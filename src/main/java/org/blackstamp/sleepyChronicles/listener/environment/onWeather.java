@@ -3,11 +3,13 @@ package org.blackstamp.sleepyChronicles.listener.environment;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
+import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.blackstamp.sleepyChronicles.util.Registrable;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -15,33 +17,52 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.serverDay;
 
 @Registrable
 public class onWeather implements Listener {
-    private static final String BAR_TITLE = "§6Dᴏᴏᴍɪꜱʜ Eʀᴀ §8| §7";
+    private static final String BAR_TITLE = ChatColor.of("#cfc4c3") + "Uɴɪᴠᴇʀꜱᴀʟ Cᴏʟʟᴀᴘꜱᴇ §8| §7";
 
-    private BukkitTask stormTask;
+    private final AtomicReference<BukkitTask> stormTask = new AtomicReference<>();
     private final Map<UUID, BossBar> playerBossBars = new HashMap<>();
-    public boolean isStormActive = false;
-    public int remainingSeconds = 0;
+    private boolean isStormActive = false;
+    private int remainingSeconds = 0;
     private int storedSeconds = 0;
-    public int stormMins = 15;
+    private int stormMins = 15;
+
+    private static final int STORM_TIME = 16000;
+    private static final int WEATHER_DURATION = 100;
+    private static final int TICKS_PER_SECOND = 20;
 
     @EventHandler
     public void onWeather(WeatherChangeEvent e) {
+        World world = e.getWorld();
         if (!e.toWeatherState()) {
             cleanupStorm();
             return;
         }
+
+        if(e.getCause().equals(WeatherChangeEvent.Cause.PLUGIN)) {
             Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-                if (e.getWorld().hasStorm()) {
-                    startStorm(e.getWorld());
+                if (world.hasStorm()) {
+                    startStorm(world);
                 }
             }, 1);
+        }
 
     }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        if (isStormActive) {
+            Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () ->
+                    showBar(e.getPlayer()), 10);
+        }
+    }
+
 
     private void startStorm(World w) {
         cleanupStorm();
@@ -52,37 +73,48 @@ public class onWeather implements Listener {
         remainingSeconds = storedSeconds;
 
         Bukkit.getOnlinePlayers().forEach(all -> {
-            all.sendTitle("§e§k| §f§6Dᴏᴏᴍɪꜱʜ Eʀᴀ §e§k|", "§7With a duration of " + stormMins + "m!");
-            all.playSound(all, Sound.BLOCK_END_PORTAL_SPAWN, 1, 0F);
+            all.sendTitle("§e§k| §f" + ChatColor.of("#cfc4c3") + "Uɴɪᴠᴇʀꜱᴀʟ Cᴏʟʟᴀᴘꜱᴇ §e§k|",
+                    "§7With a duration of " + stormMins + "m!");
+            all.playSound(all, Sound.BLOCK_END_PORTAL_SPAWN, 1, 0.5F);
+            all.playSound(all, Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, 1.25F);
             showBar(all);
         });
 
-        stormTask = new BukkitRunnable() {
+        BukkitTask existingTask = stormTask.get();
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
+
                 if (!isStormActive || remainingSeconds <= 0) {
                     cleanupStorm();
                     return;
                 }
 
-                w.setTime(16000);
+                w.setTime(STORM_TIME);
                 remainingSeconds--;
                 storedSeconds = remainingSeconds;
-                updateBossBars(remainingSeconds);
 
-                Bukkit.getWorlds().forEach(world -> world.setWeatherDuration(100));
+                Bukkit.getWorlds().forEach(world -> world.setWeatherDuration(WEATHER_DURATION));
+                updateBossBars(remainingSeconds);
 
                 if (remainingSeconds <= 0) {
                     endStormNormally();
                 }
+
             }
-        }.runTaskTimer(sleepyChronicles.getter(), 0, 20);
+        }.runTaskTimer(sleepyChronicles.getter(), 0, TICKS_PER_SECOND);
+
+        stormTask.set(task);
     }
 
     private void cleanupStorm() {
-        if (stormTask != null) {
-            stormTask.cancel();
-            stormTask = null;
+        BukkitTask task = stormTask.getAndSet(null);
+        if (task != null) {
+            task.cancel();
         }
 
             playerBossBars.forEach((uuid, bar) -> {
@@ -101,6 +133,8 @@ public class onWeather implements Listener {
     }
 
     public void showBar(Player p) {
+        hideBar(p);
+
         BossBar bar = BossBar.bossBar(
                 Component.text(BAR_TITLE + formatTime(remainingSeconds)),
                 1.0f,
@@ -115,19 +149,18 @@ public class onWeather implements Listener {
 
     public void hideBar(Player p) {
         UUID uuid = p.getUniqueId();
-            if(playerBossBars.get(uuid) != null) {
-                System.out.println("BOSSBAR HID!");
-                p.hideBossBar(playerBossBars.get(uuid));
-                playerBossBars.remove(uuid);
-            }
+        BossBar bar = playerBossBars.remove(uuid);
+        if (bar != null) {
+            p.hideBossBar(bar);
+        }
     }
 
     public void updateBossBars(int remainingSeconds) {
         String timeText = formatTime(remainingSeconds);
 
         for (Map.Entry<UUID, BossBar> entry : playerBossBars.entrySet()) {
-            Player player = Bukkit.getPlayer(entry.getKey());
-            if (player != null && player.isOnline()) {
+            Player p = Bukkit.getPlayer(entry.getKey());
+            if (p != null && p.isOnline()) {
                 entry.getValue().name(Component.text(BAR_TITLE + timeText));
             }
         }
@@ -142,7 +175,8 @@ public class onWeather implements Listener {
 
     private void endStormNormally() {
         Bukkit.getOnlinePlayers().forEach(all -> {
-            all.sendMessage("§8| §6The storm has ended abruptly!");
+            all.sendMessage(PREFIX + "§8| §6The storm has ended!");
+            all.playSound(all.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH,1,1.25F);
             all.getWorld().setStorm(false);
             storedSeconds = 0;
             cleanupStorm();

@@ -85,7 +85,11 @@ public class AftermathChunkGenerator extends ChunkGenerator {
 
         int dirtLayers = 6 + (int)((detailNoise + 1.0) * 1.5);
         for (int y = actualSurfaceHeight - dirtLayers; y < actualSurfaceHeight; y++) {
+            if(r.nextInt(5001) < 5000){
             chunkData.setBlock(x, y, z, Material.DIRT);
+        } else {
+                chunkData.setBlock(x, y, z, Material.CHISELED_RESIN_BRICKS);
+            }
         }
 
         chunkData.setBlock(x, actualSurfaceHeight, z, surfaceMaterial);

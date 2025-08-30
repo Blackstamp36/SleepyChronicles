@@ -2,6 +2,8 @@ package org.blackstamp.sleepyChronicles;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import org.blackstamp.sleepyChronicles.command.onStaffTab;
 import org.blackstamp.sleepyChronicles.command.sleepyCRegister;
 import org.blackstamp.sleepyChronicles.command.onSleepyTab;
@@ -38,6 +40,7 @@ public final class sleepyChronicles extends JavaPlugin {
         instance = this;
 
         global.globalData.put("days", global.getServerDay());
+        global.initializeDiscordBot();
         createMainFiles();
         createAftermathDimension();
         RegistrableUtils.registerListeners();
@@ -45,13 +48,15 @@ public final class sleepyChronicles extends JavaPlugin {
         registerCommands();
         registerRecipes();
         changeDaySystem();
+        System.out.println("S̸̝̈́͐̍͛̓̆͛͘͝͠l̸͇͕̤͒̄͐̋̒͝e̸̛̛̓͗͊̈̔̊͒͜ḛ̸̖̗̒͋̎̇͆͘͠ṕ̵̪͎͚̪͚̲̱̎̋̔͒̍̎͐ͅy̵̧̡̳͉̹̞͉̙͙͌̍̚͜ ̴͎̀̽͠ͅC̴̖͖̘͚̿͊͋̄̈́̀h̸̢̺̪̣̳̟̘̠̓̂͘r̴͉̐͒͆͛͝ǫ̸̨̜͍̹̞͚̙̩͂͂ṉ̵̺͚̪̹̔̓́̊̅͜͝ǐ̸͈̼̻̈͘c̵̢͍̥̦͓̤͖̍̅̎̆̓̈́͘l̴̪̅̐̓̒́̃͆̋̐͐e̸͚̭͇̠͋̐̽̌̾̎̕͝ͅs̵̢̟̲̤̦̟̠̿̽̽̉̚");
+        System.out.println();
         System.out.println("Enabling " + sleepyChronicles.getter().getName() + "!");
         global.initPlayerTasks();
     }
 
     @Override
     public void onDisable() {
-        System.out.println("Disabling SleepyChronicles..! ");
+        System.out.println("It's time to sleep, my dear sleepy chronicle.. ");
 
     }
 

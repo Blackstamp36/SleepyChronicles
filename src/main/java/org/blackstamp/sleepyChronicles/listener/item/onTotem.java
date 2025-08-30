@@ -143,7 +143,10 @@ public class onTotem implements Listener {
             Bukkit.getOnlinePlayers().forEach(all -> all.sendMessage(
                     PREFIX + "§f" + p.getName() + " has consumpt a §ctotem of undying§f! \n" +
                             "§8(" + "Nª" + global.getTotems(uuid) + ". Cause: §7" + finalCause + "§8)"));
+
+            global.showTotemUse(p, global.getTotems(p.getUniqueId()), "Totem of Undying", finalCause);
         }
+
 
     }
 
@@ -172,6 +175,7 @@ public class onTotem implements Listener {
                 all.playSound(all.getLocation(), Sound.ENTITY_WITHER_HURT, 0.2F, 0F);
             });
 
+            global.showTotemUse(p, global.getTotems(p.getUniqueId()), "Wooden Totem", finalCause);
         }
     }
 
