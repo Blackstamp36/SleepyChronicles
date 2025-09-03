@@ -78,40 +78,58 @@ public class staffCRegister implements CommandExecutor {
                         break;
 
                     case "summon":
-                        if (args.length > 1) {
-                            int summons = 1;
+                        if (args.length < 2) {
+                            p.sendMessage(PREFIX + "§cNo entity provided.");
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                            return false;
+                        }
 
-                            if (global.getCustomEntities().containsKey(args[1].toUpperCase())) {
-                                try {
-                                    if (args.length == 3) summons = Integer.parseInt(args[2]);
-                                    Class<?> act = global.getCustomEntities().get(args[1].toUpperCase());
-                                    p.sendMessage(PREFIX + "§7Summoned " + summons + "x §c" + args[1] + "§7!");
-                                    java.lang.reflect.Method method;
-                                    if (args[1].equalsIgnoreCase("PALESOUL")) {
-                                        method = act.getMethod("spawnEntity", Location.class, int.class, Player.class);
-                                        method.invoke(null, p.getLocation(), summons, p);
-                                    } else {
-                                        method = act.getMethod("spawnEntity", Location.class, int.class);
-                                        method.invoke(null, p.getLocation(), summons);
-                                    }
+                        String entityName = args[1].toUpperCase();
+                        if (!global.getCustomEntities().containsKey(entityName)) {
+                            p.sendMessage(PREFIX + "§cNo entity found. Case: §7" + entityName);
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                            return false;
+                        }
 
-                                    p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
-
-                                } catch (NumberFormatException |
-                                         NoSuchMethodException |
-                                         InvocationTargetException |
-                                         IllegalAccessException e) {
-                                    e.printStackTrace();
+                        int summons = 1;
+                        if (args.length == 3) {
+                            try {
+                                summons = Integer.parseInt(args[2]);
+                                if (summons <= 0) {
+                                    p.sendMessage(PREFIX + "§cSummon count must be positive.");
+                                    p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                                    return false;
                                 }
-
-                            } else {
-                                p.sendMessage(PREFIX + "§cNo entity found. Case: §7" + args[1]);
-                                p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                            } catch (NumberFormatException e) {
+                                p.sendMessage(PREFIX + "§cInvalid number format: §7" + args[2]);
+                                p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                                 return false;
                             }
-                        } else {
-                            p.sendMessage(PREFIX + "§cNo entity provided.");
-                            p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                        }
+
+                        try {
+                            Class<?> entityClass = global.getCustomEntities().get(entityName);
+                            p.sendMessage(PREFIX + "§7Summoned " + summons + "x §c" + entityName + "§7!");
+
+                            java.lang.reflect.Method method;
+                            try {
+                                method = entityClass.getMethod("spawnEntity", Location.class, int.class, Player.class);
+                                method.invoke(null, p.getLocation(), summons, p); // THIS LINE IS THE PROBLEM.
+                            } catch (NoSuchMethodException e) {
+                                method = entityClass.getMethod("spawnEntity", Location.class, int.class);
+                                method.invoke(null, p.getLocation(), summons);
+                            }
+
+                            p.playSound(p.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
+
+                        } catch (NoSuchMethodException | IllegalAccessException e) {
+                            p.sendMessage(PREFIX + "§cFailed to find spawn method for: §7" + entityName);
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            p.sendMessage(PREFIX + "§cError while summoning entity: §7" + e.getCause().getMessage());
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                            e.printStackTrace();
                         }
                         break;
 

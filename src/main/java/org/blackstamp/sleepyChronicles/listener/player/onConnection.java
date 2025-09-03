@@ -13,6 +13,8 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.UUID;
 
+import static org.blackstamp.sleepyChronicles.globalClass.*;
+
 @Registrable
 public class onConnection implements Listener {
     Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -31,15 +33,18 @@ public class onConnection implements Listener {
             }
 
         e.setJoinMessage("§6※ §a" + p.getName() + " §7has logged in!");
-        global.cancelFallDamage.put(uuid, false);
+        cancelFallDamage.put(uuid, false);
         global.pickaxesCooldowns.put(uuid, false);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
         Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
 
         e.setQuitMessage("§6※ §c" + p.getName() + " §7has disconnected!");
+
+        playerMaxSummons.remove(uuid);
     }
 
 }

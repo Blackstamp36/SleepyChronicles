@@ -2,6 +2,8 @@ package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -22,9 +24,18 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
+
+import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 
 public class paleSoul extends Zombie {
+    private UUID summonerUUID;
     private static final trinketItems trinkets = new trinketItems();
 
     public paleSoul(EntityType<? extends Zombie> type, Level world) {
@@ -53,40 +64,46 @@ public class paleSoul extends Zombie {
         initTimer(this);
     }
 
+    public void setSummoner(UUID summonerUUID) {
+        this.summonerUUID = summonerUUID;
+    }
+
+    public UUID getSummoner() {
+        return summonerUUID;
+    }
+
+
     private void initTimer(Zombie z){
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            if(z.isAlive()) {
-                Location l = z.getBukkitEntity().getLocation();
-                ParticleBuilder pBuilder = new ParticleBuilder(Particle.SOUL);
-                pBuilder.location(z.getBukkitEntity().getLocation())
-                        .count(100)
-                        .offset(0.25, 0.25, 0.25)
-                        .location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ())
-                        .spawn();
-
-                z.remove(RemovalReason.KILLED);
-
-                for (Player nearby : z.getBukkitEntity().getLocation().getNearbyPlayers(15)) {
-                    nearby.sendActionBar(ChatColor.of("#cfc4c3") + "A nearby pale soul has left..");
-                    nearby.playSound(nearby.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH, 1, 1.25F);
-                }
-            }
+            if(z.isAlive()) z.kill((ServerLevel) z.level());
         }, 200);
     }
 
     public static void spawnEntity(Location loc, int entities, Player summoner) {
+        UUID uuid = summoner.getUniqueId();
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++) {
             paleSoul e = new paleSoul(EntityType.ZOMBIE, nmsLvl);
+            e.setSummoner(uuid);
             globalClass global = new globalClass();
             playerData data = global.getPlayerData(summoner.getUniqueId());
             Inventory perksInv = data.getTrinketsAsInventory(summoner);
+            playerSummons.putIfAbsent(uuid, 0);
+            int currentSummons = playerSummons.getOrDefault(uuid,0);
 
-            if(perksInv.contains(trinkets.createSummonerEmblem())) {
+            if(global.hasMaxSummons(summoner)){
+                summoner.sendMessage(PREFIX + "§cYou've reached your max summons! (" + playerSummons.get(uuid) + ")");
+                summoner.playSound(summoner.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,0.5F,0.5F);
+                return;
+            }
+
+            playerSummons.put(uuid, currentSummons + 1);
+            boolean hasEmblem = perksInv.contains(trinkets.createSummonerEmblem());
+
+            if(hasEmblem) {
                 double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
                 e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage + (currentDamage * 0.15));
-                summoner.sendMessage("Entity spawned with damage modifier!");
             }
 
             e.setPos(loc.getX(), loc.getY(), loc.getZ());

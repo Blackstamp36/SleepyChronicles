@@ -76,6 +76,8 @@ public class globalClass {
 
     public HashMap<String, Integer> globalData = new HashMap<>();
     public HashMap<UUID, PickaxeMode> playerPickaxes = new HashMap<>();
+    public static HashMap<UUID, Integer> playerSummons = new HashMap<>();
+    public static HashMap<UUID, Integer> playerMaxSummons = new HashMap<>();
     public HashMap<UUID, Boolean> pickaxesCooldowns = new HashMap<>();
     public static HashMap<UUID, Boolean> cancelFallDamage = new HashMap<>();
 
@@ -311,6 +313,7 @@ public class globalClass {
                 for (Player all : Bukkit.getOnlinePlayers()) {
                     checkImperceptibility(all);
 
+                    int maxSummons = 2;
                     UUID uuid = all.getUniqueId();
                     globalClass global = new globalClass();
 
@@ -368,6 +371,12 @@ public class globalClass {
                         speedModification += 0.25;
                     }
 
+                    if(hasCustomArmor(all, "stardust")){
+                        healthModification += 8.0;
+                        maxSummons += 4;
+                    }
+
+                    playerMaxSummons.put(uuid, maxSummons);
                     all.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(baseSpeed * speedModification);
                     all.setMaxHealth(baseHealth + healthModification);
                 }
@@ -623,5 +632,11 @@ public class globalClass {
 
         return true;
 
+    }
+
+    public boolean hasMaxSummons(Player p){
+        UUID uuid = p.getUniqueId();
+
+        return playerSummons.get(uuid) >= playerMaxSummons.get(uuid);
     }
 }
