@@ -28,8 +28,6 @@ public class solarSword implements Listener {
         Entity damagedEntity = e.getEntity();
         Entity causingEntity = e.getDamageSource().getCausingEntity();
 
-        // test
-
         if(!(damagedEntity instanceof Monster)) return;
         if(!(causingEntity instanceof Player p)) return;
         if(e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) return;
