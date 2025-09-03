@@ -33,9 +33,11 @@ public class onDamageToP implements Listener {
             }
         }
 
-        if(entity instanceof Player p && w.getName().equals("world_aftermath")){
+        if(entity instanceof Player p
+                && damageType.equals(DamageType.OUT_OF_WORLD)
+                && w.getName().equals("world_aftermath")){
             double x = p.getLocation().getX();
-            double y = p.getLocation().getY() + 325;
+            double y = p.getLocation().getY() + 225;
             double z = p.getLocation().getZ();
 
             Location overworldL = new Location(Bukkit.getWorld("world"), x, y, z);

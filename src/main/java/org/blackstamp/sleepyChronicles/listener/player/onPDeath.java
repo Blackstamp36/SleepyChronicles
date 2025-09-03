@@ -47,7 +47,7 @@ public class onPDeath implements Listener {
                 "What a shame.",
                 "Was it worth it?",
                 "Not surprised.",
-                "That was your chronicle.",
+                "Too bad.",
                 "Wake up.",
                 "It seems that you've found an end.."
         };
@@ -95,7 +95,7 @@ public class onPDeath implements Listener {
 
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 70, 0, false, false, false));
-            all.sendTitle("§7Bad news.. §c(┬┬﹏┬┬)","§c" + p.getName() + " has died!");
+            all.sendTitle("§c" + banQuotes[r.nextInt(banQuotes.length)],"§c" + p.getName() + " has died!");
             playDeathMelody();
 
             Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {

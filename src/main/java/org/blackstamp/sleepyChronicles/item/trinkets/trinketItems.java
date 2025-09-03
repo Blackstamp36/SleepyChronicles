@@ -30,7 +30,10 @@ public class trinketItems {
             createYourWish(),
             createGoldenTouch(),
             createGhostlySoul(),
-            createQuantumReactor()
+            createQuantumReactor(),
+            createWarriorEmblem(),
+            createRangerEmblem(),
+            createSummonerEmblem()
     };
 
     public ItemStack createMissingNo(){
@@ -359,6 +362,54 @@ public class trinketItems {
         lore.add(ChatColor.of("#33cc52") + "→ §aMobs cannot knockback you.");
         lore.add(ChatColor.of("#33cc52") + "→ §aSpeed II permanent.");
         meta.setDisplayName(ChatColor.of("#70ba6d") + "Quantum Reactor");
+        meta.setLore(lore);
+        meta.setCustomModelDataComponent(component);
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public ItemStack createWarriorEmblem(){
+        ItemStack item = new ItemStack(Material.SADDLE);
+        ItemMeta meta = item.getItemMeta();
+        CustomModelDataComponent component = meta.getCustomModelDataComponent();
+        component.setStrings(List.of(new String("warrior_emblem")));
+        List<String> lore = new ArrayList<>();
+        lore.add("§8§l— " + ChatColor.of("#ebc247") + "[\uD83C\uDFA3]");
+        lore.add(ChatColor.of("#33cc52") + "→ §a+15% Attack damage.");
+        meta.setDisplayName(ChatColor.of("#e9d435") + "Warrior's Emblem");
+        meta.setLore(lore);
+        meta.setCustomModelDataComponent(component);
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public ItemStack createRangerEmblem(){
+        ItemStack item = new ItemStack(Material.SADDLE);
+        ItemMeta meta = item.getItemMeta();
+        CustomModelDataComponent component = meta.getCustomModelDataComponent();
+        component.setStrings(List.of(new String("ranger_emblem")));
+        List<String> lore = new ArrayList<>();
+        lore.add("§8§l— " + ChatColor.of("#ebc247") + "[\uD83C\uDFA3]");
+        lore.add(ChatColor.of("#33cc52") + "→ §a+15% Projectile damage.");
+        meta.setDisplayName(ChatColor.of("#e9d435") + "Ranger's Emblem");
+        meta.setLore(lore);
+        meta.setCustomModelDataComponent(component);
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public ItemStack createSummonerEmblem(){
+        ItemStack item = new ItemStack(Material.SADDLE);
+        ItemMeta meta = item.getItemMeta();
+        CustomModelDataComponent component = meta.getCustomModelDataComponent();
+        component.setStrings(List.of(new String("summoner_emblem")));
+        List<String> lore = new ArrayList<>();
+        lore.add("§8§l— " + ChatColor.of("#ebc247") + "[\uD83C\uDFA3]");
+        lore.add(ChatColor.of("#33cc52") + "→ §a+15% Summoned damage.");
+        meta.setDisplayName(ChatColor.of("#e9d435") + "Summoner's Emblem");
         meta.setLore(lore);
         meta.setCustomModelDataComponent(component);
         item.setItemMeta(meta);

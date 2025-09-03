@@ -81,8 +81,8 @@ public class mechanicalEye extends WitherBoss {
             @Override
             public void run() {
                 int chance = r.nextInt(1001);
-                if(chance <= 50){
-                    seekerPhantom.spawnEntity(wither.getBukkitEntity().getLocation(), r.nextInt(1,4));
+                if(chance <= 49){
+                    seekerPhantom.spawnEntity(wither.getBukkitEntity().getLocation(), r.nextInt(1,5));
                 }
 
                 if (wither.isAlive() && wither.getBukkitEntity().getLocation().getNearbyPlayers(35).isEmpty()) {

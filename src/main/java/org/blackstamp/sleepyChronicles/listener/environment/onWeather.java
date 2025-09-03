@@ -28,7 +28,7 @@ public class onWeather implements Listener {
 
     private final AtomicReference<BukkitTask> stormTask = new AtomicReference<>();
     private final Map<UUID, BossBar> playerBossBars = new HashMap<>();
-    private boolean isStormActive = false;
+    public static boolean isStormActive = false;
     private int remainingSeconds = 0;
     private int storedSeconds = 0;
     private int stormMins = 15;
@@ -58,13 +58,15 @@ public class onWeather implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (isStormActive) {
-            Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () ->
-                    showBar(e.getPlayer()), 10);
+            Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
+                    showBar(e.getPlayer());
+                    e.getPlayer().sendMessage("bar detected bc storm was active idk");
+            },10);
         }
     }
 
 
-    private void startStorm(World w) {
+    public void startStorm(World w) {
         cleanupStorm();
 
         stormMins = serverDay * 15;
@@ -111,7 +113,7 @@ public class onWeather implements Listener {
         stormTask.set(task);
     }
 
-    private void cleanupStorm() {
+    public void cleanupStorm() {
         BukkitTask task = stormTask.getAndSet(null);
         if (task != null) {
             task.cancel();
@@ -126,6 +128,7 @@ public class onWeather implements Listener {
             playerBossBars.clear();
 
             remainingSeconds = 0;
+            isStormActive = false;
     }
 
     private int calculateInitialDuration(int hours, int minutes, int seconds) {
@@ -173,16 +176,15 @@ public class onWeather implements Listener {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-    private void endStormNormally() {
+    public void endStormNormally() {
         Bukkit.getOnlinePlayers().forEach(all -> {
-            all.sendMessage(PREFIX + "§8| §6The storm has ended!");
+            all.sendMessage(PREFIX + "§6The storm has ended!");
             all.playSound(all.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH,1,1.25F);
             all.getWorld().setStorm(false);
-            storedSeconds = 0;
-            cleanupStorm();
         });
 
-        isStormActive = false;
+        storedSeconds = 0;
+        remainingSeconds = 0;
+        cleanupStorm();
         }
-
 }

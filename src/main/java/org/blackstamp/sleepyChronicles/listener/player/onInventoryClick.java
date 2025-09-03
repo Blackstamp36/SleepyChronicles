@@ -22,7 +22,8 @@ public class onInventoryClick implements Listener {
 
     @EventHandler
     private void onInventoryClick(InventoryClickEvent e) {
-        Inventory clickedInv = e.getInventory();
+        Inventory currentInv = e.getInventory();
+        Inventory clickedInv = e.getClickedInventory();
         ItemStack clickedItem = e.getCurrentItem();
 
         if (data.isDecoration(clickedItem)) {
@@ -34,7 +35,7 @@ public class onInventoryClick implements Listener {
             if (clickedItem.hasItemMeta() && e.getView().getOriginalTitle().equals("§eITEMS")) {
                 Player p = (Player) e.getWhoClicked();
                 Inventory pInv = p.getInventory();
-                int page = iR.getPageNumber(clickedInv);
+                int page = iR.getPageNumber(currentInv);
 
                 if(global.isBackItem(clickedItem)){
                     if(page != 1) {
@@ -53,7 +54,7 @@ public class onInventoryClick implements Listener {
                     }
                     e.setCancelled(true);
 
-                } else {
+                } else if(!clickedInv.equals(pInv)){
                     e.setCancelled(true);
                     pInv.addItem(clickedItem);
                     p.sendMessage(PREFIX + "§aReceiving item..");

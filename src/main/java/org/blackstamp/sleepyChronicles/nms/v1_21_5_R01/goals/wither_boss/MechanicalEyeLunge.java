@@ -156,7 +156,6 @@ public class MechanicalEyeLunge extends Goal {
     }
 
     private Vec3 calculateLungeDirection() {
-        // Predict target's movement for better accuracy
         Vec3 targetPos = this.target.position().add(this.target.getDeltaMovement().scale(5));
 
         return new Vec3(

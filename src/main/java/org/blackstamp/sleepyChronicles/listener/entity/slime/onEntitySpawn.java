@@ -29,7 +29,7 @@ public class onEntitySpawn implements Listener {
         if (entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)
                 || entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG)) {
             if (global.getServerDay() >= 6 && entity instanceof Slime) {
-                if(r.nextInt(1,1001) <= 100){
+                if(r.nextInt(0,1001) <= 49){
                     seedGhostSlime.spawnEntity(entity.getLocation(), 1);
                     e.setCancelled(true);
                 }

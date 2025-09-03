@@ -2,8 +2,9 @@ name: sleepyChronicles
 version: '1.0.0'
 main: org.blackstamp.sleepyChronicles.sleepyChronicles
 api-version: '1.21'
+softdepend: [WorldEdit]
 authors: [ Blackstamp ]
-description: Un plugin por aburrimiento
+description: Un plugin hecho por mero aburrimiento.
 commands:
   sc:
   staff:

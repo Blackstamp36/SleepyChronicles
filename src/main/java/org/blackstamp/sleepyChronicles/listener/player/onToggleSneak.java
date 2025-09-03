@@ -34,7 +34,7 @@ public class onToggleSneak implements Listener {
             p.addPotionEffect(new PotionEffect(PotionEffectType.WEAVING, 300, 0, true,false));
 
         } else if(perksInv.contains(trinkets.createGhostlyEssence()) && CooldownManager.isOnCooldown(p, "ghostly_essence")){
-            CooldownManager.showTrinketCooldown(p, "ghostly_essence");
+            CooldownManager.showCooldown(p, "ghostly_essence");
         }
 
         if(perksInv.contains(trinkets.createGhostlySoul()) && !CooldownManager.isOnCooldown(p, "ghostly_soul")){
@@ -43,7 +43,7 @@ public class onToggleSneak implements Listener {
             p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600, 1, true,false));
 
         } else if(perksInv.contains(trinkets.createGhostlySoul()) && CooldownManager.isOnCooldown(p, "ghostly_soul")){
-            CooldownManager.showTrinketCooldown(p, "ghostly_soul");
+            CooldownManager.showCooldown(p, "ghostly_soul");
             }
         }
     }

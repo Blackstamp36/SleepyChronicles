@@ -15,12 +15,13 @@ import java.util.List;
 public class onStaffTab implements TabCompleter {
     globalClass global = new globalClass();
 
-    public final String[] values = {
-            "items", "settotems", "setday", "summon", "teleport", "broadcast"
+    private final String[] values = {
+            "items", "settotems", "setday", "summon", "teleport", "broadcast", "storm"
     };
 
-    public final String[] mobs = global.getCustomEntities().keySet().toArray(new String[0]);
-    public final String[] worlds = global.getServerWorlds().keySet().toArray(new String[0]);
+    private final String[] mobs = global.getCustomEntities().keySet().toArray(new String[0]);
+    private final String[] storm = {"start", "stop"};
+    private final String[] worlds = global.getServerWorlds().keySet().toArray(new String[0]);
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
@@ -33,15 +34,25 @@ public class onStaffTab implements TabCompleter {
                 return vCompletions;
 
             } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("summon")) {
-                    return mCompletions;
+                switch(args[0].toUpperCase()){
+                    case "SUMMON" -> {
+                        return mCompletions;
+                    }
 
-                } else if(args[0].equalsIgnoreCase("settotems")){
-                    return new ArrayList<>(List.of("<int>"));
+                    case "SETTOTEMS" -> {
+                        return new ArrayList<>(List.of("<int>"));
+                    }
 
-                } else if(args[0].equalsIgnoreCase("teleport")){
-                    return wCompletions;
+                    case "TELEPORT" -> {
+                        return wCompletions;
+                    }
+
+                    case "STORM" -> {
+                        return new ArrayList<>(List.of(storm));
+                    }
+
                 }
+
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("summon")) {
                     return new ArrayList<>(List.of("<int>"));

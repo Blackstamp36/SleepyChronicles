@@ -4,6 +4,18 @@ import com.destroystokyo.paper.ParticleBuilder;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -12,11 +24,12 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
-import org.blackstamp.sleepyChronicles.listener.player.onPDeath;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking.bobCreaking;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.blackHole;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.missingId;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.suppressedCreeper;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.enderman.nightMan;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.enderman.theScreech;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.endermite.netherMite;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.fox.kitsuneFox;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.ghast.eyelessGhast;
@@ -41,16 +54,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -66,6 +77,8 @@ public class globalClass {
     public HashMap<String, Integer> globalData = new HashMap<>();
     public HashMap<UUID, PickaxeMode> playerPickaxes = new HashMap<>();
     public HashMap<UUID, Boolean> pickaxesCooldowns = new HashMap<>();
+    public static HashMap<UUID, Boolean> cancelFallDamage = new HashMap<>();
+
     public enum PickaxeMode {
         SILK, FORTUNE
     }
@@ -84,7 +97,8 @@ public class globalClass {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
-                    .registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ListItemStackTypeAdapter())
+                    .registerTypeAdapter(new TypeToken<List<ItemStack>>() {
+                    }.getType(), new ListItemStackTypeAdapter())
                     .create();
             gson.toJson(newData, writer);
             getLogger().info("New data for player: " + uuid);
@@ -100,7 +114,8 @@ public class globalClass {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
-                    .registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ListItemStackTypeAdapter())
+                    .registerTypeAdapter(new TypeToken<List<ItemStack>>() {
+                    }.getType(), new ListItemStackTypeAdapter())
                     .create();
 
             gson.toJson(data, writer);
@@ -115,7 +130,8 @@ public class globalClass {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
-                .registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ListItemStackTypeAdapter())
+                .registerTypeAdapter(new TypeToken<List<ItemStack>>() {
+                }.getType(), new ListItemStackTypeAdapter())
                 .create();
 
         if (!playerFile.exists()) {
@@ -155,11 +171,11 @@ public class globalClass {
         savePlayerData(uuid, data);
     }
 
-    private File getPlayerFile(UUID uuid){
+    private File getPlayerFile(UUID uuid) {
         return new File("plugins/" + sleepyChronicles.getter().getName() + "/" + uuid, uuid + ".json");
     }
 
-    private File getMainFile(){
+    private File getMainFile() {
         return new File("plugins/" + sleepyChronicles.getter().getName(), "mainFile.json");
     }
 
@@ -172,7 +188,8 @@ public class globalClass {
         }
 
         try (FileReader fileR = new FileReader(file)) {
-            Type type = new TypeToken<Map<String, Integer>>() {}.getType();
+            Type type = new TypeToken<Map<String, Integer>>() {
+            }.getType();
             Map<String, Integer> data = gson.fromJson(fileR, type);
 
             if (data.get("days") != null) {
@@ -218,18 +235,18 @@ public class globalClass {
                 .offset(0.05, 0.05, 0.05)
                 .location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
 
-        if(material != null){
+        if (material != null) {
             pBuilder.data(material.createBlockData());
         }
 
-        if(count != null){
+        if (count != null) {
             pBuilder.count(count);
         }
 
         pBuilder.spawn();
     }
 
-    public void teleportRandom(Entity e, double radius){
+    public void teleportRandom(Entity e, double radius) {
         Location l = e.getLocation();
         Location newL = new Location(l.getWorld(), l.getX() + radius, l.getY(), l.getZ() + radius);
 
@@ -253,6 +270,8 @@ public class globalClass {
         entityRegistry.put("VOIDBORNSPIDER", voidbornSpider.class);
         entityRegistry.put("MECHANICALEYE", mechanicalEye.class);
         entityRegistry.put("PALESOUL", paleSoul.class);
+        entityRegistry.put("SCREECH", theScreech.class);
+        entityRegistry.put("BLACKHOLE", blackHole.class);
 
         return entityRegistry;
     }
@@ -277,7 +296,7 @@ public class globalClass {
         return worldTypes;
     }
 
-    public void initPlayerTasks(){
+    public void initPlayerTasks() {
         final Map<UUID, Boolean> hasNullTNT = new HashMap<>();
         final Map<UUID, Boolean> hasBobSoul = new HashMap<>();
         final Map<UUID, Boolean> hasQuantumCore = new HashMap<>();
@@ -289,7 +308,7 @@ public class globalClass {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(Player all : Bukkit.getOnlinePlayers()) {
+                for (Player all : Bukkit.getOnlinePlayers()) {
                     checkImperceptibility(all);
 
                     UUID uuid = all.getUniqueId();
@@ -313,31 +332,44 @@ public class globalClass {
                     hasBobMiracle.put(uuid, currentlyHasBobMiracle);
 
                     double baseHealth = 20.0;
-                    double modification = 0.0;
+                    double baseSpeed = 0.1;
+                    double healthModification = 0.0;
+                    double speedModification = 1.0;
 
                     if (hasNullTNT.get(uuid)) {
-                        modification -= 2.0;
+                        healthModification -= 2.0;
                     }
 
                     if (hasBobSoul.get(uuid)) {
-                        modification += 4.0;
+                        healthModification += 4.0;
                         all.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 1, true, false));
                         all.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 100, 0, true, false));
                     }
 
-                    if(hasQuantumCore.get(uuid)){
+                    if (hasQuantumCore.get(uuid)) {
                         all.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 1, true, false));
                     }
 
-                    if(hasQuantumReactor.get(uuid)){
+                    if (hasQuantumReactor.get(uuid)) {
                         all.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1, true, false));
                     }
 
                     if (hasBobMiracle.get(uuid)) {
-                        modification += 8.0;
+                        healthModification += 8.0;
                     }
 
-                    all.setMaxHealth(baseHealth + modification);
+                    if(hasCustomArmor(all, "solar")) {
+                        healthModification += 12.0;
+
+                    }
+
+                    if(hasCustomArmor(all, "vortex")) {
+                        healthModification += 8.0;
+                        speedModification += 0.25;
+                    }
+
+                    all.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(baseSpeed * speedModification);
+                    all.setMaxHealth(baseHealth + healthModification);
                 }
             }
         }.runTaskTimer(sleepyChronicles.getter(), 0, 60);
@@ -367,49 +399,25 @@ public class globalClass {
         return false;
     }
 
-    private void checkImperceptibility(Player p){
-        if(p.hasPotionEffect(PotionEffectType.WEAVING)){
-            for(Player all : Bukkit.getOnlinePlayers()){
+    private void checkImperceptibility(Player p) {
+        if (p.hasPotionEffect(PotionEffectType.WEAVING)) {
+            for (Player all : Bukkit.getOnlinePlayers()) {
                 all.hidePlayer(p);
             }
         } else {
-            for(Player all : Bukkit.getOnlinePlayers()){
+            for (Player all : Bukkit.getOnlinePlayers()) {
                 all.showPlayer(p);
             }
         }
 
     }
 
-    public void removeTotemEffects(Player p){
+    public void removeTotemEffects(Player p) {
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
             p.removePotionEffect(PotionEffectType.REGENERATION);
             p.removePotionEffect(PotionEffectType.ABSORPTION);
             p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
         }, 1);
-    }
-
-    public void createTomb(Player p){
-        Location pL = p.getLocation();
-
-        Location headLoc = new Location(p.getWorld(), pL.getX(), pL.getY() + 1, pL.getZ());
-        Location fenceLoc = new Location(p.getWorld(), pL.getX(), pL.getY(), pL.getZ());
-        Location bedrockLoc = new Location(p.getWorld(), pL.getX(), pL.getY() - 1, pL.getZ());
-
-        Material head = Material.PLAYER_HEAD;
-        Material fence = Material.NETHER_BRICK_FENCE;
-        Material bedrock = Material.BEDROCK;
-
-        headLoc.getBlock().setType(head);
-        fenceLoc.getBlock().setType(fence);
-        bedrockLoc.getBlock().setType(bedrock);
-
-        Block headBlock = headLoc.getBlock();;
-
-        if (headBlock.getState() instanceof Skull skullState) {
-            skullState.setOwner(p.getName());
-            skullState.update();
-        }
-
     }
 
     public void initializeDiscordBot() {
@@ -443,7 +451,7 @@ public class globalClass {
 
     }
 
-    public void showDiscordDeath(Player p, Location dL, String finalCause, String dimension, String deathMessage){
+    public void showDiscordDeath(Player p, Location dL, String finalCause, String dimension, String deathMessage) {
         Guild guild = discordBot.getGuildById(1393327785606512753L);
 
         TextChannel channel;
@@ -470,7 +478,7 @@ public class globalClass {
 
     }
 
-    public void showTotemUse(Player p, int totems, String totemName,String finalCause){
+    public void showTotemUse(Player p, int totems, String totemName, String finalCause) {
         Guild guild = discordBot.getGuildById(1393327785606512753L);
 
         TextChannel channel;
@@ -490,17 +498,130 @@ public class globalClass {
         embed.setTitle(p.getName() + " • N°" + totems);
         embed.addField("Caused by: 💀", finalCause, true);
         embed.addField("Time: 🕛", "<t:" + currentTime + ">", true);
-        switch(totemName){
+        switch (totemName) {
             case "Wooden Totem":
                 embed.setThumbnail("https://cdn.discordapp.com/attachments/1411147147910582413/1411147410134143037/big_wooden_totem.png?ex=68b398f0&is=68b24770&hm=9e4ab4de6f22c02eeff0d736d0e20a33c031610c6104c36002c5e1093af60973&");
                 break;
 
             default:
                 embed.setThumbnail("https://cdn.discordapp.com/attachments/1411147147910582413/1411147158199205928/image.png?ex=68b398b4&is=68b24734&hm=165c444ab637ff7bb95f053d0b23698f566b0b1a201e0fbd42172c0deafada98&");
-            break;
+                break;
         }
         channel.sendMessageEmbeds(embed.build()).queue();
 
     }
 
+    public File getSchematicFolder() {
+        return new File(sleepyChronicles.getter().getDataFolder(), "schematics");
+    }
+
+    public boolean pasteSchematic(Location bukkitLocation, String schematicFileName) {
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(bukkitLocation.getWorld());
+        BlockVector3 wePosition = BukkitAdapter.asBlockVector(bukkitLocation);
+
+        File schemFile = new File(getSchematicFolder(), schematicFileName);
+
+        if (!schemFile.exists()) {
+            sleepyChronicles.getter().getLogger().warning("Schematic file not found: " + schemFile.getAbsolutePath());
+            return false;
+        }
+
+        ClipboardFormat format = ClipboardFormats.findByFile(schemFile);
+        if (format == null) {
+            sleepyChronicles.getter().getLogger().warning("Unknown schematic format for file: " + schematicFileName);
+            return false;
+        }
+
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld);
+             FileInputStream fileInputStream = new FileInputStream(schemFile);
+             ClipboardReader reader = format.getReader(fileInputStream)) {
+
+            Clipboard clipboard = reader.read();
+
+            Operation operation = new ClipboardHolder(clipboard)
+                    .createPaste(editSession)
+                    .to(wePosition)
+                    .ignoreAirBlocks(true) // Crucial for performance
+                    .build();
+
+            Operations.complete(operation); // This does the actual pasting
+            editSession.close();
+
+            sleepyChronicles.getter().getLogger().info("Schematic pasted successfully!");
+            return true;
+
+        } catch (IOException e) {
+            sleepyChronicles.getter().getLogger().severe("Failed to paste schematic: " + e.getMessage());
+
+
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    public boolean doesSchemExist(String schematic){
+        File schemFile = new File(getSchematicFolder(), schematic + ".schem");
+
+        return schemFile.exists();
+    }
+
+    public void createTomb(Player p) {
+        String[] availableTombstones = {
+                "tombstone_spruce",
+                "tombstone_ice",
+                "tombstone_jungle"
+        };
+        Random r = new Random();
+        Location pL = p.getLocation();
+
+        pasteSchematic(pL, availableTombstones[r.nextInt(availableTombstones.length)] + ".schem");
+
+        Location headLoc = new Location(p.getWorld(), pL.getX(), pL.getY(), pL.getZ());
+
+        Material head = Material.PLAYER_HEAD;
+
+        headLoc.getBlock().setType(head);
+
+        Block headBlock = headLoc.getBlock();
+
+        if (headBlock.getState() instanceof Skull skullState) {
+            skullState.setOwner(p.getName());
+            skullState.setRotation(p.getFacing());
+            skullState.update();
+
+        }
+
+    }
+
+    public boolean hasCustomArmor(Player p, String armor) {
+        Inventory inventory = p.getInventory();
+        ItemStack[] armorPieces = {
+                inventory.getItem(39), // helmet
+                inventory.getItem(38), // chestplate
+                inventory.getItem(37), // leggings
+                inventory.getItem(36)  // boots
+        };
+
+        for (ItemStack piece : armorPieces) {
+            if (piece == null || !piece.hasItemMeta()) {
+                return false;
+
+            }
+
+            ItemMeta meta = piece.getItemMeta();
+            if (!meta.hasCustomModelDataComponent()) {
+                return false;
+            }
+
+            CustomModelDataComponent data = meta.getCustomModelDataComponent();
+            if (!data.getStrings().contains(armor)) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
 }

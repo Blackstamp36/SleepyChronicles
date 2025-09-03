@@ -48,7 +48,7 @@ public class onEntityDeath implements Listener {
 
                         if ((l.getWorld().getBiome(l).toString().contains("PALE") && r.nextInt(1,1001) <= paleChance)
                                 || (!(l.getWorld().getBiome(l).toString().contains("PALE")) && r.nextInt(1,1001) <= normalChance)){
-                            paleSoul.spawnEntity(l, 1);
+                            paleSoul.spawnEntity(l, 1, entity.getKiller());
                             global.spawnParticles(l, Particle.ENCHANT,null,25);
                         }
                     }

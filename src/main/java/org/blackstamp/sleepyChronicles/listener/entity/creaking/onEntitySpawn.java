@@ -29,7 +29,7 @@ public class onEntitySpawn implements Listener {
         if (entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)
                 || entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG)) {
             if (global.getServerDay() >= 6 && entity instanceof Zombie) {
-                if (r.nextInt(101) <= 10) {
+                if (r.nextInt(101) <= 9) {
                     bobCreaking.spawnEntity(entity.getLocation(), 1);
                     e.setCancelled(true);
 

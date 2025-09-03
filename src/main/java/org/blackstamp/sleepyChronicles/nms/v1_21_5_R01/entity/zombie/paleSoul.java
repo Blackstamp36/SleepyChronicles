@@ -11,8 +11,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
+import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -20,9 +22,10 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class paleSoul extends Zombie {
-    globalClass global = new globalClass();
+    private static final trinketItems trinkets = new trinketItems();
 
     public paleSoul(EntityType<? extends Zombie> type, Level world) {
         super(type, world);
@@ -71,11 +74,21 @@ public class paleSoul extends Zombie {
         }, 200);
     }
 
-    public static void spawnEntity(Location loc, int entities) {
+    public static void spawnEntity(Location loc, int entities, Player summoner) {
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++) {
             paleSoul e = new paleSoul(EntityType.ZOMBIE, nmsLvl);
+            globalClass global = new globalClass();
+            playerData data = global.getPlayerData(summoner.getUniqueId());
+            Inventory perksInv = data.getTrinketsAsInventory(summoner);
+
+            if(perksInv.contains(trinkets.createSummonerEmblem())) {
+                double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
+                e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage + (currentDamage * 0.15));
+                summoner.sendMessage("Entity spawned with damage modifier!");
+            }
+
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
             nmsLvl.addFreshEntity(e);
 

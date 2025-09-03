@@ -31,6 +31,7 @@ public class onConnection implements Listener {
             }
 
         e.setJoinMessage("§6※ §a" + p.getName() + " §7has logged in!");
+        global.cancelFallDamage.put(uuid, false);
         global.pickaxesCooldowns.put(uuid, false);
     }
 

@@ -13,22 +13,21 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
-public class nightMan extends EnderMan {
+public class theScreech extends EnderMan {
 
-    public nightMan(EntityType<? extends EnderMan> type, Level world) {
+    public theScreech(EntityType<? extends EnderMan> type, Level world) {
         super(type, world);
 
-        this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#cc8033") + "Nightman"));
+        this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#6b4e53") + "The Screech"));
         this.setAggressive(true);
-        this.addTag("nightMan");
+        this.addTag("theScreech");
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.315);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(30);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(20);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(15);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(10);
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(20);
-        this.setHealth(30);
+        this.setHealth(15);
 
         this.goalSelector.getAvailableGoals().clear();
-        this.targetSelector.getAvailableGoals().clear();
 
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
@@ -42,7 +41,7 @@ public class nightMan extends EnderMan {
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++) {
-            nightMan e = new nightMan(EntityType.ENDERMAN, nmsLvl);
+            theScreech e = new theScreech(EntityType.ENDERMAN, nmsLvl);
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
             nmsLvl.addFreshEntity(e);
 

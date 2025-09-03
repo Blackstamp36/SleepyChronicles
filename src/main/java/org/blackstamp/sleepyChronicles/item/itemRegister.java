@@ -6,6 +6,7 @@ import org.blackstamp.sleepyChronicles.item.null_items.nullItems;
 import org.blackstamp.sleepyChronicles.item.pale.paleItems;
 import org.blackstamp.sleepyChronicles.item.solar.solarItems;
 import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
+import org.blackstamp.sleepyChronicles.item.vortex.vortexItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -29,6 +30,7 @@ public class itemRegister {
     foxDrops foxDrops = new foxDrops();
     usableItems usableItems = new usableItems();
     trinketItems trinkets = new trinketItems();
+    vortexItems vortexItems = new vortexItems();
 
     final int[] chestBorderSlots = {
             0, 1, 2, 3, 4, 5, 6, 7, 8,
@@ -92,23 +94,58 @@ public class itemRegister {
                         5,
                         "solar_sword"),
                 solarItems.createSolarTool(
-                        Material.NETHERITE_PICKAXE,
-                        "Solar Pickaxe",
-                        Enchantment.EFFICIENCY,
-                        5,
-                        "solar_pickaxe"),
+                        Material.NETHERITE_HELMET,
+                        "Solar Helmet",
+                        Enchantment.PROTECTION,
+                        4,
+                        "solar"),
                 solarItems.createSolarTool(
-                        Material.NETHERITE_AXE,
-                        "Solar Axe",
-                        Enchantment.EFFICIENCY,
-                        5,
-                        "solar_axe"),
+                        Material.NETHERITE_CHESTPLATE,
+                        "Solar Chestplate",
+                        Enchantment.PROTECTION,
+                        4,
+                        "solar"),
                 solarItems.createSolarTool(
-                        Material.NETHERITE_SHOVEL,
-                        "Solar Shovel",
-                        Enchantment.EFFICIENCY,
+                        Material.NETHERITE_LEGGINGS,
+                        "Solar Leggings",
+                        Enchantment.PROTECTION,
+                        4,
+                        "solar"),
+                solarItems.createSolarTool(
+                        Material.NETHERITE_BOOTS,
+                        "Solar Boots",
+                        Enchantment.PROTECTION,
+                        4,
+                        "solar")
+        };
+
+        ItemStack[] vortexTools = {
+                vortexItems.createVortexTool(Material.BOW,
+                        "Vortex Shortbow",
+                        Enchantment.POWER,
                         5,
-                        "solar_shovel")
+                        "vortex_shortbow"),
+
+                vortexItems.createVortexTool(Material.NETHERITE_HELMET,
+                        "Vortex Helmet",
+                        Enchantment.PROTECTION,
+                        4,
+                        "vortex"),
+                vortexItems.createVortexTool(Material.NETHERITE_CHESTPLATE,
+                        "Vortex Chestplate",
+                        Enchantment.PROTECTION,
+                        4,
+                        "vortex"),
+                vortexItems.createVortexTool(Material.NETHERITE_LEGGINGS,
+                        "Vortex Leggings",
+                        Enchantment.PROTECTION,
+                        4,
+                        "vortex"),
+                vortexItems.createVortexTool(Material.NETHERITE_BOOTS,
+                        "Vortex Boots",
+                        Enchantment.PROTECTION,
+                        4,
+                        "vortex")
         };
 
         ItemStack[] drops = {
@@ -142,6 +179,7 @@ public class itemRegister {
 
         itemsInv.addItem(paleTools);
         itemsInv.addItem(solarTools);
+        itemsInv.addItem(vortexTools);
         itemsInv.addItem(usables);
         itemsInv.addItem(drops);
 

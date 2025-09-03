@@ -2,6 +2,7 @@ package org.blackstamp.sleepyChronicles.command;
 
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.itemRegister;
+import org.blackstamp.sleepyChronicles.listener.environment.onWeather;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -50,16 +51,16 @@ public class staffCRegister implements CommandExecutor {
 
                     case "items":
                         p.sendMessage(PREFIX + "§eOpening items menu!");
-                        p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 1,1.25F);
+                        p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1.25F);
                         p.openInventory(itemsPageOne);
                         break;
 
                     case "broadcast":
                         if (args.length > 1) {
-                            for(Player all : Bukkit.getOnlinePlayers()){
+                            for (Player all : Bukkit.getOnlinePlayers()) {
                                 all.sendMessage(PREFIX + "§7" + args[1]);
-                                all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F,1.5F);
-                                all.playSound(all.getLocation(), Sound.BLOCK_BELL_USE, 0.85F,1.25F);
+                                all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
+                                all.playSound(all.getLocation(), Sound.BLOCK_BELL_USE, 0.85F, 1.25F);
                             }
                         } else {
                             p.sendMessage(PREFIX + "§7Command: §e/staff broadcast <message>");
@@ -69,7 +70,7 @@ public class staffCRegister implements CommandExecutor {
 
                     case "teleport":
                         if (args.length > 1) {
-                            if(global.getServerWorlds().containsKey(args[1].toUpperCase())){
+                            if (global.getServerWorlds().containsKey(args[1].toUpperCase())) {
                                 p.teleport(global.getServerWorlds().get(args[1]));
                             }
                             p.sendMessage(PREFIX + "§7Teleporting to: §e" + args[1]);
@@ -85,8 +86,15 @@ public class staffCRegister implements CommandExecutor {
                                     if (args.length == 3) summons = Integer.parseInt(args[2]);
                                     Class<?> act = global.getCustomEntities().get(args[1].toUpperCase());
                                     p.sendMessage(PREFIX + "§7Summoned " + summons + "x §c" + args[1] + "§7!");
-                                    java.lang.reflect.Method method = act.getMethod("spawnEntity", Location.class, int.class);
-                                    method.invoke(null, p.getLocation(), summons);
+                                    java.lang.reflect.Method method;
+                                    if (args[1].equalsIgnoreCase("PALESOUL")) {
+                                        method = act.getMethod("spawnEntity", Location.class, int.class, Player.class);
+                                        method.invoke(null, p.getLocation(), summons, p);
+                                    } else {
+                                        method = act.getMethod("spawnEntity", Location.class, int.class);
+                                        method.invoke(null, p.getLocation(), summons);
+                                    }
+
                                     p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
 
                                 } catch (NumberFormatException |
@@ -107,7 +115,22 @@ public class staffCRegister implements CommandExecutor {
                         }
                         break;
 
-                    case "structures":
+                    case "schematic":
+                        if (args.length > 1) {
+                            String schematic = args[1];
+                            if (global.doesSchemExist(schematic)) {
+                                global.pasteSchematic(p.getLocation(), schematic + ".schem");
+                                p.sendMessage(PREFIX + "§7Placing a §e" + args[1] + "§7!");
+                                p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
+                            } else {
+                                p.sendMessage(PREFIX + "§cDeclared schematic doesn't exist!");
+                                p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+
+                            }
+                        } else {
+                            p.sendMessage(PREFIX + "§cNo schem provided.");
+                            p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                        }
                         break;
 
                     case "settotems":
@@ -127,6 +150,26 @@ public class staffCRegister implements CommandExecutor {
                             p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                         }
                         break;
+
+                    case "storm":
+                        if (args.length > 1) {
+                            if (args[1].equalsIgnoreCase("start")) {
+                                p.getWorld().setStorm(true);
+                                p.getWorld().setWeatherDuration(60);
+
+                            } else if (args[1].equalsIgnoreCase("stop")) {
+                                onWeather weather = new onWeather();
+
+                                if (onWeather.isStormActive) {
+                                    weather.endStormNormally();
+                                } else {
+                                    p.sendMessage(PREFIX + "§cThere's no such storm active!");
+                                    p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                                }
+
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -138,5 +181,6 @@ public class staffCRegister implements CommandExecutor {
         return false;
     }
 }
+
 
 

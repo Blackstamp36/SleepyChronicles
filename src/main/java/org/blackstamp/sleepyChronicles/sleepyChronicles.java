@@ -14,6 +14,7 @@ import org.blackstamp.sleepyChronicles.item.drops.phantomDrops;
 import org.blackstamp.sleepyChronicles.item.misc.usableItems;
 import org.blackstamp.sleepyChronicles.item.pale.paleItems;
 import org.blackstamp.sleepyChronicles.listener.player.*;
+import org.blackstamp.sleepyChronicles.recipe.recipeRegister;
 import org.blackstamp.sleepyChronicles.util.RegistrableUtils;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public final class sleepyChronicles extends JavaPlugin {
+    recipeRegister recipes = new recipeRegister();
     public static String PREFIX = "§7§l[§r" + org.blackstamp.sleepyChronicles.util.ChatColor.of("#6932a8") + "SʟᴇᴇᴘʏCʜʀᴏɴɪᴄʟᴇꜱ§7§l]§r §8» ";
     private static sleepyChronicles instance;
     public static File pluginDir = new File("plugins", "sleepyChronicles");
@@ -46,7 +48,7 @@ public final class sleepyChronicles extends JavaPlugin {
         RegistrableUtils.registerListeners();
         registerTeams();
         registerCommands();
-        registerRecipes();
+        recipes.registerRecipes();
         changeDaySystem();
         System.out.println("S̸̝̈́͐̍͛̓̆͛͘͝͠l̸͇͕̤͒̄͐̋̒͝e̸̛̛̓͗͊̈̔̊͒͜ḛ̸̖̗̒͋̎̇͆͘͠ṕ̵̪͎͚̪͚̲̱̎̋̔͒̍̎͐ͅy̵̧̡̳͉̹̞͉̙͙͌̍̚͜ ̴͎̀̽͠ͅC̴̖͖̘͚̿͊͋̄̈́̀h̸̢̺̪̣̳̟̘̠̓̂͘r̴͉̐͒͆͛͝ǫ̸̨̜͍̹̞͚̙̩͂͂ṉ̵̺͚̪̹̔̓́̊̅͜͝ǐ̸͈̼̻̈͘c̵̢͍̥̦͓̤͖̍̅̎̆̓̈́͘l̴̪̅̐̓̒́̃͆̋̐͐e̸͚̭͇̠͋̐̽̌̾̎̕͝ͅs̵̢̟̲̤̦̟̠̿̽̽̉̚");
         System.out.println();
@@ -116,6 +118,12 @@ public final class sleepyChronicles extends JavaPlugin {
         File file = new File("plugins/" + sleepyChronicles.getter().getName(), "mainFile.json");
         globalClass global = new globalClass();
 
+        File schematics = new File("plugins/" + sleepyChronicles.getter().getName(), "schematics");
+        if(!schematics.exists()) {
+            schematics.mkdir();
+            System.out.println("No dir found for schematics! Creating new one..");
+        }
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         if (!pluginDir.exists()) {
@@ -133,52 +141,6 @@ public final class sleepyChronicles extends JavaPlugin {
         } catch (IOException e) {
             System.out.println("An exception has ocurred in createData! " + e.getMessage());
         }
-    }
-
-    private void registerRecipes(){
-        createPSRecipe();
-        createMERecipe();
-    }
-
-    private void createPSRecipe(){
-        paleItems paleItems = new paleItems();
-
-        ItemStack paleCrystal = paleItems.createPaleCrystal();
-
-        NamespacedKey paleCrystalKey = new NamespacedKey(sleepyChronicles.getter(), "pale_shard");
-        ShapedRecipe shapedRecipe = new ShapedRecipe(paleCrystalKey, paleCrystal);
-
-        shapedRecipe.shape(
-                "PPP",
-                "PNP",
-                "PPP"
-        );
-
-        shapedRecipe.setIngredient('P', paleItems.createPaleShard());
-        shapedRecipe.setIngredient('N', Material.NETHERITE_INGOT);
-
-        sleepyChronicles.getter().getServer().addRecipe(shapedRecipe);
-    }
-
-    private void createMERecipe(){
-        usableItems usableItems = new usableItems();
-        phantomDrops phantomDrops = new phantomDrops();
-
-        ItemStack mechanicalEye = usableItems.createMechanicalEye();
-
-        NamespacedKey mechanicalEyeKey = new NamespacedKey(sleepyChronicles.getter(), "mechanical_eye");
-        ShapedRecipe shapedRecipe = new ShapedRecipe(mechanicalEyeKey, mechanicalEye);
-
-        shapedRecipe.shape(
-                "LLL",
-                "LSL",
-                "LLL"
-        );
-
-        shapedRecipe.setIngredient('L', phantomDrops.createLens());
-        shapedRecipe.setIngredient('S', Material.NETHER_STAR);
-
-        sleepyChronicles.getter().getServer().addRecipe(shapedRecipe);
     }
 
     private void createAftermathDimension() {

@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 @Registrable
 public class onDamageToE implements Listener {
 
-    @EventHandler
+
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onDamageToE(EntityDamageEvent e) {
         globalClass global = new globalClass();
         Entity entity = e.getEntity();
