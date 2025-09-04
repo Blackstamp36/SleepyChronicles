@@ -1,9 +1,6 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -19,39 +16,35 @@ import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 
-public class paleSoul extends Zombie {
-    private UUID summonerUUID;
+public class stardustGolem extends Zombie {
     private static final trinketItems trinkets = new trinketItems();
 
-    public paleSoul(EntityType<? extends Zombie> type, Level world) {
+    public stardustGolem(EntityType<? extends Zombie> type, Level world) {
         super(type, world);
 
         this.setShouldBurnInDay(false);
         this.setSilent(true);
 
-        this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#cfc4c3") + "Pale Soul"));
-        this.addTag("paleSoul");
+        this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#64c7e8") + "Stardust Golem"));
+        this.addTag("stardustGolem");
         this.addTag("allyMob");
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(12);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.325);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(20);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.375);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(10);
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5);
-        this.setHealth(10);
+        this.getAttribute(Attributes.SCALE).setBaseValue(1.25);
+        this.setHealth(1);
 
         this.goalSelector.getAvailableGoals().clear();
 
@@ -65,45 +58,24 @@ public class paleSoul extends Zombie {
         initTimer(this);
     }
 
-    public void setSummoner(UUID summonerUUID) {
-        this.summonerUUID = summonerUUID;
-    }
-
-    public UUID getSummoner() {
-        return summonerUUID;
-    }
-
-
     private void initTimer(Zombie z){
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
             if(z.isAlive()) z.kill((ServerLevel) z.level());
-        }, 200);
+        }, 15 * 20); // 15s Alive.
     }
 
     public static void spawnEntity(Location loc, int entities, Player summoner) {
-        UUID uuid = summoner.getUniqueId();
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++) {
-            paleSoul e = new paleSoul(EntityType.ZOMBIE, nmsLvl);
-            e.setSummoner(uuid);
+            stardustGolem e = new stardustGolem(EntityType.ZOMBIE, nmsLvl);
             globalClass global = new globalClass();
-            playerSummons.putIfAbsent(uuid, 0);
-            int currentSummons = playerSummons.getOrDefault(uuid,0);
-
-            if(global.hasMaxSummons(summoner)){
-                summoner.sendMessage(PREFIX + "§cYou've reached your max summons! (" + playerSummons.get(uuid) + ")");
-                summoner.playSound(summoner.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,0.5F,0.5F);
-                return;
-            }
 
             double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
             e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonModifier(summoner));
-            playerSummons.put(uuid, currentSummons + 1);
 
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
             nmsLvl.addFreshEntity(e);
-
         }
     }
 

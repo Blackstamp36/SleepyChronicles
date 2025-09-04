@@ -639,4 +639,18 @@ public class globalClass {
 
         return playerSummons.get(uuid) >= playerMaxSummons.get(uuid);
     }
+
+    public double getSummonModifier(Player p){
+        double damage = 1.0;
+        trinketItems trinkets = new trinketItems();
+        playerData data = getPlayerData(p.getUniqueId());
+        Inventory perksInv = data.getTrinketsAsInventory(p);
+
+        boolean hasEmblem = perksInv.contains(trinkets.createSummonerEmblem());
+
+        if(hasEmblem) damage += 0.15;
+        if(hasCustomArmor(p, "stardust")) damage += 0.3;
+
+        return damage;
+    }
 }

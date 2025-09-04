@@ -31,7 +31,7 @@ public class CooldownManager {
 
         Map<UUID, Map<String, Long>> cooldownMap = globalClass.getActiveCooldowns();
 
-        Map<String, Long> playerCooldowns = cooldownMap.computeIfAbsent(p.getUniqueId(), k -> new HashMap<>());
+        Map<String, Long> playerCooldowns = cooldownMap.computeIfAbsent(p.getUniqueId(), _ -> new HashMap<>());
         long expirationTime = System.currentTimeMillis() + cooldownTimeMs;
         playerCooldowns.put(cooldownName, expirationTime);
 
@@ -68,7 +68,7 @@ public class CooldownManager {
         long remainingMinutes = remainingSeconds / 60;
         long showableSeconds = (remainingMs / 1000) % 60;
 
-        p.sendMessage(PREFIX + "§cYour trinket/ability is on cooldown! (" + remainingMinutes + "m " + showableSeconds + "s)");
+        p.sendMessage(PREFIX + "§cYour ability is on cooldown! (" + remainingMinutes + "m " + showableSeconds + "s)");
         p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.15F,0.75F);
 
     }

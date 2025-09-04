@@ -5,6 +5,7 @@ import org.blackstamp.sleepyChronicles.item.misc.usableItems;
 import org.blackstamp.sleepyChronicles.item.null_items.nullItems;
 import org.blackstamp.sleepyChronicles.item.pale.paleItems;
 import org.blackstamp.sleepyChronicles.item.solar.solarItems;
+import org.blackstamp.sleepyChronicles.item.stardust.stardustItems;
 import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
 import org.blackstamp.sleepyChronicles.item.vortex.vortexItems;
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ import static org.blackstamp.sleepyChronicles.command.staffCRegister.itemsPageTw
 public class itemRegister {
 
     solarItems solarItems = new solarItems();
+    stardustItems stardustItems = new stardustItems();
     witherDrops witherDrops = new witherDrops();
     paleItems paleItems = new paleItems();
     nullItems nullItems = new nullItems();
@@ -148,6 +150,35 @@ public class itemRegister {
                         "vortex")
         };
 
+        ItemStack[] stardustTools = {
+                stardustItems.createStardustTool(Material.STICK,
+                        "Stardust Staff",
+                        Enchantment.POWER,
+                        5,
+                        "stardust_staff"),
+
+                stardustItems.createStardustTool(Material.NETHERITE_HELMET,
+                        "Stardust Helmet",
+                        Enchantment.PROTECTION,
+                        4,
+                        "stardust"),
+                stardustItems.createStardustTool(Material.NETHERITE_CHESTPLATE,
+                        "Stardust Chestplate",
+                        Enchantment.PROTECTION,
+                        4,
+                        "stardust"),
+                stardustItems.createStardustTool(Material.NETHERITE_LEGGINGS,
+                        "Stardust Leggings",
+                        Enchantment.PROTECTION,
+                        4,
+                        "stardust"),
+                stardustItems.createStardustTool(Material.NETHERITE_BOOTS,
+                        "Stardust Boots",
+                        Enchantment.PROTECTION,
+                        4,
+                        "stardust")
+        };
+
         ItemStack[] drops = {
                 ghastDrops.createBloodTear(),
                 creakingDrops.createBobFlesh(),
@@ -180,8 +211,8 @@ public class itemRegister {
         itemsInv.addItem(paleTools);
         itemsInv.addItem(solarTools);
         itemsInv.addItem(vortexTools);
+        itemsInv.addItem(stardustTools);
         itemsInv.addItem(usables);
-        itemsInv.addItem(drops);
 
         return itemsInv;
     }

@@ -29,7 +29,7 @@ public class vortexItems {
                 lore.add(ChatColor.of("#4dcbcb") + "Full Set Advantage:");
                 lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+4 §7hearts.");
                 lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+30% §7Projectile damage.");
-                lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+0.25x §7Movement speed.");
+                lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+0.25 §7Movement speed.");
                 lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "50% §7of not consuming ammo.");
                 lore.add(ChatColor.of("#4dcbcb") + "→ §7Shift to " + ChatColor.of("#4dcbcb") + "double jump§7!");
                 lore.add(ChatColor.of("#ebc247") + "→ 15s Cooldown.");

@@ -1,4 +1,4 @@
-package org.blackstamp.sleepyChronicles.listener.entity.zombie.paleSoul;
+package org.blackstamp.sleepyChronicles.listener.entity.zombie.stardustGolem;
 
 import org.blackstamp.sleepyChronicles.util.Registrable;
 import org.bukkit.entity.Entity;
@@ -13,12 +13,12 @@ public class onEntityTarget implements Listener {
     public void onEntityTarget(EntityTargetEvent e){
         Entity entity = e.getEntity();
 
-        if(entity.getScoreboardTags().contains("paleSoul")){
+        if(entity.getScoreboardTags().contains("allyMob") || entity.isInvulnerable()){
             if(e.getTarget() == null) return;
 
             Entity target = e.getTarget();
 
-            if(target.getScoreboardTags().contains("paleSoul")){
+            if(target.getScoreboardTags().contains("allyMob") || entity.isInvulnerable()){
                 e.setCancelled(true);
 
             }
