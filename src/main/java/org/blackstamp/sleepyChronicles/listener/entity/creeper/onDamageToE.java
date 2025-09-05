@@ -20,9 +20,7 @@ public class onDamageToE implements Listener {
         if(entity.getScoreboardTags().contains("blackHole")) e.setCancelled(true);
 
         if (entity instanceof Creeper
-                && (entity.getScoreboardTags().contains("missingId")
-                || entity.getScoreboardTags().contains("suppressedCreeper"))){
-
+                && (entity.getScoreboardTags().contains("missingId"))){
             if (damageType.equals(DamageType.ARROW) || damageType.equals(DamageType.MOB_PROJECTILE)) {
                 e.setCancelled(true);
             }

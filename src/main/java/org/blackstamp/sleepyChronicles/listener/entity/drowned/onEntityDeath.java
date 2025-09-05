@@ -17,9 +17,7 @@ public class onEntityDeath implements Listener {
         globalClass global = new globalClass();
 
         if(global.getServerDay() >= 6) {
-            if (entity instanceof Drowned) {
-                e.getDrops().clear();
-            }
+            if (entity instanceof Drowned) e.getDrops().clear();
 
         }
     }

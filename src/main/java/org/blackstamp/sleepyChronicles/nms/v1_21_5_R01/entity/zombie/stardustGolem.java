@@ -10,22 +10,14 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
+import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
-import java.util.UUID;
-
-import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 
 public class stardustGolem extends Zombie {
     private static final trinketItems trinkets = new trinketItems();
@@ -72,7 +64,7 @@ public class stardustGolem extends Zombie {
             globalClass global = new globalClass();
 
             double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
-            e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonModifier(summoner));
+            e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonDamageModifier(summoner));
 
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
             nmsLvl.addFreshEntity(e);

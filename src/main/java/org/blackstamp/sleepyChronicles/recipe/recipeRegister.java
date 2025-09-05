@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.recipe;
 
-import org.blackstamp.sleepyChronicles.item.drops.phantomDrops;
+import org.blackstamp.sleepyChronicles.item.drop.phantomDrops;
 import org.blackstamp.sleepyChronicles.item.misc.usableItems;
 import org.blackstamp.sleepyChronicles.item.pale.paleItems;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;

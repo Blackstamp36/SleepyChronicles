@@ -1,9 +1,8 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie;
 
-import com.destroystokyo.paper.ParticleBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -13,28 +12,25 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
+import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityRemoveEvent;
-import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 
-public class paleSoul extends Zombie {
+public class paleSoul extends Zombie implements allyMob {
+    @Getter
+    @Setter
     private UUID summonerUUID;
     private static final trinketItems trinkets = new trinketItems();
 
@@ -65,14 +61,9 @@ public class paleSoul extends Zombie {
         initTimer(this);
     }
 
-    public void setSummoner(UUID summonerUUID) {
-        this.summonerUUID = summonerUUID;
+    public boolean isAllyMob(){
+        return true;
     }
-
-    public UUID getSummoner() {
-        return summonerUUID;
-    }
-
 
     private void initTimer(Zombie z){
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
@@ -86,7 +77,7 @@ public class paleSoul extends Zombie {
 
         for (int i = 0; i < entities; i++) {
             paleSoul e = new paleSoul(EntityType.ZOMBIE, nmsLvl);
-            e.setSummoner(uuid);
+            e.setSummonerUUID(uuid);
             globalClass global = new globalClass();
             playerSummons.putIfAbsent(uuid, 0);
             int currentSummons = playerSummons.getOrDefault(uuid,0);
@@ -98,7 +89,7 @@ public class paleSoul extends Zombie {
             }
 
             double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
-            e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonModifier(summoner));
+            e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonDamageModifier(summoner));
             playerSummons.put(uuid, currentSummons + 1);
 
             e.setPos(loc.getX(), loc.getY(), loc.getZ());

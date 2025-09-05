@@ -34,9 +34,13 @@ public class solarItems {
                 lore.add("§8§l—");
                 lore.add(ChatColor.of("#cc9933") + "Full Set Advantage:");
                 lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#cc9933") + "+6 §7hearts.");
-                lore.add(ChatColor.of("#33cc52") + "→ §7Immunity to " + ChatColor.of("#cc9933") + "Fire§7.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#cc9933") + "+15% §7Attack damage.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#cc9933") + "-10% §7Incoming melee damage.");
+                lore.add(ChatColor.of("#33cc52") + "→ §7Immunity to " + ChatColor.of("#cc9933") + "Fire ticks§7.");
                 lore.add(ChatColor.of("#33cc52") + "→ §7Lights on " + ChatColor.of("#cc9933") + "fire §7monsters");
                 lore.add("§7that attack you physically.");
+                lore.add(ChatColor.of("#cc9933") + "→ §7Shift to enable a " + ChatColor.of("#cc9933") + "shield§7!");
+                lore.add(ChatColor.of("#ebc247") + "→ 4m Cooldown.");
 
                 if(meta instanceof ArmorMeta armorMeta) {
                     armorMeta.setTrim(new ArmorTrim(TrimMaterial.GOLD, TrimPattern.SPIRE));

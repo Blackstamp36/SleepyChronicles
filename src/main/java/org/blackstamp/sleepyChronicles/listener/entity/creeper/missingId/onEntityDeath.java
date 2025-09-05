@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.entity.creeper.missingId;
 
-import org.blackstamp.sleepyChronicles.item.null_items.nullItems;
+import org.blackstamp.sleepyChronicles.item.nullItems.nullItems;
 import org.blackstamp.sleepyChronicles.util.Registrable;
 import org.bukkit.Material;
 import org.bukkit.entity.Creeper;
@@ -17,7 +17,9 @@ public class onEntityDeath implements Listener {
         LivingEntity entity = e.getEntity();
         nullItems nullItems = new nullItems();
 
-        if (entity instanceof Creeper && entity.getScoreboardTags().contains("missingId")) {
+        if (entity instanceof Creeper
+                && entity.getScoreboardTags().contains("missingId")
+                && entity.getKiller() != null) {
             e.getDrops().clear();
             e.getDrops().add(nullItems.createNullItem(Material.GUNPOWDER, "Nullpowder"));
         }

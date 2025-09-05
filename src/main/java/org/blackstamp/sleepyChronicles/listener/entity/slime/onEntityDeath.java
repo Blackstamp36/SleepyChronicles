@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.entity.slime;
 
-import org.blackstamp.sleepyChronicles.item.drops.slimeDrops;
+import org.blackstamp.sleepyChronicles.item.drop.slimeDrops;
 import org.blackstamp.sleepyChronicles.util.Registrable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;

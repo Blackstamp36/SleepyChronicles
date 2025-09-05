@@ -1,12 +1,12 @@
 package org.blackstamp.sleepyChronicles.item;
 
-import org.blackstamp.sleepyChronicles.item.drops.*;
+import org.blackstamp.sleepyChronicles.item.drop.*;
 import org.blackstamp.sleepyChronicles.item.misc.usableItems;
-import org.blackstamp.sleepyChronicles.item.null_items.nullItems;
+import org.blackstamp.sleepyChronicles.item.nullItems.nullItems;
 import org.blackstamp.sleepyChronicles.item.pale.paleItems;
 import org.blackstamp.sleepyChronicles.item.solar.solarItems;
 import org.blackstamp.sleepyChronicles.item.stardust.stardustItems;
-import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
+import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
 import org.blackstamp.sleepyChronicles.item.vortex.vortexItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -125,7 +125,7 @@ public class itemRegister {
                 vortexItems.createVortexTool(Material.BOW,
                         "Vortex Shortbow",
                         Enchantment.POWER,
-                        5,
+                        6,
                         "vortex_shortbow"),
 
                 vortexItems.createVortexTool(Material.NETHERITE_HELMET,

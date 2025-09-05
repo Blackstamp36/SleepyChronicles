@@ -1,10 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.ghast.eyelessGhast;
 
-import org.blackstamp.sleepyChronicles.item.drops.ghastDrops;
-import org.blackstamp.sleepyChronicles.item.null_items.nullItems;
+import org.blackstamp.sleepyChronicles.item.drop.ghastDrops;
 import org.blackstamp.sleepyChronicles.util.Registrable;
-import org.bukkit.Material;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;

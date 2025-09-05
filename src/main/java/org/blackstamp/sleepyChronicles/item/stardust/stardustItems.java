@@ -30,7 +30,7 @@ public class stardustItems {
                 lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#64c7e8") + "+4 §7hearts.");
                 lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#64c7e8") + "+4 §7summons.");
                 lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#64c7e8") + "+30% §7of summoning damage.");
-                lore.add(ChatColor.of("#33cc52") + "→ §7Shift to " + ChatColor.of("#64c7e8") + "summon a golem§7!");
+                lore.add(ChatColor.of("#64c7e8") + "→ §7Shift to summon a " + ChatColor.of("#64c7e8") + "golem§7!");
                 lore.add(ChatColor.of("#ebc247") + "→ 2m Cooldown.");
 
                 if(meta instanceof ArmorMeta armorMeta) {

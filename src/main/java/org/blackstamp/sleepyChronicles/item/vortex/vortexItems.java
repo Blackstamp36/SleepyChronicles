@@ -27,10 +27,10 @@ public class vortexItems {
                  NETHERITE_LEGGINGS, NETHERITE_BOOTS:
                 lore.add("§8§l—");
                 lore.add(ChatColor.of("#4dcbcb") + "Full Set Advantage:");
-                lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+4 §7hearts.");
-                lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+30% §7Projectile damage.");
-                lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "+0.25 §7Movement speed.");
-                lore.add(ChatColor.of("#4dcbcb") + "→ " + ChatColor.of("#4dcbcb") + "50% §7of not consuming ammo.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#4dcbcb") + "+4 §7hearts.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#4dcbcb") + "+30% §7Projectile damage.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#4dcbcb") + "+0.25 §7Movement speed.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#4dcbcb") + "50% §7of not consuming ammo.");
                 lore.add(ChatColor.of("#4dcbcb") + "→ §7Shift to " + ChatColor.of("#4dcbcb") + "double jump§7!");
                 lore.add(ChatColor.of("#ebc247") + "→ 15s Cooldown.");
 
@@ -43,9 +43,12 @@ public class vortexItems {
             
             case BOW:
                 lore.add("§8§l—");
-                lore.add("§6» §7Every " + ChatColor.of("#4dcbcb") + "10" + " §7consecutive hits");
-                lore.add("§7a" + ChatColor.of("#4dcbcb") + " Blackhole§7 is spawned which attracts");
-                lore.add("§7nearby enemies and explodes after " + ChatColor.of("#4dcbcb") + "5s§7.");
+                lore.add("§6» §7After " + ChatColor.of("#4dcbcb") + "10" + " §7consecutive hits");
+                lore.add("§7a" + ChatColor.of("#4dcbcb") + " Blackhole§7 is spawned in the");
+                lore.add("§7damaged mob.");
+                lore.add(ChatColor.of("#33cc52") + "→ " + ChatColor.of("#4dcbcb") + "Shortbow: §7Left click to");
+                lore.add("§7instantly shoot!");
+                lore.add(ChatColor.of("#ebc247") + "→ Vortex Full Set Only!");
                 break;
 
         }

@@ -23,7 +23,9 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import org.blackstamp.sleepyChronicles.item.trinkets.trinketItems;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.bogged.breezeraBoss;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking.bobCreaking;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.blackHole;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.missingId;
@@ -50,6 +52,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -271,6 +274,7 @@ public class globalClass {
         entityRegistry.put("SEEDGHOST", seedGhostSlime.class);
         entityRegistry.put("VOIDBORNSPIDER", voidbornSpider.class);
         entityRegistry.put("MECHANICALEYE", mechanicalEye.class);
+        entityRegistry.put("BREEZERA", breezeraBoss.class);
         entityRegistry.put("PALESOUL", paleSoul.class);
         entityRegistry.put("SCREECH", theScreech.class);
         entityRegistry.put("BLACKHOLE", blackHole.class);
@@ -640,7 +644,7 @@ public class globalClass {
         return playerSummons.get(uuid) >= playerMaxSummons.get(uuid);
     }
 
-    public double getSummonModifier(Player p){
+    public double getSummonDamageModifier(Player p){
         double damage = 1.0;
         trinketItems trinkets = new trinketItems();
         playerData data = getPlayerData(p.getUniqueId());
@@ -652,5 +656,34 @@ public class globalClass {
         if(hasCustomArmor(p, "stardust")) damage += 0.3;
 
         return damage;
+    }
+
+    public void modifyBossHealth(net.minecraft.world.entity.LivingEntity boss){
+        LivingEntity bukkitBoss = boss.getBukkitLivingEntity();
+        Collection<org.bukkit.entity.Player> playersNearby = bukkitBoss.getLocation().getNearbyPlayers(35);
+        Collection<org.bukkit.entity.Player> playersInSurvival = new ArrayList<>();
+
+        for(org.bukkit.entity.Player p : playersNearby){
+            if(p.getGameMode().equals(GameMode.SURVIVAL)) playersInSurvival.add(p);
+        }
+
+        int actualPlayerCount = playersInSurvival.size();
+
+        boss.getAttribute(Attributes.MAX_HEALTH).setBaseValue(boss.getMaxHealth() * actualPlayerCount);
+        boss.setHealth(boss.getMaxHealth());
+    }
+
+    public boolean isCustomItem(ItemStack main, String cmdComponent) {
+        if (main.hasItemMeta()) {
+            ItemMeta mainMeta = main.getItemMeta();
+
+            if (mainMeta.hasCustomModelDataComponent()) {
+                CustomModelDataComponent data = mainMeta.getCustomModelDataComponent();
+
+                return data.getStrings().contains(cmdComponent);
+            }
+        }
+
+        return false;
     }
 }

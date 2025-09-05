@@ -21,13 +21,9 @@ public class onDamageToE implements Listener {
 
         if(entity instanceof Enderman && entity.getScoreboardTags().contains("nightMan")) {
             if(e.getCause().equals(EntityDamageEvent.DamageCause.CUSTOM)){
-                if(entity.isInRain()){
-                    e.setCancelled(true);
-                }
-            } else if(e.getCause().equals(EntityDamageEvent.DamageCause.DROWNING)){
-                e.setCancelled(true);
-            }
+                if(entity.isInRain()) e.setCancelled(true);
 
+            } else if(e.getCause().equals(EntityDamageEvent.DamageCause.DROWNING)) e.setCancelled(true);
         }
     }
 }

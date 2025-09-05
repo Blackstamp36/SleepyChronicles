@@ -22,7 +22,7 @@ public class onDamageToP implements Listener {
         if(entity instanceof Player p) {
             if (damager instanceof Creeper && damager.getScoreboardTags().contains("suppressedCreeper")) {
                 Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 0, true, false));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 0, true, false));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 200, 0, true, false));
                     p.playSound(p.getLocation(), Sound.ITEM_TRIDENT_THUNDER,1,0.5F);
 

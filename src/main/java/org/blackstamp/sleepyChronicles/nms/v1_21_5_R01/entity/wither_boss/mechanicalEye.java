@@ -11,7 +11,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.phantom.seekerPhantom;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.wither_boss.MechanicalEyeLunge;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.wither_boss.mechanicalLungeGoal;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.bukkit.Location;
@@ -42,7 +42,7 @@ public class mechanicalEye extends WitherBoss {
         this.goalSelector.getAvailableGoals().clear();
         this.targetSelector.getAvailableGoals().clear();
 
-        this.goalSelector.addGoal(1, new MechanicalEyeLunge(this, 3.6));
+        this.goalSelector.addGoal(1, new mechanicalLungeGoal(this, 3.6));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomFlyingGoal(this, 1.0));
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));

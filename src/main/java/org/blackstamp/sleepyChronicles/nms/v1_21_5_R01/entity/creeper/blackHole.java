@@ -25,7 +25,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import java.util.UUID;
+
 public class blackHole extends Creeper {
+    private UUID summonerUUID;
     globalClass global = new globalClass();
 
     public blackHole(EntityType<? extends Creeper> type, Level world) {
@@ -41,12 +44,21 @@ public class blackHole extends Creeper {
         initBlackholeTask(this);
     }
 
-    public static void spawnEntity(Location loc, int entities) {
+    public void setSummoner(UUID summonerUUID) {
+        this.summonerUUID = summonerUUID;
+    }
+
+    public UUID getSummoner() {
+        return summonerUUID;
+    }
+
+    public static void spawnEntity(Location loc, int entities, Player summoner){
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++){
             blackHole e = new blackHole(EntityType.CREEPER, nmsLvl);
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
+            e.setSummoner(summoner.getUniqueId());
             nmsLvl.addFreshEntity(e);
 
             }
@@ -75,10 +87,10 @@ public class blackHole extends Creeper {
                     }
 
                     direction.normalize();
-                    direction.multiply(0.9);
+                    direction.multiply(1.25);
 
                     nearbyMonsters.setVelocity(direction);
-                    global.spawnParticles(l, Particle.GLOW_SQUID_INK, null,5);
+                    global.spawnParticles(l, Particle.GLOW_SQUID_INK, null,10);
                 }
 
             }
@@ -86,11 +98,13 @@ public class blackHole extends Creeper {
 
 
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            if(c.isAlive()) {
+            Player summoner = Bukkit.getPlayer(this.getSummoner());
+
+            if(c.isAlive() && summoner != null) {
                 Location l = c.getBukkitEntity().getLocation();
                 ParticleBuilder pBuilder = new ParticleBuilder(Particle.END_ROD);
                 pBuilder.location(c.getBukkitEntity().getLocation())
-                        .count(50)
+                        .count(75)
                         .offset(0.25, 0.25, 0.25)
                         .location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ())
                         .spawn();
@@ -99,7 +113,7 @@ public class blackHole extends Creeper {
 
                 for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(8, 5, 8)) {
                     if (nearbyMonsters instanceof Player || nearbyMonsters.isInvulnerable()) continue;
-                    nearbyMonsters.damage(30);
+                    nearbyMonsters.damage(summoner.getHealth() * 2);
                 }
 
                 c.remove(RemovalReason.KILLED);

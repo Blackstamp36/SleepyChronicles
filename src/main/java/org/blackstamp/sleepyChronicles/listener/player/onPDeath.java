@@ -133,7 +133,7 @@ public class onPDeath implements Listener {
         deathSources.put("STARVATION", "Hunger");
         deathSources.put("KILL", "Suicide");
         deathSources.put("WORLD_BORDER", "Reached the limits.. quite literally");
-        deathSources.put("CUSTOM", "???");
+        deathSources.put("CUSTOM", "Intentional Plugin-Design");
         deathSources.put("NULL", "Unknown");
 
         return deathSources;

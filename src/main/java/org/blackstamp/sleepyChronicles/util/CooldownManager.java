@@ -35,14 +35,14 @@ public class CooldownManager {
         long expirationTime = System.currentTimeMillis() + cooldownTimeMs;
         playerCooldowns.put(cooldownName, expirationTime);
 
-        if (item != null) {
-            p.sendMessage(PREFIX + "§aYou used your " + item.getItemMeta().getDisplayName() + " §atrinket!");
-            p.playSound(p.getLocation(), Sound.ENTITY_SKELETON_HORSE_DEATH, 0.35F, 0.75F);
-            p.playSound(p.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_BREAK, 0.75F, 1.25F);
-            p.playSound(p.getLocation(), Sound.ITEM_TRIDENT_THUNDER, 0.35F, 0.75F);
-            p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH, 0.35F, 0.75F);
-            p.playSound(p.getLocation(), Sound.ITEM_MACE_SMASH_GROUND, 0.35F, 0.75F);
-        }
+        if (item == null) return;
+
+        p.sendMessage(PREFIX + "§aYou used your " + item.getItemMeta().getDisplayName() + "§a!");
+        p.playSound(p.getLocation(), Sound.ENTITY_SKELETON_HORSE_DEATH, 0.35F, 0.75F);
+        p.playSound(p.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_BREAK, 0.75F, 1.25F);
+        p.playSound(p.getLocation(), Sound.ITEM_TRIDENT_THUNDER, 0.35F, 0.75F);
+        p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH, 0.35F, 0.75F);
+        p.playSound(p.getLocation(), Sound.ITEM_MACE_SMASH_GROUND, 0.35F, 0.75F);
     }
 
     public static long getRemainingCooldown(Player p, String cooldownName) {
@@ -68,7 +68,7 @@ public class CooldownManager {
         long remainingMinutes = remainingSeconds / 60;
         long showableSeconds = (remainingMs / 1000) % 60;
 
-        p.sendMessage(PREFIX + "§cYour ability is on cooldown! (" + remainingMinutes + "m " + showableSeconds + "s)");
+        p.sendMessage(PREFIX + "§cYour item is on cooldown! (" + remainingMinutes + "m " + showableSeconds + "s)");
         p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.15F,0.75F);
 
     }
