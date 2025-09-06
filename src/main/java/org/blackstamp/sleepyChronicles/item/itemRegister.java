@@ -194,7 +194,8 @@ public class itemRegister {
 
         ItemStack[] usables = {
                 paleItems.createWoodenTotem(),
-                usableItems.createEyePearl()
+                usableItems.createEyePearl(),
+                usableItems.createSniperRifle()
         };
 
         for (int slot = 0; slot < itemsInv.getSize(); slot++) {

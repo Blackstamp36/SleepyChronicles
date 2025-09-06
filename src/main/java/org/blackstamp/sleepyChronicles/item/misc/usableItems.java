@@ -53,4 +53,23 @@ public class usableItems {
 
         return item;
     }
+
+    public ItemStack createSniperRifle(){
+        ItemStack item = new ItemStack(Material.STICK);
+        ItemMeta meta = item.getItemMeta();
+        CustomModelDataComponent component = meta.getCustomModelDataComponent();
+        component.setStrings(List.of(new String("sniper_rifle")));
+        List<String> lore = new ArrayList<>();
+        lore.add("§8§l—");
+        lore.add("§6» §7Do I need to tell you?");
+        lore.add(ChatColor.of("#ebc247") + "→ 5s Cooldown.");
+        meta.setDisplayName(ChatColor.of("#668154") + "Sniper Rifle");
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.INFINITY,1,false);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setCustomModelDataComponent(component);
+        item.setItemMeta(meta);
+
+        return item;
+    }
 }

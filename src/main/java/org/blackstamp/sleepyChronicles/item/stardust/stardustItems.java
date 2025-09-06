@@ -3,6 +3,7 @@ package org.blackstamp.sleepyChronicles.item.stardust;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,6 +50,7 @@ public class stardustItems {
                 lore.add("§7per each hit.");
                 lore.add(ChatColor.of("#33cc52") + "→ §7Grants " + ChatColor.of("#64c7e8") + "Regeneration I §7to all");
                 lore.add("§7players in 5 blocks.");
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 break;
 
         }

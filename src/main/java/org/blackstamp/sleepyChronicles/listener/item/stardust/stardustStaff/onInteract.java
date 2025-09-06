@@ -41,7 +41,7 @@ public class onInteract implements Listener {
             p.playSound(l, Sound.ENTITY_LIGHTNING_BOLT_IMPACT,0.5F,0.5F);
             p.playSound(l, Sound.BLOCK_BREWING_STAND_BREW,0.85F,1.5F);
             global.spawnParticles(l, Particle.ELECTRIC_SPARK,null,25);
-            CooldownManager.setCooldown(p, "stardust_staff", main, 6 * 1000);
+            CooldownManager.setCooldown(p, "stardust_staff", main, 5 * 1000);
 
         } else CooldownManager.showCooldown(p, "stardust_staff");
 
