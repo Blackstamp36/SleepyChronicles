@@ -24,7 +24,10 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.blackstamp.sleepyChronicles.dimension.AftermathBiomeProvider;
+import org.blackstamp.sleepyChronicles.dimension.AftermathChunkGenerator;
 import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.bogged.breezeraBoss;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking.bobCreaking;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.blackHole;
@@ -61,6 +64,8 @@ import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +74,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.mojang.logging.LogUtils.getLogger;
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.pluginDir;
 
 public class globalClass {
     @Getter
@@ -77,7 +81,6 @@ public class globalClass {
     @Getter
     public static JDA discordBot;
 
-    public HashMap<String, Integer> globalData = new HashMap<>();
     public HashMap<UUID, PickaxeMode> playerPickaxes = new HashMap<>();
     public static HashMap<UUID, Integer> playerSummons = new HashMap<>();
     public static HashMap<UUID, Integer> playerMaxSummons = new HashMap<>();
@@ -177,54 +180,96 @@ public class globalClass {
     }
 
     private File getPlayerFile(UUID uuid) {
-        return new File("plugins/" + sleepyChronicles.getter().getName() + "/" + uuid, uuid + ".json");
+        return new File("plugins/" + sleepyChronicles.getter().getName() + "/" + getPlayersFolder().getName() + "/"+ uuid,
+                uuid + ".json");
+    }
+
+    public File getPlayersFolder() {
+        return new File("plugins/" + sleepyChronicles.getter().getName(), "players");
+    }
+
+    public void createMainFiles() {
+        // This file stores the current day integer value.
+        // This will only be created once. And in a case that the file is lost, it tries to create it again here.
+
+        File mainFile = getMainFile();
+        getPluginDir();
+        getSchematicsFolder();
+        getPlayersFolder();
+
+        if (mainFile.exists()) return;
+
+        try (FileWriter writer = new FileWriter(mainFile)) {
+            Map<String, Integer> daysMap = new HashMap<>();
+            daysMap.put("day", 1);
+
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+
+            gson.toJson(daysMap, writer);
+
+            getLogger().info("Main file created successfully!");
+        } catch (IOException e) {
+            getLogger().warn("Couldn't create Main file: " + e.getMessage());
+        }
+    }
+
+    public File getPluginDir(){
+        File dir = new File("plugins", "sleepyChronicles");
+        if(!dir.exists()) dir.mkdir();
+
+        return dir;
     }
 
     private File getMainFile() {
         return new File("plugins/" + sleepyChronicles.getter().getName(), "mainFile.json");
     }
 
+    public File getSchematicsFolder(){
+        File schematicFolder = new File("plugins/" + sleepyChronicles.getter().getName(), "schematics");
+        if(!schematicFolder.exists()) schematicFolder.mkdir();
+
+        return schematicFolder;
+    }
+
     public int getServerDay() {
         Gson gson = new Gson();
-        File file = new File("plugins/" + sleepyChronicles.getter().getName(), "mainFile.json");
+        File mainFile = getMainFile();
 
-        if (!file.exists()) {
-            System.out.println("File " + file.getName() + " not found! Returning..");
+        if (!mainFile.exists()) {
+            System.out.println("File " + mainFile.getName() + " not found!");
+            return 1;
         }
 
-        try (FileReader fileR = new FileReader(file)) {
+        try (FileReader fileR = new FileReader(mainFile)) {
             Type type = new TypeToken<Map<String, Integer>>() {
             }.getType();
             Map<String, Integer> data = gson.fromJson(fileR, type);
 
-            if (data.get("days") != null) {
-                globalData.put("days", data.get("days"));
-                return globalData.get("days");
+            if (data.get("days") == null) return 1;
 
-            }
+            return data.get("days");
+
         } catch (Exception e) {
-            System.out.println("An exception has ocurred in getTotems! " + e.getMessage());
+            System.out.println("An exception has ocurred in getServerDay! " + e.getMessage());
         }
 
         return 1;
     }
 
     public void setServerDay(int day) {
-        File file = new File("plugins/" + sleepyChronicles.getter().getName(), "mainFile.json");
-        globalData.put("days", day);
+        File file = getMainFile();
+        Map<String, Integer> daysMap = new HashMap<>();
+        daysMap.put("days", day);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        if (!pluginDir.exists()) {
-            pluginDir.mkdir();
-            System.out.println("No dir found for " + sleepyChronicles.getter().getName() + " plugin! Creating new one..");
-        }
-
         try (FileWriter fileW = new FileWriter(file)) {
-            gson.toJson(globalData, fileW);
+            gson.toJson(daysMap, fileW);
 
         } catch (IOException e) {
-            System.out.println("An exception has ocurred in createData! " + e.getMessage());
+            System.out.println("An exception has ocurred in setServerDay! " + e.getMessage());
         }
     }
 
@@ -425,7 +470,7 @@ public class globalClass {
 
     }
 
-    public void removeTotemEffects(Player p) {
+    public void removeTotemInitialEffects(Player p) {
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
             p.removePotionEffect(PotionEffectType.REGENERATION);
             p.removePotionEffect(PotionEffectType.ABSORPTION);
@@ -433,7 +478,7 @@ public class globalClass {
         }, 1);
     }
 
-    public void initializeDiscordBot() {
+    public void initDiscordBot() {
         if (discordBot == null) {
             try {
                 discordBot = JDABuilder.createDefault("MTQwMDkzNzI4NjY2NDg1MTY0MQ.GropTH.WlPKLg5EHI_U7whHMxuBltsab8U2mlpog9oAMc")
@@ -471,7 +516,7 @@ public class globalClass {
         if (guild != null) {
             channel = guild.getTextChannelById(1400936730550599873L);
         } else {
-            System.out.println("No guild found! Returning.. ");
+            System.out.println("No guild found! Returning.. =(");
             return;
         }
 
@@ -673,6 +718,17 @@ public class globalClass {
         boss.setHealth(boss.getMaxHealth());
     }
 
+    public void modifyAllyHealth(allyMob ally){
+        net.minecraft.world.entity.LivingEntity entity = ally.getEntity();
+        Player summoner = Bukkit.getPlayer(ally.getSummonerUUID());
+
+        if(summoner == null) return;
+
+        entity.getAttribute(Attributes.MAX_HEALTH).setBaseValue((int) (entity.getMaxHealth() + summoner.getHealth()));
+        entity.setHealth(entity.getMaxHealth());
+        System.out.println("Health set to: " + entity.getMaxHealth());
+    }
+
     public boolean isCustomItem(ItemStack main, String cmdComponent) {
         if (main.hasItemMeta()) {
             ItemMeta mainMeta = main.getItemMeta();
@@ -685,5 +741,67 @@ public class globalClass {
         }
 
         return false;
+    }
+
+    public void initChangeDayTask() {
+        Bukkit.getScheduler().runTaskTimer(sleepyChronicles.getter(), () -> {
+            setServerDay(getServerDay() + 1);
+            Bukkit.getOnlinePlayers().forEach(all -> {
+                all.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0, false, false, false));
+                all.sendTitle("§7§k|§r §5Day passed! §7§k|", "§7Day §c" + (getServerDay() - 1) + " §6→→ " + "§7Day §c" + getServerDay() + "§7!");
+                all.playSound(all, Sound.ENTITY_RAVAGER_DEATH, 1, 0.5F);
+            });
+
+        }, 1728000, 1728000); //1728000 ticks = 1 IRL day
+    }
+
+    public void registerPlayerTeams() {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+
+        record TeamConfig(String name, String prefix, ChatColor color) {
+        }
+
+        TeamConfig[] teams = {
+                new TeamConfig("admin", "§f\uE000 §8| §e", ChatColor.YELLOW),
+                new TeamConfig("staff", "§f\uE001 §8| §9", ChatColor.BLUE),
+                new TeamConfig("player", "§f\uE002 §8| §2", ChatColor.DARK_GREEN),
+                new TeamConfig("dead", "§f\uE003 §8| §7", ChatColor.GRAY)
+        };
+
+        for (TeamConfig config : teams) {
+            if (scoreboard.getTeam(config.name) == null) {
+                System.out.println("No " + config.name + " team detected! Creating new one..");
+                Team team = scoreboard.registerNewTeam(config.name);
+                team.addEntry(config.name);
+                team.setPrefix(config.prefix);
+                team.setColor(config.color);
+
+            }
+
+        }
+
+    }
+
+    public void createAftermathDimension() {
+        WorldCreator worldCreator = WorldCreator.name("world_aftermath")
+                .environment(World.Environment.NORMAL)
+                .type(WorldType.NORMAL)
+                .biomeProvider(new AftermathBiomeProvider())
+                .generator(new AftermathChunkGenerator());
+
+        World world = worldCreator.createWorld();
+        if (world != null) {
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            world.setTime(13000);
+            world.setStorm(false);
+            world.setThundering(false);
+
+            WorldBorder border = world.getWorldBorder();
+            border.setCenter(0.0, 0.0);
+            border.setSize(10000.0);
+        }
     }
 }

@@ -20,6 +20,8 @@ import java.util.UUID;
 
 @Registrable
 public class solarSword implements Listener {
+    int initialValue = 0;
+    int hitsNeeded = 10;
     globalClass global = new globalClass();
     public HashMap<UUID, Integer> solarCounter = new HashMap<>();
 
@@ -39,16 +41,16 @@ public class solarSword implements Listener {
 
         if(!isSolarSword(main)) return;
 
-        solarCounter.putIfAbsent(p.getUniqueId(), 0);
+        solarCounter.putIfAbsent(p.getUniqueId(), initialValue);
+        solarCounter.put(uuid, solarCounter.get(uuid) + 1);
 
-        int hitsNeeded = 10; // Number of hits needed to explode.
-        if (solarCounter.get(uuid) <= (hitsNeeded - 1)) {
+        // Number of hits needed to explode.
+        if (solarCounter.get(uuid) < hitsNeeded) {
             p.sendActionBar(ChatColor.of("#cc9933") + solarCounter.get(uuid).toString());
-            solarCounter.put(uuid, solarCounter.get(uuid) + 1);
             p.playSound(p, Sound.BLOCK_TRIAL_SPAWNER_EJECT_ITEM, 0.5F, 0.25F);
 
         } else if (solarCounter.get(uuid) >= hitsNeeded) {
-            solarCounter.put(uuid, 0);
+            solarCounter.put(uuid, initialValue);
             doSolarExplosion(p, l);
 
         }

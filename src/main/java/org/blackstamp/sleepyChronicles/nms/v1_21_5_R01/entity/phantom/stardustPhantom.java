@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.ally.copyOwnerTarget;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -20,14 +22,14 @@ import org.bukkit.craftbukkit.util.CraftChatMessage;
 import java.util.UUID;
 
 import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 public class stardustPhantom extends Phantom implements allyMob {
     @Setter
     @Getter
     private UUID summonerUUID;
-    int damage = 15;
-    int maxHealth = 60;
+    int damage = 20;
+    int maxHealth = 30;
     float flyingSpeed = 2.75F * 3;
     double mobScale = 1.75D;
 
@@ -48,11 +50,16 @@ public class stardustPhantom extends Phantom implements allyMob {
 
         this.targetSelector.getAvailableGoals().clear();
 
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Monster.class, true));
+        this.targetSelector.addGoal(1, new copyOwnerTarget(this, 1.0, true, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true));
     }
 
     public boolean isAllyMob(){
         return true;
+    }
+
+    public Mob getEntity(){
+        return this;
     }
 
     public static void spawnEntity(Location loc, int entities, org.bukkit.entity.Player summoner) {
@@ -67,7 +74,7 @@ public class stardustPhantom extends Phantom implements allyMob {
             int currentSummons = playerSummons.getOrDefault(uuid,0);
 
             if(global.hasMaxSummons(summoner)){
-                summoner.sendMessage(PREFIX + "§cYou've reached your max summons! (" + playerSummons.get(uuid) + ")");
+                summoner.sendMessage(chatPrefix + "§cYou've reached your max summons! (" + playerSummons.get(uuid) + ")");
                 summoner.playSound(summoner.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.5F,0.5F);
                 return;
             }

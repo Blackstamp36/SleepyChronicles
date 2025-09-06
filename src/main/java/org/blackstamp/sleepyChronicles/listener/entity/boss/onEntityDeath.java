@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 @Registrable
 public class onEntityDeath implements Listener {
@@ -30,7 +30,7 @@ public class onEntityDeath implements Listener {
             }
 
             for(Player all : Bukkit.getOnlinePlayers()){
-                all.sendMessage(PREFIX + entity.getName() + ChatColor.of("#9c48dc") + " has been defeated!");
+                all.sendMessage(chatPrefix + entity.getName() + ChatColor.of("#9c48dc") + " has been defeated!");
                 all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F,1.5F);
                 global.spawnParticles(l, Particle.BLOCK, Material.REDSTONE_BLOCK, 50);
                 global.spawnParticles(l, Particle.HAPPY_VILLAGER, null, 25);

@@ -41,8 +41,14 @@ public class stardustItems {
 
             case STICK:
                 lore.add("§8§l—");
-                lore.add("§6» §7Spawns a" + ChatColor.of("#64c7e8") + " Stardust Phantom§7.");
-                lore.add(ChatColor.of("#ebc247") + "→ Only 1 at the time.");
+                lore.add("§6» §7Spawns a" + ChatColor.of("#64c7e8") + " Stardust Mob§7.");
+                lore.add(ChatColor.of("#ebc247") + "→ Will die if not in line of sight");
+                lore.add(ChatColor.of("#ebc247") + "or is too far from its summoner.");
+                lore.add(ChatColor.of("#64c7e8") + "The staff can also be used as a weapon!");
+                lore.add(ChatColor.of("#33cc52") + "→ §7Inflicts " + ChatColor.of("#64c7e8") + "Weakness I §7and " + ChatColor.of("#64c7e8") +  "Slowness II");
+                lore.add("§7per each hit.");
+                lore.add(ChatColor.of("#33cc52") + "→ §7Grants " + ChatColor.of("#64c7e8") + "Regeneration I §7to all");
+                lore.add("§7players in 5 blocks.");
                 break;
 
         }

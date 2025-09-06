@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 
 import java.util.Random;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.serverDay;
 
 @Registrable
@@ -36,7 +36,7 @@ public class onSleep implements Listener {
 
                 if(serverDay >= 6) chance = 30;
 
-                p.sendMessage(PREFIX + "§cAttempting to sleep.. §7(Chance: " + chance + "<=30)");
+                p.sendMessage(chatPrefix + "§cAttempting to sleep.. §7(Chance: " + chance + "<=30)");
                 p.playSound(p.getLocation(), Sound.ENTITY_ALLAY_ITEM_TAKEN, 1, 0.5F);
                 if (chance <= 30) {
                     p.playSound(p.getLocation(), Sound.ENTITY_ALLAY_DEATH, 1, 0.5F);
@@ -44,7 +44,7 @@ public class onSleep implements Listener {
                     e.setCancelled(true);
                 }
             } else {
-                p.sendMessage(PREFIX +  "§cYou can't sleep yet!");
+                p.sendMessage(chatPrefix +  "§cYou can't sleep yet!");
                 p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0.5F);
             }
         }

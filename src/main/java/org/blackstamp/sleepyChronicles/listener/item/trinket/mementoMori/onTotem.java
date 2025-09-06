@@ -44,7 +44,7 @@ public class onTotem implements Listener {
                 } else {
                     p.sendActionBar("§c50/50");
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,1,0.25F);
-                    global.removeTotemEffects(p);
+                    global.removeTotemInitialEffects(p);
 
                 }
 

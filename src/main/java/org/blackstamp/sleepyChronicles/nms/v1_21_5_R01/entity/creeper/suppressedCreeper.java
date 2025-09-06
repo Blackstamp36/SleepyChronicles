@@ -16,8 +16,8 @@ public class suppressedCreeper extends Creeper {
         super(type, world);
 
         this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#567f86") + "Suppressed"));
-        this.explosionRadius = 5;
-        this.maxSwell = 7;
+        this.explosionRadius = 4;
+        this.maxSwell = 10;
         this.addTag("suppressedCreeper");
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(25);

@@ -19,8 +19,13 @@ import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
 public class onEntityDespawn implements Listener {
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        handleSummonRemoval(event.getEntity());
+    public void onEntityDeath(EntityDeathEvent e) {
+        handleSummonRemoval(e.getEntity());
+
+        if(e.getEntity().getScoreboardTags().contains("allyMob")) {
+            e.getDrops().clear();
+            e.setDroppedExp(0);
+        }
     }
 
     @EventHandler

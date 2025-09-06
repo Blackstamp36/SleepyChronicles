@@ -1,6 +1,8 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper;
 
 import com.destroystokyo.paper.ParticleBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +30,8 @@ import org.bukkit.util.Vector;
 import java.util.UUID;
 
 public class blackHole extends Creeper {
+    @Setter
+    @Getter
     private UUID summonerUUID;
     globalClass global = new globalClass();
 
@@ -44,21 +48,13 @@ public class blackHole extends Creeper {
         initBlackholeTask(this);
     }
 
-    public void setSummoner(UUID summonerUUID) {
-        this.summonerUUID = summonerUUID;
-    }
-
-    public UUID getSummoner() {
-        return summonerUUID;
-    }
-
     public static void spawnEntity(Location loc, int entities, Player summoner){
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++){
             blackHole e = new blackHole(EntityType.CREEPER, nmsLvl);
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
-            e.setSummoner(summoner.getUniqueId());
+            e.setSummonerUUID(summoner.getUniqueId());
             nmsLvl.addFreshEntity(e);
 
             }
@@ -98,7 +94,7 @@ public class blackHole extends Creeper {
 
 
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            Player summoner = Bukkit.getPlayer(this.getSummoner());
+            Player summoner = Bukkit.getPlayer(this.getSummonerUUID());
 
             if(c.isAlive() && summoner != null) {
                 Location l = c.getBukkitEntity().getLocation();

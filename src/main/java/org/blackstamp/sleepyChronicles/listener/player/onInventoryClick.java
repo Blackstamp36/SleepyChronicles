@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 @Registrable
 public class onInventoryClick implements Listener {
@@ -57,7 +57,7 @@ public class onInventoryClick implements Listener {
                 } else if(!clickedInv.equals(pInv)){
                     e.setCancelled(true);
                     pInv.addItem(clickedItem);
-                    p.sendMessage(PREFIX + "§aReceiving item..");
+                    p.sendMessage(chatPrefix + "§aReceiving item..");
                     p.playSound(p.getLocation(), Sound.BLOCK_SHULKER_BOX_OPEN, 0.5F, 1.5F);
 
                     }

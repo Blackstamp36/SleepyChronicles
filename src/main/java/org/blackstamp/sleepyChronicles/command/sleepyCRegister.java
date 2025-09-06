@@ -24,20 +24,20 @@ public class sleepyCRegister implements CommandExecutor {
         if (sender != null && args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "day":
-                    p.sendMessage(PREFIX + "§7Currently, we're on day §c" + global.getServerDay() + "§7!");
+                    p.sendMessage(chatPrefix + "§7Currently, we're on day §c" + global.getServerDay() + "§7!");
                     p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
                     break;
 
                 case "totem", "totems", "gettotems":
                     int totems = global.getTotems(uuid);
-                    p.sendMessage(PREFIX + "§7By the moment, you've consumed §6" + totems + " §7totems!");
+                    p.sendMessage(chatPrefix + "§7By the moment, you've consumed §6" + totems + " §7totems!");
                     break;
 
                 case "trinkets":
                     playerData data = global.getPlayerData(uuid);
                     Inventory perksInv = data.getTrinketsAsInventory(p);
                     p.openInventory(perksInv);
-                    p.sendMessage(PREFIX + "§7Viewing trinkets..");
+                    p.sendMessage(chatPrefix + "§7Viewing trinkets..");
                     p.playSound(p, Sound.BLOCK_ENDER_CHEST_OPEN, 1, 0.5F);
                     break;
             }

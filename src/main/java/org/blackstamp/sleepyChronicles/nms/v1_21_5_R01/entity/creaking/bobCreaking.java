@@ -9,6 +9,8 @@ import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class bobCreaking extends Creaking {
 
@@ -22,6 +24,7 @@ public class bobCreaking extends Creaking {
         this.getAttribute(Attributes.SCALE).setBaseValue(1.3);
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1);
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
+        this.getBukkitLivingEntity().addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,-1,0));
         this.setHealth(1);
 
     }

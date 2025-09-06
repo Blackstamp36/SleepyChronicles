@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.serverDay;
 
 @Registrable
@@ -178,7 +178,7 @@ public class onWeather implements Listener {
 
     public void endStormNormally() {
         Bukkit.getOnlinePlayers().forEach(all -> {
-            all.sendMessage(PREFIX + "§6The storm has ended!");
+            all.sendMessage(chatPrefix + "§6The storm has ended!");
             all.playSound(all.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH,1,1.25F);
             all.getWorld().setStorm(false);
         });

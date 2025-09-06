@@ -15,7 +15,7 @@ import org.bukkit.inventory.Inventory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 public class staffCRegister implements CommandExecutor {
     static itemRegister iR = new itemRegister();
@@ -35,22 +35,22 @@ public class staffCRegister implements CommandExecutor {
                         if (args.length > 1) {
                             try {
                                 global.setServerDay(Integer.parseInt(args[1]));
-                                p.sendMessage(PREFIX + "§7The day was set to §c" + global.getServerDay() + "§7!");
+                                p.sendMessage(chatPrefix + "§7The day was set to §c" + global.getServerDay() + "§7!");
                                 p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
                             } catch (NumberFormatException e) {
-                                p.sendMessage(PREFIX + "§cPlease provide a VALID number to change the day!");
+                                p.sendMessage(chatPrefix + "§cPlease provide a VALID number to change the day!");
                                 p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                                 return false;
                             }
 
                         } else {
-                            p.sendMessage(PREFIX + "§7Enter the day that you want to set!");
+                            p.sendMessage(chatPrefix + "§7Enter the day that you want to set!");
                             p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                         }
                         break;
 
                     case "items":
-                        p.sendMessage(PREFIX + "§eOpening items menu!");
+                        p.sendMessage(chatPrefix + "§eOpening items menu!");
                         p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1.25F);
                         p.openInventory(itemsPageOne);
                         break;
@@ -58,12 +58,12 @@ public class staffCRegister implements CommandExecutor {
                     case "broadcast":
                         if (args.length > 1) {
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                all.sendMessage(PREFIX + "§7" + args[1]);
+                                all.sendMessage(chatPrefix + "§7" + args[1]);
                                 all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
                                 all.playSound(all.getLocation(), Sound.BLOCK_BELL_USE, 0.85F, 1.25F);
                             }
                         } else {
-                            p.sendMessage(PREFIX + "§7Command: §e/staff broadcast <message>");
+                            p.sendMessage(chatPrefix + "§7Command: §e/staff broadcast <message>");
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
                         }
                         break;
@@ -73,20 +73,20 @@ public class staffCRegister implements CommandExecutor {
                             if (global.getServerWorlds().containsKey(args[1].toUpperCase())) {
                                 p.teleport(global.getServerWorlds().get(args[1]));
                             }
-                            p.sendMessage(PREFIX + "§7Teleporting to: §e" + args[1]);
+                            p.sendMessage(chatPrefix + "§7Teleporting to: §e" + args[1]);
                         }
                         break;
 
                     case "summon":
                         if (args.length < 2) {
-                            p.sendMessage(PREFIX + "§cNo entity provided.");
+                            p.sendMessage(chatPrefix + "§cNo entity provided.");
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                             return false;
                         }
 
                         String entityName = args[1].toUpperCase();
                         if (!global.getCustomEntities().containsKey(entityName)) {
-                            p.sendMessage(PREFIX + "§cNo entity found. Case: §7" + entityName);
+                            p.sendMessage(chatPrefix + "§cNo entity found. Case: §7" + entityName);
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                             return false;
                         }
@@ -96,12 +96,12 @@ public class staffCRegister implements CommandExecutor {
                             try {
                                 summons = Integer.parseInt(args[2]);
                                 if (summons <= 0) {
-                                    p.sendMessage(PREFIX + "§cSummon count must be positive.");
+                                    p.sendMessage(chatPrefix + "§cSummon count must be positive.");
                                     p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                                     return false;
                                 }
                             } catch (NumberFormatException e) {
-                                p.sendMessage(PREFIX + "§cInvalid number format: §7" + args[2]);
+                                p.sendMessage(chatPrefix + "§cInvalid number format: §7" + args[2]);
                                 p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                                 return false;
                             }
@@ -109,7 +109,7 @@ public class staffCRegister implements CommandExecutor {
 
                         try {
                             Class<?> entityClass = global.getCustomEntities().get(entityName);
-                            p.sendMessage(PREFIX + "§7Summoned " + summons + "x §c" + entityName + "§7!");
+                            p.sendMessage(chatPrefix + "§7Summoned " + summons + "x §c" + entityName + "§7!");
 
                             java.lang.reflect.Method method;
                             try {
@@ -123,11 +123,11 @@ public class staffCRegister implements CommandExecutor {
                             p.playSound(p.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
 
                         } catch (NoSuchMethodException | IllegalAccessException e) {
-                            p.sendMessage(PREFIX + "§cFailed to find spawn method for: §7" + entityName);
+                            p.sendMessage(chatPrefix + "§cFailed to find spawn method for: §7" + entityName);
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                             e.printStackTrace();
                         } catch (InvocationTargetException e) {
-                            p.sendMessage(PREFIX + "§cError while summoning entity: §7" + e.getCause().getMessage());
+                            p.sendMessage(chatPrefix + "§cError while summoning entity: §7" + e.getCause().getMessage());
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                             e.printStackTrace();
                         }
@@ -138,15 +138,15 @@ public class staffCRegister implements CommandExecutor {
                             String schematic = args[1];
                             if (global.doesSchemExist(schematic)) {
                                 global.pasteSchematic(p.getLocation(), schematic + ".schem");
-                                p.sendMessage(PREFIX + "§7Placing a §e" + args[1] + "§7!");
+                                p.sendMessage(chatPrefix + "§7Placing a §e" + args[1] + "§7!");
                                 p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
                             } else {
-                                p.sendMessage(PREFIX + "§cDeclared schematic doesn't exist!");
+                                p.sendMessage(chatPrefix + "§cDeclared schematic doesn't exist!");
                                 p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
 
                             }
                         } else {
-                            p.sendMessage(PREFIX + "§cNo schem provided.");
+                            p.sendMessage(chatPrefix + "§cNo schem provided.");
                             p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                         }
                         break;
@@ -155,16 +155,16 @@ public class staffCRegister implements CommandExecutor {
                         if (args.length > 1) {
                             try {
                                 global.setTotems(uuid, Integer.parseInt(args[1]));
-                                p.sendMessage(PREFIX + "§7Totems set to §c" + args[1] + "§7!");
+                                p.sendMessage(chatPrefix + "§7Totems set to §c" + args[1] + "§7!");
                                 p.playSound(p, Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
                             } catch (NumberFormatException e) {
-                                p.sendMessage(PREFIX + "§cPlease provide a VALID number to change the number of totems consumpt!");
+                                p.sendMessage(chatPrefix + "§cPlease provide a VALID number to change the number of totems consumpt!");
                                 p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                                 return false;
                             }
 
                         } else {
-                            p.sendMessage(PREFIX + "§7Enter the totems you want to set!");
+                            p.sendMessage(chatPrefix + "§7Enter the totems you want to set!");
                             p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                         }
                         break;
@@ -181,7 +181,7 @@ public class staffCRegister implements CommandExecutor {
                                 if (onWeather.isStormActive) {
                                     weather.endStormNormally();
                                 } else {
-                                    p.sendMessage(PREFIX + "§cThere's no such storm active!");
+                                    p.sendMessage(chatPrefix + "§cThere's no such storm active!");
                                     p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
                                 }
 
@@ -192,7 +192,7 @@ public class staffCRegister implements CommandExecutor {
             }
 
         } else {
-            p.sendMessage(PREFIX + "§cYou don't have the permissions to execute this command!");
+            p.sendMessage(chatPrefix + "§cYou don't have the permissions to execute this command!");
             p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
         }
 

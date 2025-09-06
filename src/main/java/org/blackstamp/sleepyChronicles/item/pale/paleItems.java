@@ -32,7 +32,9 @@ public class paleItems {
                 lore.add("§8§l—");
                 lore.add("§6» " + ChatColor.of("#bc5c0f") + "Right click §7+" + ChatColor.of("#bc5c0f") + " shift");
                 lore.add("§7to switch between modes!");
+                break;
 
+            case NETHERITE_SWORD:
                 NamespacedKey paleSpeedKey = new NamespacedKey(sleepyChronicles.getter(), "pale_speed");
                 AttributeModifier speedModifier = new AttributeModifier(
                         paleSpeedKey,
@@ -42,13 +44,14 @@ public class paleItems {
                 );
 
                 meta.addAttributeModifier(Attribute.ATTACK_SPEED, speedModifier);
-                break;
 
-            case NETHERITE_SWORD:
                 lore.add("§8§l— §f" + ChatColor.of("#33cc52") + "[♣]");
                 lore.add("§6»" + ChatColor.of("#bc5c0f") + " 0.5% §7chance of spawning a");
                 lore.add(ChatColor.of("#cfc4c3") + "Pale Soul §7when killing a monster.");
-                lore.add(ChatColor.of("#33cc52") + "→ §eGrows up to a" + ChatColor.of("#bc5c0f") + " 5% §ewhen on a " + ChatColor.of("#cfc4c3") + "Pale Garden§e.");
+                lore.add(ChatColor.of("#cfc4c3") + "→ §7If on a Pale Garden: " + ChatColor.of("#bc5c0f") + "5%§7.");
+                lore.add(ChatColor.of("#cfc4c3") + "→ §7After " + ChatColor.of("#cfc4c3") + "10 §7consecutive hits");
+                lore.add("§7a " + ChatColor.of("#cfc4c3") + "Storm of Knives §7is spawned.");
+                lore.add(ChatColor.of("#bc5c0f") + "(DAMAGE: Current health * 0.75)");
                 break;
 
             case NETHERITE_AXE:

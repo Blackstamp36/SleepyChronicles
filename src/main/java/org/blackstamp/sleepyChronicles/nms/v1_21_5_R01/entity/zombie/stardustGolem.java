@@ -1,7 +1,10 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -11,6 +14,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
 import org.bukkit.Bukkit;
@@ -19,8 +23,12 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 
-public class stardustGolem extends Zombie {
-    private static final trinketItems trinkets = new trinketItems();
+import java.util.UUID;
+
+public class stardustGolem extends Zombie implements allyMob {
+    @Getter
+    @Setter
+    private UUID summonerUUID;
 
     public stardustGolem(EntityType<? extends Zombie> type, Level world) {
         super(type, world);
@@ -50,9 +58,9 @@ public class stardustGolem extends Zombie {
         initTimer(this);
     }
 
-    private void initTimer(Zombie z){
+    private void initTimer(Zombie z) {
         Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            if(z.isAlive()) z.kill((ServerLevel) z.level());
+            if (z.isAlive()) z.kill((ServerLevel) z.level());
         }, 15 * 20); // 15s Alive.
     }
 
@@ -65,11 +73,21 @@ public class stardustGolem extends Zombie {
 
             double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
             e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonDamageModifier(summoner));
+            e.setSummonerUUID(summoner.getUniqueId());
 
             e.setPos(loc.getX(), loc.getY(), loc.getZ());
             nmsLvl.addFreshEntity(e);
         }
     }
 
+    @Override
+    public boolean isAllyMob() {
+        return false;
+    }
+
+    @Override
+    public Mob getEntity() {
+        return null;
+    }
 }
 

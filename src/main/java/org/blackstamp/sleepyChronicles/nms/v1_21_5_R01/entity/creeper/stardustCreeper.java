@@ -1,87 +1,71 @@
-package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie;
+package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
-import org.blackstamp.sleepyChronicles.sleepyChronicles;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.ally.copyOwnerTarget;
 import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
-public class paleSoul extends Zombie implements allyMob {
-    @Getter
+public class stardustCreeper extends Creeper implements allyMob {
     @Setter
+    @Getter
     private UUID summonerUUID;
-    private static final trinketItems trinkets = new trinketItems();
+    int maxHealth = 20;
+    float movSpeed = 0.4F;
+    double mobScale = 0.85D;
 
-    public paleSoul(EntityType<? extends Zombie> type, Level world) {
+    public stardustCreeper(EntityType<? extends Creeper> type, Level world) {
         super(type, world);
-
-        this.setShouldBurnInDay(false);
-        this.setSilent(true);
-
-        this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#cfc4c3") + "Pale Soul"));
-        this.addTag("paleSoul");
+        this.explosionRadius = 6;
+        this.maxSwell = 7;
+        this.addTag("stardustCreeper");
         this.addTag("allyMob");
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(12);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.325);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(10);
-        this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5);
-        this.setHealth(10);
-
-        this.goalSelector.getAvailableGoals().clear();
-
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
+        this.setCustomName(CraftChatMessage.fromStringOrNull(ChatColor.of("#64c7e8") + "Stardust Creeper"));
+        this.getAttribute(Attributes.SCALE).setBaseValue(mobScale);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(movSpeed);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHealth);
+        this.setHealth(this.getMaxHealth());
+        this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(20);
+        this.setSilent(true);
 
         this.targetSelector.getAvailableGoals().clear();
 
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Monster.class, 10, true, false, null));
-
-        initTimer(this);
+        this.targetSelector.addGoal(1, new copyOwnerTarget(this, 1.0, true, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true));
     }
 
     public boolean isAllyMob(){
         return true;
     }
 
-    public PathfinderMob getEntity(){
+    public Mob getEntity(){
         return this;
     }
 
-    private void initTimer(Zombie z){
-        Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            if(z.isAlive()) z.kill((ServerLevel) z.level());
-        }, 200);
-    }
-
-    public static void spawnEntity(Location loc, int entities, Player summoner) {
+    public static void spawnEntity(Location loc, int entities, org.bukkit.entity.Player summoner) {
         UUID uuid = summoner.getUniqueId();
         ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
 
         for (int i = 0; i < entities; i++) {
-            paleSoul e = new paleSoul(EntityType.ZOMBIE, nmsLvl);
+            stardustCreeper e = new stardustCreeper(EntityType.CREEPER, nmsLvl);
             e.setSummonerUUID(uuid);
             globalClass global = new globalClass();
             playerSummons.putIfAbsent(uuid, 0);
@@ -89,7 +73,7 @@ public class paleSoul extends Zombie implements allyMob {
 
             if(global.hasMaxSummons(summoner)){
                 summoner.sendMessage(chatPrefix + "§cYou've reached your max summons! (" + playerSummons.get(uuid) + ")");
-                summoner.playSound(summoner.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,0.5F,0.5F);
+                summoner.playSound(summoner.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.5F,0.5F);
                 return;
             }
 
@@ -104,4 +88,5 @@ public class paleSoul extends Zombie implements allyMob {
     }
 
 }
+
 

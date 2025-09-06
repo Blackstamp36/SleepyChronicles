@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 @Registrable
 public class onTotem implements Listener {
@@ -88,12 +88,12 @@ public class onTotem implements Listener {
                 } else if (currentTotems > 7) {
                     int randomTotems = r.nextInt(1, 4);
                     totemDebuff(p, randomTotems, e);
-                    global.removeTotemEffects(p);
+                    global.removeTotemInitialEffects(p);
                     Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () ->
                             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 600,2)), 1);
 
                 } else if (currentTotems >= 30) {
-                    p.sendMessage(PREFIX + "§cYour totem broke!");
+                    p.sendMessage(chatPrefix + "§cYour totem broke!");
                     e.setCancelled(true);
                 }
 
@@ -112,9 +112,9 @@ public class onTotem implements Listener {
                     inv.removeItem(totem);
                 }
 
-                p.sendMessage(PREFIX + "§cYou've consumpt §f" + totemsToRemove + "§c EXTRA totems as a debuff!");
+                p.sendMessage(chatPrefix + "§cYou've consumpt §f" + totemsToRemove + "§c EXTRA totems as a debuff!");
             } else {
-                p.sendMessage(PREFIX + "§cYou didn't had the required totems in your inventory! As consequence you died.");
+                p.sendMessage(chatPrefix + "§cYou didn't had the required totems in your inventory! As consequence you died.");
                 e.setCancelled(true);
                 return;
             }
@@ -141,7 +141,7 @@ public class onTotem implements Listener {
             }
 
             Bukkit.getOnlinePlayers().forEach(all -> all.sendMessage(
-                    PREFIX + "§f" + p.getName() + " has consumpt a §ctotem of undying§f! \n" +
+                    chatPrefix + "§f" + p.getName() + " has consumpt a §ctotem of undying§f! \n" +
                             "§8(" + "Nª" + global.getTotems(uuid) + ". Cause: §7" + finalCause + "§8)"));
 
             global.showTotemUse(p, global.getTotems(p.getUniqueId()), "Totem of Undying", finalCause);
@@ -170,7 +170,7 @@ public class onTotem implements Listener {
 
             Bukkit.getOnlinePlayers().forEach(all -> {
                 all.sendMessage(
-                        PREFIX + "§f" + p.getName() + " has consumpt a " + ChatColor.of("#8e5f25") + "Wooden Totem§f! \n" +
+                        chatPrefix + "§f" + p.getName() + " has consumpt a " + ChatColor.of("#8e5f25") + "Wooden Totem§f! \n" +
                                 "§8(Cause: §7" + finalCause + "§8)");
                 all.playSound(all.getLocation(), Sound.ENTITY_WITHER_HURT, 0.2F, 0F);
             });

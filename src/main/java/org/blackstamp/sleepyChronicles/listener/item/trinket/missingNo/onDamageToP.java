@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.Random;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 @Registrable
 public class onDamageToP implements Listener {
@@ -34,10 +34,10 @@ public class onDamageToP implements Listener {
                 e.setCancelled(true);
                 perksInv.removeItem(trinkets.createMissingNo());
                 global.updateTrinkets(p.getUniqueId(), perksInv);
-                p.sendMessage(PREFIX + "§cYour " + trinkets.createMissingNo().getItemMeta().getDisplayName() + " §cbroke!");
+                p.sendMessage(chatPrefix + "§cYour " + trinkets.createMissingNo().getItemMeta().getDisplayName() + " §cbroke!");
                 p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1,0.75F);
             } else if(perksInv.contains(trinkets.createNullPointerException()) && r.nextInt(100) <= 4){
-                p.sendMessage(PREFIX + "§aYour " + trinkets.createNullPointerException().getItemMeta().getDisplayName() + " §asaved you!");
+                p.sendMessage(chatPrefix + "§aYour " + trinkets.createNullPointerException().getItemMeta().getDisplayName() + " §asaved you!");
                 e.setCancelled(true);
             }
 

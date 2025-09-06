@@ -18,12 +18,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 @Registrable
 public class onPDeath implements Listener {
@@ -87,7 +86,7 @@ public class onPDeath implements Listener {
         p.setGameMode(GameMode.SPECTATOR);
         p.getWorld().setStorm(false);
         scoreboard.getTeam("dead").addPlayer(p);
-        e.setDeathMessage(PREFIX + "§c" + p.getName() + " has died! Reason: " + finalCause + "\n" +
+        e.setDeathMessage(chatPrefix + "§c" + p.getName() + " has died! \nCause of death: " + finalCause + "\n" +
                 "§8| §7X: " + (int) dL.getX() + ", §7Y: " + (int) dL.getY() + ", §7Z: " + (int) dL.getZ() + "; §7(" + deathInWorld + "§7)" + "\n" +
                 "§8" + p.getName() + ", " + deathMessage + ".");
 

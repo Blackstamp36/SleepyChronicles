@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
+import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 @Registrable
 public class onInventoryClose implements Listener {
@@ -27,7 +27,7 @@ public class onInventoryClose implements Listener {
             UUID uuid = p.getUniqueId();
             global.updateTrinkets(uuid, closedInventory);
 
-            p.sendMessage(PREFIX + "§aTrinkets saved!");
+            p.sendMessage(chatPrefix + "§aTrinkets saved!");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, 2F);
             p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.75F, 1.25F);
         }

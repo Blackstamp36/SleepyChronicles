@@ -61,10 +61,10 @@ public class itemRegister {
         ItemStack[] paleTools = {
                 paleItems.createPaleTool(
                         Material.NETHERITE_SWORD,
-                        "Pale Sword",
+                        "Pale Dagger",
                         Enchantment.SHARPNESS,
                         5,
-                        "pale_sword"),
+                        "pale_dagger"),
 
                 paleItems.createPaleTool(
                         Material.NETHERITE_PICKAXE,
@@ -153,8 +153,8 @@ public class itemRegister {
         ItemStack[] stardustTools = {
                 stardustItems.createStardustTool(Material.STICK,
                         "Stardust Staff",
-                        Enchantment.POWER,
-                        5,
+                        Enchantment.INFINITY,
+                        1,
                         "stardust_staff"),
 
                 stardustItems.createStardustTool(Material.NETHERITE_HELMET,

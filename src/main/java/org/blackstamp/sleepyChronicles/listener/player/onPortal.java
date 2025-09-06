@@ -10,9 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-import java.util.HashMap;
-
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.serverDay;
 
 @Registrable

@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.blackstamp.sleepyChronicles.globalClass.PickaxeMode.FORTUNE;
 import static org.blackstamp.sleepyChronicles.globalClass.PickaxeMode.SILK;
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.PREFIX;
 
 @Registrable
 public class onInteract implements Listener {
