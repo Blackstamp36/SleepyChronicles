@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.creaking.bobCreaking;
 
 import org.blackstamp.sleepyChronicles.item.drop.creakingDrops;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.Creaking;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;

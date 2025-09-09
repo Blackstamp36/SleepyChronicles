@@ -1,13 +1,12 @@
 package org.blackstamp.sleepyChronicles.listener.item;
 
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 @Registrable

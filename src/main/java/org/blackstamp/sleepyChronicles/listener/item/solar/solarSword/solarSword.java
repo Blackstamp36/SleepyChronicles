@@ -1,8 +1,8 @@
 package org.blackstamp.sleepyChronicles.listener.item.solar.solarSword;
 
-import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.manager.ParticleManager;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -22,7 +22,6 @@ import java.util.UUID;
 public class solarSword implements Listener {
     int initialValue = 0;
     int hitsNeeded = 10;
-    globalClass global = new globalClass();
     public HashMap<UUID, Integer> solarCounter = new HashMap<>();
 
     @EventHandler
@@ -71,12 +70,15 @@ public class solarSword implements Listener {
     }
 
     private void doSolarExplosion(Player p, Location l){
+        ParticleManager particleManager = new ParticleManager(l.getWorld());
+
         p.sendActionBar(ChatColor.of("#cc9933") + "Explosion emitted!");
         p.playSound(p, Sound.BLOCK_TRIAL_SPAWNER_EJECT_ITEM, 1F, 1.5F);
         p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 0.5F, 2);
         p.playSound(p, Sound.ENTITY_GENERIC_EXPLODE, 0.5F, 2);
         p.playSound(p, Sound.BLOCK_BREWING_STAND_BREW, 0.75F, 0);
-        global.spawnParticles(l, Particle.EXPLOSION_EMITTER, null, 1);
+        particleManager.spawnParticle(l, Particle.EXPLOSION_EMITTER,null,
+                1,0,0,0,1.0);
 
         for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(6, 3, 6)) {
             if (nearbyMonsters instanceof Player || nearbyMonsters.isInvulnerable()) continue;
@@ -86,8 +88,6 @@ public class solarSword implements Listener {
     }
 
     public void cleanupSolarCounter(UUID playerId) {
-        // If the player disconnects, removes his counter from the static HashMap.
-
         solarCounter.remove(playerId);
     }
 

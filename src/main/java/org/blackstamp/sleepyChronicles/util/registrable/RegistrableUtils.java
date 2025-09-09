@@ -1,4 +1,4 @@
-package org.blackstamp.sleepyChronicles.util;
+package org.blackstamp.sleepyChronicles.util.registrable;
 
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.bukkit.Bukkit;

@@ -2,8 +2,8 @@ package org.blackstamp.sleepyChronicles.listener.item;
 
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -49,7 +49,6 @@ public class onTotem implements Listener {
                     Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> p.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK,duration,amplifier,true,false)), 1);
 
                 }
-
 
                 Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.ENTITY_GUARDIAN_DEATH, 1F, 0.75F));
 

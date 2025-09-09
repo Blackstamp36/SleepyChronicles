@@ -2,8 +2,8 @@ package org.blackstamp.sleepyChronicles.listener.player;
 
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
-import org.blackstamp.sleepyChronicles.util.CooldownManager;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.manager.CooldownManager;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

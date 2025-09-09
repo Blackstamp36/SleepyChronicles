@@ -1,8 +1,8 @@
 package org.blackstamp.sleepyChronicles.listener.item.vortex.vortexShortbow;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.CooldownManager;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.manager.CooldownManager;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;

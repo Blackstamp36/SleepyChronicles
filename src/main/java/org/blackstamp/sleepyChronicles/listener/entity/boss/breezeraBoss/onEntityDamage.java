@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.boss.breezeraBoss;
 
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.bogged.breezeraBoss;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -22,9 +22,9 @@ public class onEntityDamage implements Listener {
         double modifiedDamage = 1.0;
         LivingEntity causingEntity = (LivingEntity) e.getDamageSource().getCausingEntity();
 
-        if(boss.getPhase() == 1 && boss.getHealth() <= (boss.getMaxHealth() * 0.5)) boss.startPhaseTwo();
+        if(boss.getBossPhase() == 1 && boss.getHealth() <= (boss.getMaxHealth() * 0.5)) boss.startPhaseTwo();
 
-        if(boss.getPhase() == 2){
+        if(boss.getBossPhase() == 2){
             if(e.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) modifiedDamage = 0.15;
 
             else if(e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)

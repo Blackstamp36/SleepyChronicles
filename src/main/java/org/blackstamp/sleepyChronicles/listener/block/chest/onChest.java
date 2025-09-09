@@ -1,8 +1,8 @@
 package org.blackstamp.sleepyChronicles.listener.block.chest;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.ChatFormatter;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatFormatter;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;

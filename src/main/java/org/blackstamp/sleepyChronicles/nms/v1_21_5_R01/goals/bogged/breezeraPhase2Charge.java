@@ -26,7 +26,7 @@ public class breezeraPhase2Charge extends Goal {
         double distanceToTarget = bukkitBoss.getLocation().distance(bukkitPlayer.getLocation());
 
         return distanceToTarget <= 7.0
-                && boss.getPhase() == 2
+                && boss.getBossPhase() == 2
                 && bukkitPlayer.getGameMode().equals(GameMode.SURVIVAL);
     }
 

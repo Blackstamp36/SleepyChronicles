@@ -1,23 +1,37 @@
 package org.blackstamp.sleepyChronicles.command;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.itemRegister;
 import org.blackstamp.sleepyChronicles.listener.environment.onWeather;
+import org.blackstamp.sleepyChronicles.util.clazz.ClassManager;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntityRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 import java.util.UUID;
 
 import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
 
 public class staffCRegister implements CommandExecutor {
+
+    private final ClassManager cM = new ClassManager();
+    private final NMSEntityRegistry nER;
+
+    public staffCRegister(NMSEntityRegistry nER) {
+        this.nER = nER;
+    }
+
     static itemRegister iR = new itemRegister();
     public static Inventory itemsPageOne = iR.getItemsPageOne();
     public static Inventory itemsPageTwo = iR.getItemsPageTwo();
@@ -78,59 +92,68 @@ public class staffCRegister implements CommandExecutor {
                         break;
 
                     case "summon":
-                        if (args.length < 2) {
+                        if(args.length < 2) {
                             p.sendMessage(chatPrefix + "§cNo entity provided.");
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
-                            return false;
-                        }
+                            return true;
+                        } else {
+                            int summonedEntities = 1;
+                            String entityName = args[1].toLowerCase();
+                            Class<?> entityClass = nER.getNMSClass(entityName);
 
-                        String entityName = args[1].toUpperCase();
-                        if (!global.getCustomEntities().containsKey(entityName)) {
-                            p.sendMessage(chatPrefix + "§cNo entity found. Case: §7" + entityName);
-                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
-                            return false;
-                        }
-
-                        int summons = 1;
-                        if (args.length == 3) {
-                            try {
-                                summons = Integer.parseInt(args[2]);
-                                if (summons <= 0) {
-                                    p.sendMessage(chatPrefix + "§cSummon count must be positive.");
-                                    p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
-                                    return false;
-                                }
-                            } catch (NumberFormatException e) {
-                                p.sendMessage(chatPrefix + "§cInvalid number format: §7" + args[2]);
+                            if (entityClass == null) {
+                                p.sendMessage(chatPrefix + "§cDeclared entity not found: " + entityName);
                                 p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
-                                return false;
+                                return true;
                             }
-                        }
 
-                        try {
-                            Class<?> entityClass = global.getCustomEntities().get(entityName);
-                            p.sendMessage(chatPrefix + "§7Summoned " + summons + "x §c" + entityName + "§7!");
+                            if(args.length == 3){
+                                try {
+                                    summonedEntities = Integer.parseInt(args[2]);
+                                } catch(NumberFormatException e){
+                                    p.sendMessage(chatPrefix + "§cValue must be a positive number.");
+                                    p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
+                                    return true;
 
-                            java.lang.reflect.Method method;
+                                }
+                            }
+
                             try {
-                                method = entityClass.getMethod("spawnEntity", Location.class, int.class, Player.class);
-                                method.invoke(null, p.getLocation(), summons, p); // THIS LINE IS THE PROBLEM.
-                            } catch (NoSuchMethodException e) {
-                                method = entityClass.getMethod("spawnEntity", Location.class, int.class);
-                                method.invoke(null, p.getLocation(), summons);
+                                Location bukkitLoc = p.getLocation();
+                                CraftWorld craftWorld = (CraftWorld) bukkitLoc.getWorld();
+                                Level nmsWorld = craftWorld.getHandle();
+
+                                Constructor<?> constructor = entityClass.getConstructor(EntityType.class, Level.class);
+
+                                Type genericType = constructor.getGenericParameterTypes()[0];
+
+                                ParameterizedType paramType = (ParameterizedType) genericType;
+                                WildcardType wildcard = (WildcardType) paramType.getActualTypeArguments()[0];
+                                Class<?> extendedClass = (Class<?>) wildcard.getUpperBounds()[0];
+
+                                EntityType<?> entityType = cM.getEntityTypeForClass(extendedClass);
+
+                                for(int i = 0; i < summonedEntities; i++) {
+                                    Entity nmsEntity = (Entity) constructor.newInstance(entityType, nmsWorld);
+                                    nmsEntity.setPos(bukkitLoc.getX(), bukkitLoc.getY(), bukkitLoc.getZ());
+                                    nmsWorld.addFreshEntity(nmsEntity);
+                                }
+
+                                p.sendMessage(chatPrefix + "§7Summoned " + summonedEntities + "x §c" + entityName + "§7!");
+                                p.playSound(p.getLocation(), Sound.BLOCK_BONE_BLOCK_BREAK, 0.85F, 0.5F);
+
+                            } catch (Exception e) {
+                                p.sendMessage(chatPrefix + "§cFailed to summon entity. Check console for errors.");
+                                e.printStackTrace();
+                                return true;
                             }
-
-                            p.playSound(p.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1, 1);
-
-                        } catch (NoSuchMethodException | IllegalAccessException e) {
-                            p.sendMessage(chatPrefix + "§cFailed to find spawn method for: §7" + entityName);
-                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            p.sendMessage(chatPrefix + "§cError while summoning entity: §7" + e.getCause().getMessage());
-                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 0);
-                            e.printStackTrace();
                         }
+                        break;
+
+                    case "entities":
+                        p.sendMessage(chatPrefix + "§cSending list of the availables entities...");
+                        p.playSound(p.getLocation(), Sound.BLOCK_BONE_BLOCK_BREAK, 0.85F, 0.5F);
+                        p.sendMessage(nER.getNMSEntitiesMap().keySet().toArray(new String[0]));
                         break;
 
                     case "schematic":

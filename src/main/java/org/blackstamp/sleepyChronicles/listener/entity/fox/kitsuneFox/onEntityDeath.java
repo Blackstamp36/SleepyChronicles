@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.fox.kitsuneFox;
 
 import org.blackstamp.sleepyChronicles.item.drop.foxDrops;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.Fox;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;

@@ -1,17 +1,16 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.phantom;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 import java.util.Random;
 
+@NMSEntity
 public class seekerPhantom extends Phantom {
     Random r = new Random();
     int damage = 12;
@@ -55,18 +54,6 @@ public class seekerPhantom extends Phantom {
         this.shouldBurnInDay = false;
 
     }
-
-    public static void spawnEntity(Location loc, int entities) {
-        ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
-
-        for (int i = 0; i < entities; i++) {
-            seekerPhantom e = new seekerPhantom(EntityType.PHANTOM, nmsLvl);
-            e.setPos(loc.getX(), loc.getY(), loc.getZ());
-            nmsLvl.addFreshEntity(e);
-        }
-
-    }
-
 }
 
 

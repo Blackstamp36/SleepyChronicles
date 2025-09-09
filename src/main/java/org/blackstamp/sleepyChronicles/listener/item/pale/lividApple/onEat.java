@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.item.pale.lividApple;
 
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

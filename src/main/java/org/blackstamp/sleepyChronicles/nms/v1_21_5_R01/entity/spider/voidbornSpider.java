@@ -8,11 +8,13 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
+@NMSEntity
 public class voidbornSpider extends Spider {
 
     public voidbornSpider(EntityType<? extends Spider> type, Level world) {

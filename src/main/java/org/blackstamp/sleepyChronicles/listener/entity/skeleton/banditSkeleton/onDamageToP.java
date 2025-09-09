@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.entity.skeleton.banditSkeleton;
 
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

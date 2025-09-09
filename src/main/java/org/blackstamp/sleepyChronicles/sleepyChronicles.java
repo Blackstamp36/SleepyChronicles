@@ -5,12 +5,15 @@ import org.blackstamp.sleepyChronicles.command.sleepyCRegister;
 import org.blackstamp.sleepyChronicles.command.onSleepyTab;
 import org.blackstamp.sleepyChronicles.command.staffCRegister;
 import org.blackstamp.sleepyChronicles.recipe.recipeRegister;
-import org.blackstamp.sleepyChronicles.util.RegistrableUtils;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntityRegistry;
+import org.blackstamp.sleepyChronicles.util.registrable.RegistrableUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class sleepyChronicles extends JavaPlugin {
+    NMSEntityRegistry nER = new NMSEntityRegistry();
     recipeRegister recipes = new recipeRegister();
-    public static String chatPrefix = "§7§l[§r" + org.blackstamp.sleepyChronicles.util.ChatColor.of("#6932a8") + "SʟᴇᴇᴘʏCʜʀᴏɴɪᴄʟᴇꜱ§7§l]§r §8» ";
+    public static String chatPrefix = "§7§l[§r" + ChatColor.of("#6932a8") + "SʟᴇᴇᴘʏCʜʀᴏɴɪᴄʟᴇꜱ§7§l]§r §8» ";
     private static sleepyChronicles instance;
     globalClass global = new globalClass();
     public static int serverDay = 1;
@@ -38,9 +41,9 @@ public final class sleepyChronicles extends JavaPlugin {
         // Registers the commands from the plugin.
 
         this.getCommand("sc").setExecutor(new sleepyCRegister());
-        this.getCommand("staff").setExecutor(new staffCRegister());
+        this.getCommand("staff").setExecutor(new staffCRegister(nER));
         this.getCommand("sc").setTabCompleter(new onSleepyTab());
-        this.getCommand("staff").setTabCompleter(new onStaffTab());
+        this.getCommand("staff").setTabCompleter(new onStaffTab(nER));
     }
 
     public static sleepyChronicles getter() {
@@ -55,6 +58,7 @@ public final class sleepyChronicles extends JavaPlugin {
         global.registerPlayerTeams();
         global.createAftermathDimension();
         RegistrableUtils.registerListeners();
+        nER.scanNMSClasses();
     }
 
 }

@@ -1,16 +1,11 @@
 package org.blackstamp.sleepyChronicles.listener.entity.enderman.nightMan;
 
-import org.blackstamp.sleepyChronicles.util.Registrable;
-import org.bukkit.Sound;
-import org.bukkit.damage.DamageType;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 @Registrable
 public class onDamageToE implements Listener {

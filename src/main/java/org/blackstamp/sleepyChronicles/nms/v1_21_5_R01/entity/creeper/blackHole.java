@@ -1,18 +1,14 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.phantom.seekerPhantom;
-import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.manager.ParticleManager;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -21,19 +17,16 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
+@NMSEntity
 public class blackHole extends Creeper {
     @Setter
     @Getter
     private UUID summonerUUID;
-    globalClass global = new globalClass();
+    private int tickCount = 0;
 
     public blackHole(EntityType<? extends Creeper> type, Level world) {
         super(type, world);
@@ -44,8 +37,7 @@ public class blackHole extends Creeper {
         this.setNoAi(true);
         this.setPowered(true);
         this.setSilent(true);
-        this.getBukkitLivingEntity().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,-1,0));
-        initBlackholeTask(this);
+        this.setInvisible(true);
     }
 
     public static void spawnEntity(Location loc, int entities, Player summoner){
@@ -60,63 +52,62 @@ public class blackHole extends Creeper {
             }
     }
 
-    private void initBlackholeTask(Creeper c){
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Location l = c.getBukkitEntity().getLocation();
+    @Override
+    public void tick(){
+        super.tick();
+        tickCount++;
 
-                if(!c.isAlive()) this.cancel();
+        if(tickCount >= 100) executeBlackHoleExplosion(this);
 
-                for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(8, 5, 8)) {
-                    if (nearbyMonsters.isInvulnerable()) continue;
-
-                    else if(nearbyMonsters instanceof Player p){
-                        p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE,0.5F,1.25F);
-                        continue;
-                    }
-
-                    Vector direction = l.toVector().subtract(nearbyMonsters.getLocation().toVector());
-
-                    if (direction.length() < 0.001) {
-                        return;
-                    }
-
-                    direction.normalize();
-                    direction.multiply(1.25);
-
-                    nearbyMonsters.setVelocity(direction);
-                    global.spawnParticles(l, Particle.GLOW_SQUID_INK, null,10);
-                }
-
-            }
-        }.runTaskTimer(sleepyChronicles.getter(), 0, 20);
-
-
-        Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
-            Player summoner = Bukkit.getPlayer(this.getSummonerUUID());
-
-            if(c.isAlive() && summoner != null) {
-                Location l = c.getBukkitEntity().getLocation();
-                ParticleBuilder pBuilder = new ParticleBuilder(Particle.END_ROD);
-                pBuilder.location(c.getBukkitEntity().getLocation())
-                        .count(75)
-                        .offset(0.25, 0.25, 0.25)
-                        .location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ())
-                        .spawn();
-
-                global.spawnParticles(l, Particle.EXPLOSION_EMITTER,null,1);
-
-                for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(8, 5, 8)) {
-                    if (nearbyMonsters instanceof Player || nearbyMonsters.isInvulnerable()) continue;
-                    nearbyMonsters.damage(summoner.getHealth() * 2);
-                }
-
-                c.remove(RemovalReason.KILLED);
-            }
-        }, 100);
-
-
+        if(tickCount % 20 == 0) attractNearbyMobs(this);
     }
 
+    private void attractNearbyMobs(blackHole entity){
+        Location l = entity.getBukkitEntity().getLocation();
+        ParticleManager pM = new ParticleManager(l.getWorld());
+
+        for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(6, 3, 6)) {
+            if (nearbyMonsters.isInvulnerable()) continue;
+
+            else if(nearbyMonsters instanceof Player p){
+                p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE,0.5F,1.25F);
+                continue;
+            }
+
+            Vector direction = l.toVector().subtract(nearbyMonsters.getLocation().toVector());
+
+            if (direction.length() < 0.001) {
+                return;
+            }
+
+            direction.normalize().multiply(2.25);
+
+            nearbyMonsters.setVelocity(direction);
+
+            pM.spawnParticle(l, Particle.GLOW_SQUID_INK, null,
+                    20,0.25,0.25,0.25,1.0);
+        }
+    }
+
+    private void executeBlackHoleExplosion(blackHole entity){
+        Location l = entity.getBukkitEntity().getLocation();
+        ParticleManager pM = new ParticleManager(l.getWorld());
+
+        Player summoner = Bukkit.getPlayer(this.getSummonerUUID());
+
+        if (summoner == null) {
+            entity.remove(RemovalReason.DISCARDED);
+            return;
+        }
+
+        for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(6, 3, 6)) {
+            if (nearbyMonsters instanceof Player || nearbyMonsters.isInvulnerable()) continue;
+            nearbyMonsters.damage(summoner.getHealth() * 2);
+        }
+        pM.spawnParticle(l, Particle.EXPLOSION_EMITTER,null,
+                1,0,0,0,1.0);
+        pM.spawnParticle(l, Particle.SMOKE,null,
+                25,0.25,0.25,0.25,1.0);
+        entity.remove(RemovalReason.DISCARDED);
+    }
 }

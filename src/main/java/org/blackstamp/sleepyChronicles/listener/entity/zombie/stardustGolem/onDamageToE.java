@@ -1,6 +1,8 @@
 package org.blackstamp.sleepyChronicles.listener.entity.zombie.stardustGolem;
 
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie.stardustGolem;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -14,8 +16,15 @@ public class onDamageToE implements Listener {
     private void onDamageToE(EntityDamageEvent e) {
         Entity entity = e.getEntity();
 
-        if(entity.getScoreboardTags().contains("stardustGolem") &&
-        !e.getDamageSource().getDamageType().equals(DamageType.GENERIC_KILL)) e.setCancelled(true);
+        if(!(entity instanceof CraftEntity craftEntity)) return;
+        net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
+
+        if(nmsEntity == null) return;
+        if(!(nmsEntity instanceof stardustGolem)) return;
+
+        if(e.getCause().equals(EntityDamageEvent.DamageCause.KILL)) return;
+
+        e.setCancelled(true);
 
     }
 }

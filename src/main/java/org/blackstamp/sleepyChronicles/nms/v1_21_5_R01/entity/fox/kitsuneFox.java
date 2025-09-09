@@ -8,11 +8,13 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
+@NMSEntity
 public class kitsuneFox extends Fox {
 
     public kitsuneFox(EntityType<? extends Fox> type, Level world) {

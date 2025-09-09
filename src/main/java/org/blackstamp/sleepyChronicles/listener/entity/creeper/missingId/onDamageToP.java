@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.creeper.missingId;
 
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;

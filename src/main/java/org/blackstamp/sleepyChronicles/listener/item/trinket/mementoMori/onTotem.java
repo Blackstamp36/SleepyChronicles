@@ -3,7 +3,7 @@ package org.blackstamp.sleepyChronicles.listener.item.trinket.mementoMori;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;

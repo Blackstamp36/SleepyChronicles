@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.entity.boss.breezeraBoss;
 
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

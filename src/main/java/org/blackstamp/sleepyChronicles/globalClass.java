@@ -27,7 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.blackstamp.sleepyChronicles.dimension.AftermathBiomeProvider;
 import org.blackstamp.sleepyChronicles.dimension.AftermathChunkGenerator;
 import org.blackstamp.sleepyChronicles.item.trinket.trinketItems;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.bogged.breezeraBoss;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking.bobCreaking;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creeper.blackHole;
@@ -38,6 +38,7 @@ import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.enderman.theScreec
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.endermite.netherMite;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.fox.kitsuneFox;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.ghast.eyelessGhast;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.iron_golem.quantumBeast.quantumBeast;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.iron_golem.quantumGolem;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.llama.aggresiveLlama;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.phantom.seekerPhantom;
@@ -51,9 +52,11 @@ import org.blackstamp.sleepyChronicles.util.adapter.ListItemStackTypeAdapter;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -323,6 +326,7 @@ public class globalClass {
         entityRegistry.put("PALESOUL", paleSoul.class);
         entityRegistry.put("SCREECH", theScreech.class);
         entityRegistry.put("BLACKHOLE", blackHole.class);
+        entityRegistry.put("QUANTUMBEAST", quantumBeast.class);
 
         return entityRegistry;
     }
@@ -366,8 +370,6 @@ public class globalClass {
                     UUID uuid = all.getUniqueId();
                     globalClass global = new globalClass();
 
-                    AttributeInstance maxHealthAttr = all.getAttribute(Attribute.MAX_HEALTH);
-
                     playerData data = global.getPlayerData(uuid);
                     Inventory perksInv = data.getTrinketsAsInventory(all);
 
@@ -406,14 +408,9 @@ public class globalClass {
                         all.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1, true, false));
                     }
 
-                    if (hasBobMiracle.get(uuid)) {
-                        healthModification += 8.0;
-                    }
+                    if (hasBobMiracle.get(uuid)) healthModification += 8.0;
 
-                    if(hasCustomArmor(all, "solar")) {
-                        healthModification += 12.0;
-
-                    }
+                    if(hasCustomArmor(all, "solar")) healthModification += 12.0;
 
                     if(hasCustomArmor(all, "vortex")) {
                         healthModification += 8.0;
@@ -685,6 +682,7 @@ public class globalClass {
 
     public boolean hasMaxSummons(Player p){
         UUID uuid = p.getUniqueId();
+        playerSummons.putIfAbsent(uuid, 0);
 
         return playerSummons.get(uuid) >= playerMaxSummons.get(uuid);
     }
@@ -718,7 +716,7 @@ public class globalClass {
         boss.setHealth(boss.getMaxHealth());
     }
 
-    public void modifyAllyHealth(allyMob ally){
+    public void modifyAllyHealth(summonableMob ally){
         net.minecraft.world.entity.LivingEntity entity = ally.getEntity();
         Player summoner = Bukkit.getPlayer(ally.getSummonerUUID());
 
@@ -803,5 +801,61 @@ public class globalClass {
             border.setCenter(0.0, 0.0);
             border.setSize(10000.0);
         }
+    }
+
+    public void initBossBarTask(net.minecraft.world.entity.LivingEntity boss, String bossName, BarColor barColor) {
+        final BossBar finalBossBar = createBossbar(bossName, barColor);
+        LivingEntity bukkitBoss = boss.getBukkitLivingEntity();
+        String halfHealthTitle =  bossName.concat(" §c[\uD83D\uDD25]");
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                if (bukkitBoss.isDead() || !bukkitBoss.isValid()) {
+                    finalBossBar.removeAll();
+                    this.cancel();
+                    return;
+                }
+
+                double currentHealth = boss.getHealth();
+                double maxHealth = boss.getMaxHealth();
+                double progress = Math.clamp(currentHealth / maxHealth, 0.0, 1.0);
+
+                if(boss.getHealth() <= (boss.getMaxHealth() * 0.5)) finalBossBar.setTitle(
+                        "§8• §k|§f" + org.blackstamp.sleepyChronicles.util.color.ChatColor.of("#5f940c") + " " + halfHealthTitle + " " + "§8§k|§f §8•");
+                finalBossBar.setProgress(progress);
+
+                Location bossLoc = bukkitBoss.getLocation();
+                Collection<Player> playersInRange = bossLoc.getNearbyPlayers(35);
+                Set<Player> currentViewers = new HashSet<>(finalBossBar.getPlayers());
+
+                for(org.bukkit.entity.Player viewer : currentViewers) {
+                    if (!playersInRange.contains(viewer)) {
+                        finalBossBar.removePlayer(viewer);
+                    }
+                }
+
+                for(org.bukkit.entity.Player player : playersInRange) {
+                    if (!currentViewers.contains(player)) {
+                        finalBossBar.addPlayer(player);
+                    }
+                }
+
+                if (playersInRange.isEmpty()) {
+                    finalBossBar.removeAll();
+                    bukkitBoss.remove();
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(sleepyChronicles.getter(), 0, 20);
+    }
+
+    private BossBar createBossbar(String barTitle, BarColor barColor) {
+        return Bukkit.createBossBar(
+                "§8• §k|§f" + org.blackstamp.sleepyChronicles.util.color.ChatColor.of("#5f940c") + " " + barTitle + " " + "§8§k|§f §8•",
+                barColor,
+                BarStyle.SEGMENTED_12
+        );
     }
 }

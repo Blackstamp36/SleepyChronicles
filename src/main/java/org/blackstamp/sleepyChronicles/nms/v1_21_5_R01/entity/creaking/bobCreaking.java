@@ -1,17 +1,16 @@
 package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.creaking;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.creaking.Creaking;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@NMSEntity
 public class bobCreaking extends Creaking {
 
     public bobCreaking(EntityType<? extends Creaking> type, Level world) {
@@ -26,18 +25,6 @@ public class bobCreaking extends Creaking {
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
         this.getBukkitLivingEntity().addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,-1,0));
         this.setHealth(1);
-
-    }
-
-    public static void spawnEntity(Location loc, int entities) {
-        ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
-
-        for (int i = 0; i < entities; i++){
-            bobCreaking e = new bobCreaking(EntityType.CREAKING, nmsLvl);
-            e.setPos(loc.getX(), loc.getY(), loc.getZ());
-            nmsLvl.addFreshEntity(e);
-        }
-
 
     }
 

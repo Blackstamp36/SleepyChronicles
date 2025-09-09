@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.player;
 
 import com.destroystokyo.paper.ParticleBuilder;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;

@@ -2,8 +2,8 @@ package org.blackstamp.sleepyChronicles.listener.entity.zombie.paleSoul;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -16,7 +16,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 @Registrable
 public class onEntityDeath implements Listener {
-    globalClass global = new globalClass();
 
     @EventHandler
     private void onEDeath(EntityDeathEvent e) {

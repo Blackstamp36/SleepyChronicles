@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.creeper.suppressedCreeper;
 
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;

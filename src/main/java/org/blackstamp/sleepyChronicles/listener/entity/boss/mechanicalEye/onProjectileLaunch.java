@@ -2,7 +2,7 @@ package org.blackstamp.sleepyChronicles.listener.entity.boss.mechanicalEye;
 
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;

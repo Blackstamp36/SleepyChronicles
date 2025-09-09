@@ -28,7 +28,7 @@ public class breezeraPhase1 extends Goal {
         if(!(boss.getTarget() instanceof Player targetPlayer)) return false;
         org.bukkit.entity.Player bukkitPlayer = (org.bukkit.entity.Player) targetPlayer.getBukkitLivingEntity();
 
-        return boss.getPhase() == 1
+        return boss.getBossPhase() == 1
                 && bukkitPlayer.getGameMode().equals(GameMode.SURVIVAL);
     }
 

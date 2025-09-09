@@ -1,8 +1,8 @@
 package org.blackstamp.sleepyChronicles.listener.item.solar.solarArmor;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.CooldownManager;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.manager.CooldownManager;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

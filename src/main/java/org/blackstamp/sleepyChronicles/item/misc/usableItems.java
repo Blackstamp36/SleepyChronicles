@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.item.misc;
 
-import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;

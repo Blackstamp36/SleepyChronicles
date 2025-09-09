@@ -1,4 +1,4 @@
-package org.blackstamp.sleepyChronicles.util;
+package org.blackstamp.sleepyChronicles.util.color;
 
 import org.bukkit.ChatColor;
 import net.kyori.adventure.text.Component;

@@ -1,17 +1,23 @@
 package org.blackstamp.sleepyChronicles.listener.entity.enderman;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.enderman.nightMan;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.enderman.theScreech;
-import org.blackstamp.sleepyChronicles.util.Registrable;
-import org.bukkit.entity.Creaking;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.spider.voidbornSpider;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Spider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Registrable
 public class onEntitySpawn implements Listener {
@@ -19,27 +25,25 @@ public class onEntitySpawn implements Listener {
     @EventHandler
     private void onEntitySpawn(CreatureSpawnEvent e) {
         globalClass global = new globalClass();
-        Random r = new Random();
         LivingEntity entity = e.getEntity();
+        Location l = entity.getLocation();
+        CraftLivingEntity craftEntity = (CraftLivingEntity) entity;
+        net.minecraft.world.entity.LivingEntity nmsEntity = craftEntity.getHandle();
 
-        if (entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)
-                || entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG)) {
+        boolean spawnRequirements = entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)
+                || entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
 
-            if (global.getServerDay() >= 6 && entity instanceof Enderman) {
-                if (r.nextInt(101) <= 19) {
-                    nightMan.spawnEntity(entity.getLocation(), 1);
-                    e.setCancelled(true);
+        if(nmsEntity == null) return;
+        if(!spawnRequirements) return;
+        if(!(entity instanceof Enderman)) return;
+        if(!(global.getServerDay() >= 6)) return;
+        if(!(ThreadLocalRandom.current().nextInt(0, 100) <= 19)) return;
 
-                }
-
-            } else if(entity instanceof Creaking && entity.getScoreboardTags().contains("bobCreaking")
-                    && !entity.getWorld().getName().equals("world_aftermath")){
-                if (r.nextInt(1001) == 0) {
-                    theScreech.spawnEntity(entity.getLocation(), 1);
-                    e.setCancelled(true);
-
-                }
-            }
-        }
+        Vec3 vec3 = new Vec3(l.getX(), l.getY(), l.getZ());
+        Level nmsLevel = ((CraftWorld) entity.getWorld()).getHandle();
+        nightMan enderman = new nightMan(EntityType.ENDERMAN, nmsLevel);
+        nmsLevel.addFreshEntity(enderman);
+        enderman.setPos(vec3);
+        e.setCancelled(true);
     }
 }

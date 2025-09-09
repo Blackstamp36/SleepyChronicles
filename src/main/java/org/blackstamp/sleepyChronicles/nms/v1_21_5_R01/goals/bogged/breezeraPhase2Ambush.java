@@ -26,7 +26,7 @@ public class breezeraPhase2Ambush extends Goal {
         double distanceToTarget = bukkitBoss.getLocation().distance(bukkitPlayer.getLocation());
 
         return distanceToTarget >= 14.0
-                && boss.getPhase() == 2
+                && boss.getBossPhase() == 2
                 && bukkitPlayer.getGameMode().equals(GameMode.SURVIVAL);
     }
 

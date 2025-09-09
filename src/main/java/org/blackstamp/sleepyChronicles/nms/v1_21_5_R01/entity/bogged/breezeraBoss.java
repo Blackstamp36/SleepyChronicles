@@ -4,38 +4,39 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Bogged;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.bossMob;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.bogged.breezeraPhase1;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.bogged.breezeraPhase2Ambush;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.bogged.breezeraPhase2Charge;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.bogged.breezeraPhase2RapidFire;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Snowball;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class breezeraBoss extends Bogged {
+@NMSEntity
+public class breezeraBoss extends Bogged implements bossMob {
     @Getter
     @Setter
-    private int phase = 1;
+    private int bossPhase = 1;
 
     public breezeraBoss(EntityType<? extends Bogged> entityType, Level level) {
         super(entityType, level);
@@ -81,8 +82,8 @@ public class breezeraBoss extends Bogged {
     }
 
     public void startPhaseTwo() {
-        if (this.phase == 2) return;
-        this.phase = 2;
+        if (this.bossPhase == 2) return;
+        this.bossPhase = 2;
 
         LivingEntity bukkitBoss = this.getBukkitLivingEntity();
 
@@ -139,29 +140,29 @@ public class breezeraBoss extends Bogged {
         this.setInvulnerable(false);
     }
 
-    private void initBreezeraTask(breezeraBoss breeze) {
+    private void initBreezeraTask(breezeraBoss bogged) {
         final BossBar finalBossBar = createBossbar();
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                LivingEntity bukkitBreeze = breeze.getBukkitLivingEntity();
+                LivingEntity bukkitBogged = bogged.getBukkitLivingEntity();
 
-                if (!breeze.isAlive() || !bukkitBreeze.isValid()) {
+                if (!bogged.isAlive() || !bukkitBogged.isValid()) {
                     finalBossBar.removeAll();
                     this.cancel();
                     return;
                 }
 
-                double currentHealth = breeze.getHealth();
-                double maxHealth = breeze.getMaxHealth();
+                double currentHealth = bogged.getHealth();
+                double maxHealth = bogged.getMaxHealth();
                 double progress = Math.clamp(currentHealth / maxHealth, 0.0, 1.0);
 
-                if(breeze.getPhase() == 2) finalBossBar.setTitle(
+                if(bogged.getBossPhase() == 2) finalBossBar.setTitle(
                         "§8• §k|§f" + ChatColor.of("#5f940c") + " Bʀᴇᴇᴢᴇʀᴀ §c[\uD83D\uDD25] " + "§8§k|§f §8•");
                 finalBossBar.setProgress(progress);
 
-                Location witherLoc = bukkitBreeze.getLocation();
+                Location witherLoc = bukkitBogged.getLocation();
                 Collection<org.bukkit.entity.Player> playersInRange = witherLoc.getNearbyPlayers(35);
                 Set<org.bukkit.entity.Player> currentViewers = new HashSet<>(finalBossBar.getPlayers());
 
@@ -179,7 +180,7 @@ public class breezeraBoss extends Bogged {
 
                 if (playersInRange.isEmpty()) {
                     finalBossBar.removeAll();
-                    breeze.remove(RemovalReason.DISCARDED);
+                    bogged.remove(RemovalReason.DISCARDED);
                     this.cancel();
                 }
             }
@@ -205,4 +206,8 @@ public class breezeraBoss extends Bogged {
         }
     }
 
+    @Override
+    public Mob getEntity() {
+        return this;
+    }
 }

@@ -1,4 +1,4 @@
-package org.blackstamp.sleepyChronicles.util;
+package org.blackstamp.sleepyChronicles.util.color;
 
 import com.google.common.base.Preconditions;
 import java.awt.Color;

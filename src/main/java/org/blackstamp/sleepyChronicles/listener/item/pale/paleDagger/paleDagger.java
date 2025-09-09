@@ -1,8 +1,9 @@
 package org.blackstamp.sleepyChronicles.listener.item.pale.paleDagger;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.manager.ParticleManager;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @Registrable
 public class paleDagger implements Listener {
     int initialValue = 0;
-    int hitsNeeded = 10;
+    int hitsNeeded = 5;
     globalClass global = new globalClass();
     public HashMap<UUID, Integer> paleCounter = new HashMap<>();
 
@@ -58,12 +59,15 @@ public class paleDagger implements Listener {
     }
 
     private void doStormOfKnives(Player p, Location l){
+        ParticleManager particleManager = new ParticleManager(l.getWorld());
+
         p.sendActionBar(ChatColor.of("#cfc4c3") + "Storm deployed!");
-        p.playSound(p, Sound.ENTITY_CREAKING_DEATH, 1F, 1.5F);
-        p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 0.5F, 2);
-        p.playSound(p, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 0.5F, 2);
-        p.playSound(p, Sound.BLOCK_BREWING_STAND_BREW, 0.75F, 0);
-        global.spawnParticles(l, Particle.SWEEP_ATTACK, null, 15);
+        p.playSound(p, Sound.ENTITY_CREAKING_DEATH, 0.25F, 1.5F);
+        p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 0.25F, 2);
+        p.playSound(p, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 0.25F, 2);
+        p.playSound(p, Sound.BLOCK_BREWING_STAND_BREW, 0.25F, 0);
+        particleManager.spawnParticle(l, Particle.SWEEP_ATTACK,null,
+                30,0.75,0.5,0.75,1.25);
 
         for (LivingEntity nearbyMonsters : l.getNearbyLivingEntities(3, 1, 3)) {
             if (nearbyMonsters instanceof Player || nearbyMonsters.isInvulnerable()) continue;

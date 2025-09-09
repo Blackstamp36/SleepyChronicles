@@ -2,7 +2,7 @@ package org.blackstamp.sleepyChronicles.listener.item;
 
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -25,7 +25,6 @@ import static org.blackstamp.sleepyChronicles.globalClass.PickaxeMode.SILK;
 @Registrable
 public class onInteract implements Listener {
     globalClass global = new globalClass();
-    AtomicBoolean cooldown = new AtomicBoolean(false);
 
     @EventHandler
     private void onInteract(PlayerInteractEvent e) {
@@ -44,7 +43,7 @@ public class onInteract implements Listener {
                     globalClass.PickaxeMode mode = global.playerPickaxes.get(uuid);
 
                     if (mode == null) {
-                        mode = globalClass.PickaxeMode.FORTUNE; // Force default
+                        mode = globalClass.PickaxeMode.FORTUNE;
                         global.playerPickaxes.put(uuid, mode);
                         global.pickaxesCooldowns.put(uuid, false);
                     }

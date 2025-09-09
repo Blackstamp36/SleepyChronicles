@@ -1,8 +1,8 @@
 package org.blackstamp.sleepyChronicles.listener.block.paleOre;
 
 import org.blackstamp.sleepyChronicles.item.pale.paleItems;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;

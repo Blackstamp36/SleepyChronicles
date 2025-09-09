@@ -2,7 +2,7 @@ package org.blackstamp.sleepyChronicles.listener.player;
 
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.item.itemRegister;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.blackstamp.sleepyChronicles.util.data.playerData;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

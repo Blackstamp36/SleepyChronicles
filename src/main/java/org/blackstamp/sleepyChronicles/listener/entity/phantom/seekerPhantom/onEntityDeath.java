@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.phantom.seekerPhantom;
 
 import org.blackstamp.sleepyChronicles.item.drop.phantomDrops;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Phantom;
 import org.bukkit.event.EventHandler;

@@ -1,6 +1,6 @@
 package org.blackstamp.sleepyChronicles.listener.entity.phantom.seekerPhantom;
 
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Phantom;
@@ -27,7 +27,7 @@ public class onDamageToP implements Listener {
 
             p.setLevel(Math.max(p.getLevel() - randomInt, 0));
 
-            p.sendMessage(chatPrefix + "§cA phantom stole from you " + randomInt + " levels of experience!");
+            p.sendMessage(chatPrefix + "§cA seeker stole from you " + randomInt + " levels of experience!");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.75F, 0.5F);
         }
     }

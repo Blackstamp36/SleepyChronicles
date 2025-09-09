@@ -1,8 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.ally;
 
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
-import org.blackstamp.sleepyChronicles.util.Registrable;
-import org.bukkit.Sound;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public class onDamageToP implements Listener {
         if(!(entity instanceof Player)) return;
         if (!(directEntity instanceof CraftEntity craftEntity)) return;
         net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
-        if(!(nmsEntity instanceof allyMob)) return;
+        if(!(nmsEntity instanceof summonableMob)) return;
 
         e.setCancelled(true);
         }

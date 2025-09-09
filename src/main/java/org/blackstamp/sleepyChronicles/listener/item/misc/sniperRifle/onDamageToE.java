@@ -1,21 +1,18 @@
 package org.blackstamp.sleepyChronicles.listener.item.misc.sniperRifle;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.projectiles.ProjectileSource;
 
 @Registrable
 public class onDamageToE implements Listener {
@@ -35,7 +32,7 @@ public class onDamageToE implements Listener {
         if(!(damagedEntity instanceof CraftEntity craftEntity)) return;
         net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
 
-        if(nmsEntity instanceof allyMob) return;
+        if(nmsEntity instanceof summonableMob) return;
 
         if(projectileEntity.getScoreboardTags().contains("sniperProjectile")) {
             damagedEntity.damage(20);

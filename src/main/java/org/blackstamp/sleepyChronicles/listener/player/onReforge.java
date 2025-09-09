@@ -1,8 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.player;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.Registrable;
-import org.bukkit.Material;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

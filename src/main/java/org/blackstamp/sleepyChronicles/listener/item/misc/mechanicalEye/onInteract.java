@@ -1,24 +1,24 @@
 package org.blackstamp.sleepyChronicles.listener.item.misc.mechanicalEye;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.wither_boss.mechanicalEye;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.manager.ParticleManager;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.components.CustomModelDataComponent;
-
-import java.util.UUID;
 
 @Registrable
 public class onInteract implements Listener {
@@ -27,29 +27,36 @@ public class onInteract implements Listener {
     @EventHandler
     private void onInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        UUID uuid = p.getUniqueId();
-        Location l = p.getLocation();
+        ItemStack itemInteracted = e.getItem();
 
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-            ItemStack item = e.getItem();
-                if (item != null && item.hasItemMeta()) {
-                    ItemMeta meta = item.getItemMeta();
+        if(itemInteracted == null) return;
+        if(!e.getAction().toString().contains("RIGHT_CLICK")) return;
+        if(!(global.isCustomItem(itemInteracted, "mechanical_eye"))) return;
 
-                    if (meta != null && meta.hasCustomModelDataComponent()) {
-                        CustomModelDataComponent data = meta.getCustomModelDataComponent();
-                        if (data.getStrings().contains("mechanical_eye")) {
-                            global.spawnParticles(l, Particle.ENCHANT, null, 100);
-                            p.playSound(l, Sound.BLOCK_NOTE_BLOCK_PLING,1,0.5F);
-                            p.sendActionBar(ChatColor.of("#5dea7a") + "You feel an evil presence watching you...");
-                            item.subtract();
-                            Location spawn = new Location(l.getWorld(), l.getX(), l.getY() + 5, l.getZ());
+        showSummonActionBar(p, itemInteracted);
 
-                            Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () ->
-                                    mechanicalEye.spawnEntity(spawn, 1), 200);
-                        }
-                    }
-                }
+        Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () ->
+                spawnMechanicalEyeAt(p), 200);
             }
+
+        private void spawnMechanicalEyeAt(Player p){
+            Location l = p.getLocation();
+            Vec3 vec3 = new Vec3(l.getX(), l.getY() + 5, l.getZ());
+            Level nmsLevel = ((CraftWorld) p.getWorld()).getHandle();
+            mechanicalEye entity = new mechanicalEye(EntityType.WITHER, nmsLevel);
+            nmsLevel.addFreshEntity(entity);
+            entity.setPos(vec3);
+        }
+
+        private void showSummonActionBar(Player p, ItemStack summoningItem){
+            Location l = p.getLocation();
+            ParticleManager pM = new ParticleManager(p.getWorld());
+
+            pM.spawnParticle(l, Particle.ENCHANT, null,
+                    25,0.5,0.25,0.5,1.0);
+            p.playSound(l, Sound.BLOCK_NOTE_BLOCK_PLING,0.85F,0.15F);
+            p.sendActionBar(ChatColor.of("#5dea7a") + "You feel an evil presence watching you...");
+            summoningItem.subtract();
         }
     }
 

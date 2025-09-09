@@ -1,8 +1,14 @@
 package org.blackstamp.sleepyChronicles.listener.entity.slime;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.slime.seedGhostSlime;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.wither_boss.mechanicalEye;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
@@ -10,31 +16,34 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Registrable
 public class onEntitySpawn implements Listener {
 
     @EventHandler
     private void onEntitySpawn(CreatureSpawnEvent e) {
-        Random r = new Random();
         globalClass global = new globalClass();
         LivingEntity entity = e.getEntity();
+        Location l = entity.getLocation();
         CraftLivingEntity craftEntity = (CraftLivingEntity) entity;
+        net.minecraft.world.entity.LivingEntity nmsEntity = craftEntity.getHandle();
 
-        if(entity.getScoreboardTags().contains("seedGhostSlime") &&  entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SLIME_SPLIT)){
-            e.setCancelled(true);
-        }
+        boolean spawnRequirements = entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)
+                || entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
 
-        if (entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)
-                || entity.getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG)) {
-            if (global.getServerDay() >= 6 && entity instanceof Slime) {
-                if(r.nextInt(0,1001) <= 49){
-                    seedGhostSlime.spawnEntity(entity.getLocation(), 1);
-                    e.setCancelled(true);
-                }
-            }
-        }
+        if(nmsEntity == null) return;
+        if(!spawnRequirements) return;
+        if(!(global.getServerDay() >= 6)) return;
+        if(!(entity instanceof Slime)) return;
+        if(!(ThreadLocalRandom.current().nextInt(0, 1000) <= 49)) return;
+
+        Vec3 vec3 = new Vec3(l.getX(), l.getY(), l.getZ());
+        Level nmsLevel = ((CraftWorld) entity.getWorld()).getHandle();
+        seedGhostSlime slime = new seedGhostSlime(EntityType.SLIME, nmsLevel);
+        nmsLevel.addFreshEntity(slime);
+        slime.setPos(vec3);
+        e.setCancelled(true);
     }
 }
 

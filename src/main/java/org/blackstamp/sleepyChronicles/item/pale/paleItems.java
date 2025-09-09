@@ -1,8 +1,7 @@
 package org.blackstamp.sleepyChronicles.item.pale;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -16,7 +15,6 @@ import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class paleItems {
     public ItemStack createPaleTool(Material material, String name, Enchantment enchantment, int level, String data) {
@@ -49,7 +47,7 @@ public class paleItems {
                 lore.add("§6»" + ChatColor.of("#bc5c0f") + " 0.5% §7chance of spawning a");
                 lore.add(ChatColor.of("#cfc4c3") + "Pale Soul §7when killing a monster.");
                 lore.add(ChatColor.of("#cfc4c3") + "→ §7If on a Pale Garden: " + ChatColor.of("#bc5c0f") + "5%§7.");
-                lore.add(ChatColor.of("#cfc4c3") + "→ §7After " + ChatColor.of("#cfc4c3") + "10 §7consecutive hits");
+                lore.add(ChatColor.of("#cfc4c3") + "→ §7After " + ChatColor.of("#cfc4c3") + "5 §7consecutive hits");
                 lore.add("§7a " + ChatColor.of("#cfc4c3") + "Storm of Knives §7is spawned.");
                 lore.add(ChatColor.of("#bc5c0f") + "(DAMAGE: Current health * 0.75)");
                 break;

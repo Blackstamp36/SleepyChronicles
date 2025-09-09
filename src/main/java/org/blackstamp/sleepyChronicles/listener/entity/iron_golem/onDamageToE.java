@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.iron_golem;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.damage.DamageType;

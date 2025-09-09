@@ -2,9 +2,10 @@ package org.blackstamp.sleepyChronicles.listener.entity.ally;
 
 import net.minecraft.server.level.ServerLevel;
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie.stardustGolem;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -25,14 +26,17 @@ public class onEntitySpawn implements Listener {
     private void onEntitySpawn(EntitySpawnEvent e) {
         Entity entity = e.getEntity();
 
-        if (entity instanceof CraftEntity craftEntity) {
-            net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
+        if (!(entity instanceof CraftEntity craftEntity)) return;
+        net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
 
-            if (nmsEntity instanceof allyMob ally) {
-                if(entity.getScoreboardTags().contains("stardustGolem")) return;
+        if(!(nmsEntity instanceof summonableMob ally)) return;
+        if(nmsEntity instanceof stardustGolem) return;
 
-                Player summoner = Bukkit.getPlayer(ally.getSummonerUUID());
-                global.modifyAllyHealth(ally);
+        Player summoner = Bukkit.getPlayer(ally.getSummonerUUID());
+
+        if(summoner == null) return;
+
+        global.modifyAllyHealth(ally);
 
                 new BukkitRunnable() {
                     @Override
@@ -48,8 +52,8 @@ public class onEntitySpawn implements Listener {
 
                         if(entity.isDead()
                                 || summoner.isDead()
-                                || (!summoner.hasLineOfSight(entity) && isInFieldOfView(summoner, entity))
-                                || !isInFieldOfView(summoner, entity)
+                                || (!summoner.hasLineOfSight(entity) && isWithinFOV(summoner, entity))
+                                || !isWithinFOV(summoner, entity)
                                 || distanceToEntity >= 30.0){
                             nmsEntity.kill((ServerLevel) nmsEntity.level());
                             this.cancel();
@@ -57,11 +61,9 @@ public class onEntitySpawn implements Listener {
                         }
                     }
                 }.runTaskTimer(sleepyChronicles.getter(), 40, 40);
-            }
-        }
     }
 
-    private boolean isInFieldOfView(Player player, Entity entity) {
+    private boolean isWithinFOV(Player player, Entity entity) {
         Location playerLoc = player.getEyeLocation();
         Vector playerDir = playerLoc.getDirection().normalize();
 

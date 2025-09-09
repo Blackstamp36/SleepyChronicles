@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.drowned;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;

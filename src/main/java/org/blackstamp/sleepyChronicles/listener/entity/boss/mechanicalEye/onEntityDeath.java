@@ -1,7 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.boss.mechanicalEye;
 
 import org.blackstamp.sleepyChronicles.item.drop.witherDrops;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;

@@ -2,7 +2,6 @@ package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.phantom;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -10,21 +9,16 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.ally.copyOwnerTarget;
-import org.blackstamp.sleepyChronicles.util.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.blackstamp.sleepyChronicles.util.color.ChatColor;
+import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 import java.util.UUID;
 
-import static org.blackstamp.sleepyChronicles.globalClass.playerSummons;
-import static org.blackstamp.sleepyChronicles.sleepyChronicles.chatPrefix;
-
-public class stardustPhantom extends Phantom implements allyMob {
+@NMSEntity
+public class stardustPhantom extends Phantom implements summonableMob {
     @Setter
     @Getter
     private UUID summonerUUID;
@@ -54,41 +48,13 @@ public class stardustPhantom extends Phantom implements allyMob {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true));
     }
 
-    public boolean isAllyMob(){
+    public boolean isSummonable(){
         return true;
     }
 
     public Mob getEntity(){
         return this;
     }
-
-    public static void spawnEntity(Location loc, int entities, org.bukkit.entity.Player summoner) {
-        UUID uuid = summoner.getUniqueId();
-        ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
-
-        for (int i = 0; i < entities; i++) {
-            stardustPhantom e = new stardustPhantom(EntityType.PHANTOM, nmsLvl);
-            e.setSummonerUUID(uuid);
-            globalClass global = new globalClass();
-            playerSummons.putIfAbsent(uuid, 0);
-            int currentSummons = playerSummons.getOrDefault(uuid,0);
-
-            if(global.hasMaxSummons(summoner)){
-                summoner.sendMessage(chatPrefix + "§cYou've reached your max summons! (" + playerSummons.get(uuid) + ")");
-                summoner.playSound(summoner.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.5F,0.5F);
-                return;
-            }
-
-            double currentDamage = e.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
-            e.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(currentDamage * global.getSummonDamageModifier(summoner));
-            playerSummons.put(uuid, currentSummons + 1);
-
-            e.setPos(loc.getX(), loc.getY(), loc.getZ());
-            nmsLvl.addFreshEntity(e);
-
-        }
-    }
-
 }
 
 

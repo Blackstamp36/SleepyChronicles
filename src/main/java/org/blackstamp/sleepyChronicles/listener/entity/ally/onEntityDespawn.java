@@ -1,9 +1,10 @@
 package org.blackstamp.sleepyChronicles.listener.entity.ally;
 
 import net.minecraft.world.entity.Entity;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.zombie.stardustGolem;
 import org.blackstamp.sleepyChronicles.sleepyChronicles;
-import org.blackstamp.sleepyChronicles.util.Registrable;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
@@ -34,21 +35,23 @@ public class onEntityDespawn implements Listener {
         }
 
     private void handleSummonRemoval(org.bukkit.entity.Entity entity) {
-        if (entity instanceof CraftEntity craftEntity) {
-            Entity nmsEntity = craftEntity.getHandle();
+        if (!(entity instanceof CraftEntity craftEntity)) return;
+        Entity nmsEntity = craftEntity.getHandle();
 
-            if (nmsEntity instanceof allyMob ally) {
-                UUID summonerUUID = ally.getSummonerUUID();
+        if(!(nmsEntity instanceof summonableMob ally)) return;
+        if(nmsEntity instanceof stardustGolem) return;
 
-                if (summonerUUID != null) {
-                    Bukkit.getScheduler().runTask(sleepyChronicles.getter(), () -> {
+        UUID summonerUUID = ally.getSummonerUUID();
+
+        if (summonerUUID != null) {
+                    Bukkit.getScheduler().runTaskLater(sleepyChronicles.getter(), () -> {
                         Integer currentSummons = playerSummons.get(summonerUUID);
                         if (currentSummons != null
                                 && currentSummons > 0) playerSummons.put(summonerUUID, currentSummons - 1);
-                    });
-                }
-
-            }
+                    },1);
         }
+
+
+
     }
 }

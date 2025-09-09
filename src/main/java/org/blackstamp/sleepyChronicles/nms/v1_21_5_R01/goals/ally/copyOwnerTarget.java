@@ -3,8 +3,7 @@ package org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.ally;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.monster.Monster;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.allyMob;
+import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.summonableMob;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -12,7 +11,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 public class copyOwnerTarget extends Goal {
 
-    private final allyMob mob; // Your custom ally mob
+    private final summonableMob mob; // Your custom ally mob
     private final Mob entity;
     private final double speedModifier;
     private final boolean checkVisibility;
@@ -20,7 +19,7 @@ public class copyOwnerTarget extends Goal {
     private int seeTime;
     private int cooldown = 0;
 
-    public copyOwnerTarget(allyMob mob, double speed, boolean checkVisibility, boolean checkCanNavigate) {
+    public copyOwnerTarget(summonableMob mob, double speed, boolean checkVisibility, boolean checkCanNavigate) {
         this.mob = mob;
         this.entity = mob.getEntity();
         this.speedModifier = speed;
@@ -86,7 +85,7 @@ public class copyOwnerTarget extends Goal {
     }
 
     private boolean isValidTarget(LivingEntity target, Player summoner) {
-        if (target == summoner || target instanceof allyMob) return false;
+        if (target == summoner || target instanceof summonableMob) return false;
 
         return target.isAlive();
     }

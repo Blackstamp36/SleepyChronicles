@@ -47,13 +47,11 @@ public class mechanicalLungeGoal extends Goal {
             return false;
         }
 
-        // Only lunge if target is within 8-15 blocks
         double distance = this.wither.distanceToSqr(currentTarget);
         if (distance < 64.0 || distance > 225.0) { // 8-15 blocks
             return false;
         }
 
-        // 30% chance to lunge when conditions are met
         if (this.wither.getRandom().nextInt(3) != 0) {
             return false;
         }

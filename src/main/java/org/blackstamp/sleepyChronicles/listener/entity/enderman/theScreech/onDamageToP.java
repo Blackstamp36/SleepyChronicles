@@ -1,9 +1,7 @@
 package org.blackstamp.sleepyChronicles.listener.entity.enderman.theScreech;
 
 import org.blackstamp.sleepyChronicles.globalClass;
-import org.blackstamp.sleepyChronicles.util.Registrable;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.blackstamp.sleepyChronicles.util.registrable.Registrable;
 import org.bukkit.Sound;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
