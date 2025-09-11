@@ -58,7 +58,7 @@ public class quantumCore extends Creeper implements bossMob {
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1);
         this.setHealth(this.getMaxHealth());
 
-        global.initBossBarTask(this, "Qᴜᴀɴᴛᴜᴍ Cᴏʀᴇ", BarColor.GREEN);
+        global.initBossBarTask(this, "Qᴜᴀɴᴛᴜᴍ Cᴏʀᴇ", BarColor.GREEN,"#5f940c");
         registerGoals();
     }
 

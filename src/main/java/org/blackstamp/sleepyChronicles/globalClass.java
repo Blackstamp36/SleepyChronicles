@@ -517,13 +517,15 @@ public class globalClass {
             return;
         }
 
+        String causeWithoutColorCodes = finalCause.replaceAll("§[0-9a-zA-Z]", "");
+
         EmbedBuilder embed = new EmbedBuilder();
 
         int currentTime = Math.toIntExact(System.currentTimeMillis() / 1000);
 
         embed.setColor(new java.awt.Color(213, 24, 24));
         embed.setTitle(p.getName());
-        embed.addField("Death reason: 💀", finalCause, true);
+        embed.addField("Death reason: 💀", causeWithoutColorCodes, true);
         embed.addField("Coordinates: 🧭",
                 "X: " + (int) dL.getX() + ", Y: " + (int) dL.getY() + ", Z: " + (int) dL.getZ() + " (" + dimension + ")", true);
         embed.addField("Time: 🕛", "<t:" + currentTime + ">", true);
@@ -545,13 +547,15 @@ public class globalClass {
             return;
         }
 
+        String causeWithoutColorCodes = finalCause.replaceAll("§[0-9a-zA-Z]", "");
+
         EmbedBuilder embed = new EmbedBuilder();
 
         int currentTime = Math.toIntExact(System.currentTimeMillis() / 1000);
 
         embed.setColor(new java.awt.Color(245, 199, 14));
         embed.setTitle(p.getName() + " • N°" + totems);
-        embed.addField("Caused by: 💀", finalCause, true);
+        embed.addField("Caused by: 💀", causeWithoutColorCodes, true);
         embed.addField("Time: 🕛", "<t:" + currentTime + ">", true);
         switch (totemName) {
             case "Wooden Totem":
@@ -803,8 +807,8 @@ public class globalClass {
         }
     }
 
-    public void initBossBarTask(net.minecraft.world.entity.LivingEntity boss, String bossName, BarColor barColor) {
-        final BossBar finalBossBar = createBossbar(bossName, barColor);
+    public void initBossBarTask(net.minecraft.world.entity.LivingEntity boss, String bossName, BarColor barColor, String hexColor) {
+        final BossBar finalBossBar = createBossbar(bossName, barColor, hexColor);
         LivingEntity bukkitBoss = boss.getBukkitLivingEntity();
         String halfHealthTitle =  bossName.concat(" §c[\uD83D\uDD25]");
 
@@ -823,7 +827,7 @@ public class globalClass {
                 double progress = Math.clamp(currentHealth / maxHealth, 0.0, 1.0);
 
                 if(boss.getHealth() <= (boss.getMaxHealth() * 0.5)) finalBossBar.setTitle(
-                        "§8• §k|§f" + org.blackstamp.sleepyChronicles.util.color.ChatColor.of("#5f940c") + " " + halfHealthTitle + " " + "§8§k|§f §8•");
+                        "§8• §k|§f" + org.blackstamp.sleepyChronicles.util.color.ChatColor.of(hexColor) + " " + halfHealthTitle + " " + "§8§k|§f §8•");
                 finalBossBar.setProgress(progress);
 
                 Location bossLoc = bukkitBoss.getLocation();
@@ -851,9 +855,9 @@ public class globalClass {
         }.runTaskTimer(sleepyChronicles.getter(), 0, 20);
     }
 
-    private BossBar createBossbar(String barTitle, BarColor barColor) {
+    private BossBar createBossbar(String barTitle, BarColor barColor, String hexColor) {
         return Bukkit.createBossBar(
-                "§8• §k|§f" + org.blackstamp.sleepyChronicles.util.color.ChatColor.of("#5f940c") + " " + barTitle + " " + "§8§k|§f §8•",
+                "§8• §k|§f" + org.blackstamp.sleepyChronicles.util.color.ChatColor.of(hexColor) + " " + barTitle + " " + "§8§k|§f §8•",
                 barColor,
                 BarStyle.SEGMENTED_12
         );

@@ -29,6 +29,7 @@ public class onEntityDeath implements Listener {
             if(!(entity instanceof quantumCore)) return;
             if(e.getEntity().getKiller() == null) return;
             if(!(ThreadLocalRandom.current().nextInt(0, 100) <= 65)) return; // 66%
+
             e.getDrops().add(trinkets.createQuantumCore());
         }
     }

@@ -15,17 +15,12 @@ import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.iron_golem.quantumB
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.iron_golem.quantumBeastPhase1.quantumBeastShockWaveGoal;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.iron_golem.quantumBeastPhase2.quantumBeastBoostGoal;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.iron_golem.quantumBeastPhase2.quantumBeastCrushGoal;
-import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.iron_golem.quantumBeastPhase2.quantumBeastSmashBlocksGoal;
-import org.blackstamp.sleepyChronicles.sleepyChronicles;
 import org.blackstamp.sleepyChronicles.util.color.ChatColor;
 import org.blackstamp.sleepyChronicles.util.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 @NMSEntity
@@ -40,7 +35,6 @@ public class quantumBeast extends IronGolem {
     int maxHealth = 1;
     float movementSpeed = 0.325F;
     double mobScale = 3.25D;
-    private int tickCount = 0;
 
     public quantumBeast(EntityType<? extends IronGolem> entityType, Level level) {
         super(entityType, level);
@@ -102,7 +96,6 @@ public class quantumBeast extends IronGolem {
         entity.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 0.9, 32.0F));
         entity.goalSelector.addGoal(2, new quantumBeastCrushGoal(entity));
         entity.goalSelector.addGoal(3, new quantumBeastBoostGoal(entity));
-        entity.goalSelector.addGoal(4, new quantumBeastSmashBlocksGoal(entity, 4));
 
     }
 }

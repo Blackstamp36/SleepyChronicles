@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Bogged;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepyChronicles.globalClass;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.entity.bossMob;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.bogged.breezeraPhase1;
 import org.blackstamp.sleepyChronicles.nms.v1_21_5_R01.goals.bogged.breezeraPhase2Ambush;
@@ -34,6 +35,7 @@ import java.util.*;
 
 @NMSEntity
 public class breezeraBoss extends Bogged implements bossMob {
+    globalClass global = new globalClass();
     @Getter
     @Setter
     private int bossPhase = 1;
@@ -60,7 +62,7 @@ public class breezeraBoss extends Bogged implements bossMob {
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
 
-        initBreezeraTask(this);
+        global.initBossBarTask(this, "Bʀᴇᴇᴢᴇʀᴀ", BarColor.YELLOW, "#5f940c");
     }
 
     public void shootSeed(Player target, boolean isSpiky) {
@@ -138,72 +140,6 @@ public class breezeraBoss extends Bogged implements bossMob {
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
 
         this.setInvulnerable(false);
-    }
-
-    private void initBreezeraTask(breezeraBoss bogged) {
-        final BossBar finalBossBar = createBossbar();
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                LivingEntity bukkitBogged = bogged.getBukkitLivingEntity();
-
-                if (!bogged.isAlive() || !bukkitBogged.isValid()) {
-                    finalBossBar.removeAll();
-                    this.cancel();
-                    return;
-                }
-
-                double currentHealth = bogged.getHealth();
-                double maxHealth = bogged.getMaxHealth();
-                double progress = Math.clamp(currentHealth / maxHealth, 0.0, 1.0);
-
-                if(bogged.getBossPhase() == 2) finalBossBar.setTitle(
-                        "§8• §k|§f" + ChatColor.of("#5f940c") + " Bʀᴇᴇᴢᴇʀᴀ §c[\uD83D\uDD25] " + "§8§k|§f §8•");
-                finalBossBar.setProgress(progress);
-
-                Location witherLoc = bukkitBogged.getLocation();
-                Collection<org.bukkit.entity.Player> playersInRange = witherLoc.getNearbyPlayers(35);
-                Set<org.bukkit.entity.Player> currentViewers = new HashSet<>(finalBossBar.getPlayers());
-
-                for(org.bukkit.entity.Player viewer : currentViewers) {
-                    if (!playersInRange.contains(viewer)) {
-                        finalBossBar.removePlayer(viewer);
-                    }
-                }
-
-                for(org.bukkit.entity.Player player : playersInRange) {
-                    if (!currentViewers.contains(player)) {
-                        finalBossBar.addPlayer(player);
-                    }
-                }
-
-                if (playersInRange.isEmpty()) {
-                    finalBossBar.removeAll();
-                    bogged.remove(RemovalReason.DISCARDED);
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(sleepyChronicles.getter(), 0, 20);
-    }
-
-    public BossBar createBossbar() {
-        return Bukkit.createBossBar(
-                "§8• §k|§f" + ChatColor.of("#5f940c") + " Bʀᴇᴇᴢᴇʀᴀ " + "§8§k|§f §8•",
-                BarColor.GREEN,
-                BarStyle.SEGMENTED_12
-        );
-    }
-
-
-    public static void spawnEntity(Location loc, int entities) {
-        ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
-
-        for (int i = 0; i < entities; i++) {
-            breezeraBoss e = new breezeraBoss(EntityType.BOGGED, nmsLvl);
-            e.setPos(loc.getX(), loc.getY(), loc.getZ());
-            nmsLvl.addFreshEntity(e);
-        }
     }
 
     @Override

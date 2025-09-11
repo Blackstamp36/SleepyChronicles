@@ -24,14 +24,4 @@ public class eyelessGhast extends Ghast {
         this.setHealth(35);
 
     }
-
-    public static void spawnEntity(Location loc, int entities) {
-        ServerLevel nmsLvl = ((CraftWorld) loc.getWorld()).getHandle();
-
-        for (int i = 0; i < entities; i++) {
-            eyelessGhast e = new eyelessGhast(EntityType.GHAST, nmsLvl);
-            e.setPos(loc.getX(), loc.getY(), loc.getZ());
-            nmsLvl.addFreshEntity(e);
-        }
-    }
 }
