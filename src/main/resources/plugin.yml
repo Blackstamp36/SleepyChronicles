@@ -1,10 +1,16 @@
-name: sleepyChronicles
+name: SleepyChronicles
 version: '1.0.0'
-main: org.blackstamp.sleepyChronicles.sleepyChronicles
+main: org.blackstamp.sleepychronicles.SleepyChronicles
 api-version: '1.21'
 softdepend: [WorldEdit]
 authors: [ Blackstamp ]
-description: Un plugin hecho por mero aburrimiento.
+description: A custom minecraft-hardcore experience
+dependencies:
+  server:
+    WorldEdit:
+      load: BEFORE
+      required: true
+      join-classpath: true
 commands:
   sc:
   staff:

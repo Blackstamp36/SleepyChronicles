@@ -1,0 +1,24 @@
+package org.blackstamp.sleepychronicles.deprecated.listener.entity.enderman.theScreech;
+
+import com.destroystokyo.paper.event.entity.EndermanEscapeEvent;
+import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+@Registrable
+public class onEndermanEscape implements Listener {
+
+    @EventHandler
+    private void onEndermanEscape(EndermanEscapeEvent e) {
+        Entity entity = e.getEntity();
+
+        if(entity.getScoreboardTags().contains("theScreech")) {
+            if(e.getReason().equals(EndermanEscapeEvent.Reason.DROWN)){
+                e.setCancelled(true);
+            }
+
+        }
+    }
+}
+

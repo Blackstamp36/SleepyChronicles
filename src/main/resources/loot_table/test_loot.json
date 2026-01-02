@@ -1,0 +1,42 @@
+{
+  "id": "sleepyChronicles:test_loot",
+  "display_name": "IDK",
+  "pools": [
+    {
+      "name": "loot_common",
+      "rolls": 5,
+      "entries": [
+        {
+          "material": "minecraft:bread",
+          "weight": 8,
+          "count": { "min": 3, "max": 6 },
+          "chance": 0.8
+        },
+        {
+          "material": "minecraft:apple",
+          "weight": 5,
+          "count": { "min": 1, "max": 3 },
+          "chance": 0.5
+        }
+      ]
+    },
+    {
+      "name": "loot_rare",
+      "rolls": 10,
+      "entries": [
+        {
+          "material": "minecraft:iron_ingot",
+          "weight": 4,
+          "count": { "min": 1, "max": 3 },
+          "chance": 0.2
+        },
+        {
+          "material": "minecraft:golden_apple",
+          "weight": 1,
+          "count": { "min": 1, "max": 3 },
+          "chance": 0.05
+        }
+      ]
+    }
+  ]
+}

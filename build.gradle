@@ -10,6 +10,7 @@ version = '1.0.0'
 
 repositories {
     mavenCentral()
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
     maven {url = "https://repo.papermc.io/repository/maven-public/" }
     maven {url = "https://oss.sonatype.org/content/groups/public/" }
     maven {url = "https://maven.enginehub.org/repo/" }
@@ -19,10 +20,27 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT")
     implementation("net.dv8tion:JDA:6.0.0-rc.2")
-    implementation 'com.github.SasuMC:sasu-reflections:1.0'
+
+    // FAWE
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
+
+    // ACF
+    implementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+
+    // Kyori Adventure
+    implementation "net.kyori:adventure-api:4.20.0"
+    implementation "net.kyori:adventure-text-serializer-gson:4.20.0"
+    implementation "net.kyori:adventure-platform-bukkit:4.3.4"
+
+    // Reflections
+    implementation "com.github.SasuMC:sasu-reflections:1.0"
+
+    // Lombok
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
-    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.4.0-SNAPSHOT'
+    compileOnly "com.sk89q.worldedit:worldedit-bukkit:7.4.0-SNAPSHOT"
 }
 
 def targetJavaVersion = 24
@@ -61,7 +79,7 @@ shadowJar {
     doLast {
         copy {
             from shadowJar.archiveFile
-            into "C:/Users/Martin Godoy/Desktop/Cosas/server/plugins"
+            into "C:/Users/Martin Godoy/Desktop/misc/server/plugins"
         }
     }
 }
@@ -82,7 +100,7 @@ tasks {
 
     tasks.register("copyReobfJarToServer", Copy) {
         from shadowJar
-        into "C://Users//Martin Godoy//Desktop//Cosas//server//plugins"
+        into "C://Users//Martin Godoy//Desktop//misc//server//plugins"
     }
 
 }
