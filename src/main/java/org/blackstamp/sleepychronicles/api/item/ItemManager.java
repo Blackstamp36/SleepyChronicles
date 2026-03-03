@@ -1,16 +1,15 @@
 package org.blackstamp.sleepychronicles.api.item;
 
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomModelData;
+import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
+import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -27,18 +26,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Getter
 public class ItemManager implements Cloneable {
-    final ItemStack item;
-    ItemMeta meta;
 
-    public ItemManager(ItemStack item) { this.item = item; }
-    public ItemManager(Material material){ this.item = ItemStack.of(material); }
+    private final ItemStack item;
+    private final ItemMeta meta;
+
+    public ItemManager(ItemStack item) throws IllegalArgumentException{
+        if(item == null) throw new IllegalArgumentException("Item cannot be null!");
+
+        this.item = item;
+        this.meta = item.getItemMeta();
+    }
+
+    public ItemManager(Material material) throws IllegalArgumentException{
+        if(material == null) throw new IllegalArgumentException("Item cannot be null!");
+
+        this.item = ItemStack.of(material);
+        this.meta = item.getItemMeta();
+    }
 
     public ItemManager setDisplay(String display){
-        meta = item.getItemMeta();
-
-        meta.displayName(MiniMessage.miniMessage()
+        meta.displayName(ConstantFields.MINI_MESSAGE
                 .deserialize(display)
                 .decoration(TextDecoration.ITALIC,false));
         item.setItemMeta(meta);
@@ -46,22 +54,20 @@ public class ItemManager implements Cloneable {
     }
 
     public ItemManager setDisplay(Component display){
-        meta = item.getItemMeta();
-
         meta.displayName(display.decoration(TextDecoration.ITALIC,false));
         item.setItemMeta(meta);
         return this;
     }
 
-    public ItemManager setID(String value) {
-        meta = item.getItemMeta();
-
-        PersistentData.set(meta, "id", PersistentDataType.STRING, value);
+    public ItemManager setID(String value){
+        setPersistentData(SleepyKeys.ITEM_ID, value);
         item.setItemMeta(meta);
         return this.setCustomModelData(value);
     }
 
-    public String getID(){ return PersistentData.get(item.getItemMeta(), "id", PersistentDataType.STRING); }
+    public String getID(){ return getPersistentData(SleepyKeys.ITEM_ID); }
+
+    public boolean hasID(){ return PersistentData.has(meta, SleepyKeys.ITEM_ID); }
 
     public ItemManager setAmount(int value){
         item.setAmount(value);
@@ -69,24 +75,18 @@ public class ItemManager implements Cloneable {
     }
 
     public ItemManager addEnchant(Enchantment enchantment, int level){
-        meta = item.getItemMeta();
-
         meta.addEnchant(enchantment, level, true);
         item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager removeEnchant(Enchantment enchantment){
-        meta = item.getItemMeta();
-
         meta.removeEnchant(enchantment);
         item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setUnbreakable(boolean value){
-        meta = item.getItemMeta();
-
         meta.setUnbreakable(value);
         meta.setDamageResistant(DamageTypeTags.IS_EXPLOSION);
         meta.setDamageResistant(DamageTypeTags.IS_FIRE);
@@ -95,119 +95,103 @@ public class ItemManager implements Cloneable {
     }
 
     public ItemManager setGlint(boolean value){
-        meta = item.getItemMeta();
-
-        if(value){
-            meta.addEnchant(Enchantment.INFINITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS);
-        } else {
-            meta.removeEnchant(Enchantment.INFINITY);
-            meta.removeItemFlags(ItemFlag.HIDE_STORED_ENCHANTS);
-        }
-
+        meta.setEnchantmentGlintOverride(value);
         item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setFlags(ItemFlag... flags){
-        meta = item.getItemMeta();
-
         meta.addItemFlags(flags);
         item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setOwner(String nickname){
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        if(!(meta instanceof SkullMeta skull)) return this;
+
         OfflinePlayer p = Bukkit.getOfflinePlayer(nickname);
 
-        meta.setOwningPlayer(p);
-        PersistentData.set(meta, "owner", PersistentDataType.STRING, nickname);
+        skull.setOwningPlayer(p);
+        setPersistentData(SleepyKeys.ITEM_OWNER, nickname);
         item.setItemMeta(meta);
         return this;
     }
 
-    public String getOwner(){ return PersistentData.get(item.getItemMeta(), "owner", PersistentDataType.STRING); }
-
-    public ItemManager setCustomData(String key, String value){
-        meta = item.getItemMeta();
-
-        PersistentData.set(meta, key, PersistentDataType.STRING, value);
-        item.setItemMeta(meta);
-        return this;
-    }
+    public String getOwner(){ return getPersistentData(SleepyKeys.ITEM_OWNER); }
 
     public ItemManager setCustomModelData(String... value){
-        net.minecraft.world.item.ItemStack nmsItem = this.getAsNMS();
         ArrayList<String> valueArray = new ArrayList<>(Arrays.asList(value));
-        CustomModelData customModelData = new CustomModelData(
-                new ArrayList<>(),
-                new ArrayList<>(),
-                valueArray,
-                new ArrayList<>()
-                );
+        CustomModelDataComponent cmdComponent = meta.getCustomModelDataComponent();
+        cmdComponent.setStrings(valueArray);
 
-        nmsItem.applyComponents(DataComponentMap.builder().set(DataComponents.CUSTOM_MODEL_DATA, customModelData).build());
-        this.meta = nmsItem.asBukkitCopy().getItemMeta();
+        meta.setCustomModelDataComponent(cmdComponent);
         item.setItemMeta(meta);
         return this;
     }
 
-    public String getCustomData(String key){ return PersistentData.get(item.getItemMeta(), key, PersistentDataType.STRING); }
+    public void setPersistentData(NamespacedKey key, String value){
+        PersistentData.set(meta, key, PersistentDataType.STRING, value);
+        item.setItemMeta(meta);
+    }
+
+    public String getPersistentData(NamespacedKey key){ return PersistentData.get(meta, key, PersistentDataType.STRING); }
 
     public ItemManager setFamily(ItemFamily family){
-        meta = item.getItemMeta();
+        setPersistentData(SleepyKeys.ITEM_FAMILY, family.getName());
 
-        PersistentData.set(meta, "family", PersistentDataType.STRING, family.name());
         item.setItemMeta(meta);
         return this;
     }
 
-    public String getFamily(){ return PersistentData.get(item.getItemMeta(), "family", PersistentDataType.STRING); }
+    public String getFamily(){ return getPersistentData(SleepyKeys.ITEM_FAMILY); }
 
-    public ItemManager addLore(String value){
-        meta = item.getItemMeta();
+    public boolean hasFamily(){ return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY); }
+
+    public ItemManager addLore(String value, String color, boolean extra){
         final ArrayList<Component> lore = new ArrayList<>();
 
         if(meta.lore() != null) lore.addAll(meta.lore());
 
-        lore.add(MiniMessage.miniMessage()
-                .deserialize(value)
+        if(extra) lore.add(Component.text(" "));
+
+        lore.add(ConstantFields.MINI_MESSAGE
+                .deserialize(color + value)
                 .decoration(TextDecoration.ITALIC,false));
         meta.lore(lore);
         item.setItemMeta(meta);
         return this;
     }
 
-    public ItemManager setLore(String value){
-        meta = item.getItemMeta();
+    public ItemManager setLore(String value, String color){
+        final List<Component> lore = splitLoreLines(value, color);
+
+        meta.lore(lore);
+        item.setItemMeta(meta);
+        return this;
+    }
+
+    private @NotNull List<Component> splitLoreLines(String value, String color){
         final ArrayList<Component> lore = new ArrayList<>();
+        final StringBuilder builder = new StringBuilder(ConstantColors.DARK_GRAY + "|" + color);
+        final int max = 28;
 
-        lore.add(MiniMessage.miniMessage()
-                .deserialize(value)
-                .decoration(TextDecoration.ITALIC,false));
-        meta.lore(lore);
-        item.setItemMeta(meta);
-        return this;
-    }
+        for(String word : value.split("\\s+")){
+            final int chars = word.length() + builder.length() + 1;
+            int current = max;
 
-    private @NotNull List<String> splitLoreLines(String value, String color){
-        final ArrayList<String> lore = new ArrayList<>();
-        StringBuilder builder = new StringBuilder();
-        final byte max = 20;
-        String line = "";
+            if(lore.isEmpty()) current += builder.length();
 
-        for(String word : value.split("//s+")){
-            if(!builder.isEmpty() && builder.length() + word.length() > max){
-                lore.add(line);
+            if(chars > current){
+                lore.add(ConstantFields.MINI_MESSAGE.deserialize(color + builder).decoration(TextDecoration.ITALIC,false));
                 builder.setLength(0);
             }
 
-            builder.append(word);
-            line = color + builder.toString().trim();
+            if(!builder.isEmpty()) builder.append(" ").append(word);
+            else builder.append(word);
         }
 
-        if(!builder.isEmpty()) lore.add(line);
+        if(!builder.isEmpty()) lore.add(ConstantFields.MINI_MESSAGE.deserialize(color + builder).decoration(TextDecoration.ITALIC,false));
+
         return lore;
     }
 

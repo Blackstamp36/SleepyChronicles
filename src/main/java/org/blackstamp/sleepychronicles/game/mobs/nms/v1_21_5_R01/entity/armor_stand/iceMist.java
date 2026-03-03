@@ -5,13 +5,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
-public class iceMist extends ArmorStand implements customProjectile {
+public class iceMist extends ArmorStand implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     private LivingEntity caster;
     private int lifetimeTicks;
@@ -46,9 +46,9 @@ public class iceMist extends ArmorStand implements customProjectile {
         if(tickCount % 3 == 0) {
             ParticleManager pM = new ParticleManager(bukkitE.getWorld());
             Location projectileLoc = new Location(bukkitE.getWorld(), bukkitE.getX(), bukkitE.getY() + 1.25, bukkitE.getZ());
-            pM.spawnParticle(projectileLoc, Particle.GUST, null,
+            pM.particle(projectileLoc, Particle.GUST, null,
                     1, 0.0, 0.0, 0.0, 0.5);
-            pM.spawnParticle(projectileLoc, Particle.SNOWFLAKE, null,
+            pM.particle(projectileLoc, Particle.SNOWFLAKE, null,
                     particleCount, 0.25, 0.5, 0.25, 0.0);
         }
 
@@ -69,7 +69,7 @@ public class iceMist extends ArmorStand implements customProjectile {
     private void handleIceMistImpact(){
         ParticleManager pM = new ParticleManager(bukkitE.getWorld());
         Location projectileLoc = new Location(bukkitE.getWorld(), bukkitE.getX(), bukkitE.getY() + 1.25, bukkitE.getZ());
-        pM.spawnParticle(projectileLoc, Particle.EXPLOSION_EMITTER, null,
+        pM.particle(projectileLoc, Particle.EXPLOSION_EMITTER, null,
                 1,0.0,0.0,0.0,0.5);
         launchIceShards();
     }
@@ -90,6 +90,6 @@ public class iceMist extends ArmorStand implements customProjectile {
     }
 
     @Override
-    public void handleProjectileImpact(LivingEntity damagedEntity) {
+    public void handleImpact(LivingEntity damagedEntity) {
     }
 }

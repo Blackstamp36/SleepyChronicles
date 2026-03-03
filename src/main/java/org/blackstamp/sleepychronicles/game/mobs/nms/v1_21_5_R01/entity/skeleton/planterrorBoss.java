@@ -13,12 +13,10 @@ import org.blackstamp.sleepychronicles.global.GlobalClass;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.bossMob;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.skeleton.ptPhase1.*;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
-@NMSEntity
 public class planterrorBoss extends Skeleton implements bossMob {
     @Setter
     @Getter

@@ -27,7 +27,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.game.world.dimensions.AftermathBiomeProvider;
 import org.blackstamp.sleepychronicles.game.world.dimensions.AftermathChunkGenerator;
-import org.blackstamp.sleepychronicles.deprecated.items.trinket.trinketItems;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.bossMob;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.skeleton.planterrorBoss;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.summonableMob;
@@ -361,8 +360,6 @@ public class GlobalClass {
         final Map<UUID, Boolean> hasQuantumReactor = new HashMap<>();
         final Map<UUID, Boolean> hasBobMiracle = new HashMap<>();
 
-        trinketItems trinkets = new trinketItems();
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -375,18 +372,6 @@ public class GlobalClass {
 
                     PlayerData data = global.getPlayerData(uuid);
                     Inventory perksInv = data.getTrinketsAsInventory(all);
-
-                    boolean currentlyHasNullTNT = perksInv.contains(trinkets.createNullTNT());
-                    boolean currentlyHasBobSoul = perksInv.contains(trinkets.createBobSoul());
-                    boolean currentlyHasQuantumCore = perksInv.contains(trinkets.createQuantumCore());
-                    boolean currentlyHasQuantumReactor = perksInv.contains(trinkets.createQuantumReactor());
-                    boolean currentlyHasBobMiracle = perksInv.contains(trinkets.createBobMiracle());
-
-                    hasNullTNT.put(uuid, currentlyHasNullTNT);
-                    hasBobSoul.put(uuid, currentlyHasBobSoul);
-                    hasQuantumCore.put(uuid, currentlyHasQuantumCore);
-                    hasQuantumReactor.put(uuid, currentlyHasQuantumReactor);
-                    hasBobMiracle.put(uuid, currentlyHasBobMiracle);
 
                     double baseHealth = 20.0;
                     double baseSpeed = 0.1;
@@ -694,13 +679,7 @@ public class GlobalClass {
 
     public double getSummonDamageModifier(Player p){
         double damage = 1.0;
-        trinketItems trinkets = new trinketItems();
-        PlayerData data = getPlayerData(p.getUniqueId());
-        Inventory perksInv = data.getTrinketsAsInventory(p);
 
-        boolean hasEmblem = perksInv.contains(trinkets.createSummonerEmblem());
-
-        if(hasEmblem) damage += 0.15;
         if(hasCustomArmor(p, "stardust")) damage += 0.3;
 
         return damage;

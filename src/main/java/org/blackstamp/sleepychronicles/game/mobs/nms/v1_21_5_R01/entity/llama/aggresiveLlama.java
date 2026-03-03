@@ -6,11 +6,9 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-@NMSEntity
 public class aggresiveLlama extends Llama {
 
     public aggresiveLlama(EntityType<? extends Llama> type, Level world) {

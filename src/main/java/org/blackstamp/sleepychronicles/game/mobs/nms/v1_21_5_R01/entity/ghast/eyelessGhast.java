@@ -5,10 +5,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
-@NMSEntity
 public class eyelessGhast extends Ghast {
     public eyelessGhast(EntityType<? extends Ghast> entityType, Level level) {
         super(entityType, level);

@@ -12,12 +12,10 @@ import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.summonableMob;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.ally.copyOwnerTarget;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 import java.util.UUID;
 
-@NMSEntity
 public class stardustCreeper extends Creeper implements summonableMob {
     @Setter
     @Getter

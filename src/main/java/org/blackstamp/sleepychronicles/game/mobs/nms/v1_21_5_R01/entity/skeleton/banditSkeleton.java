@@ -7,7 +7,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 
-@NMSEntity
 public class banditSkeleton extends Skeleton {
 
     public banditSkeleton(EntityType<? extends Skeleton> type, Level world) {

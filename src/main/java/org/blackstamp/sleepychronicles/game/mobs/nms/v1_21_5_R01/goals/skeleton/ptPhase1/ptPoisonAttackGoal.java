@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.skeleton.planterrorBoss;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -65,12 +65,12 @@ public class ptPoisonAttackGoal extends Goal {
         bukkitT.playSound(bukkitT.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_BLINDNESS,0.5F,1.25F);
 
         entity.getBukkitLivingEntity().addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE,60,2));
-        pM.spawnParticle(l, Particle.ENTITY_EFFECT, Color.fromRGB(95,148,12),
+        pM.particle(l, Particle.ENTITY_EFFECT, Color.fromRGB(95,148,12),
                 500,1.75,1.75,1.75,0.15);
 
-        pM.spawnCircle(spawnLoc, Particle.FALLING_SPORE_BLOSSOM,
+        pM.circle(spawnLoc, Particle.FALLING_SPORE_BLOSSOM,
                 5,50,0.0,null);
-        pM.spawnCircle(spawnLoc, Particle.CHERRY_LEAVES,
+        pM.circle(spawnLoc, Particle.CHERRY_LEAVES,
                 5,50,0.0,null);
 
         for(Player nearby : l.getNearbyPlayers(5,5,5)){

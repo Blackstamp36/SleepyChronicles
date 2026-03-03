@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.skeleton.planterrorBoss;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.endermite.netherMite;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.skeleton.banditSkeleton;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -82,7 +82,7 @@ public class ptSummonMinionsGoal extends Goal {
         netherMite entity = new netherMite(EntityType.ENDERMITE, nmsLevel);
         nmsLevel.addFreshEntity(entity);
         entity.setPos(vec3);
-        pM.spawnParticle(l, Particle.SOUL,null,
+        pM.particle(l, Particle.SOUL,null,
                 25,0.25,0.25,0.25, 0.25);
     }
 
@@ -93,7 +93,7 @@ public class ptSummonMinionsGoal extends Goal {
         banditSkeleton entity = new banditSkeleton(EntityType.SKELETON, nmsLevel);
         nmsLevel.addFreshEntity(entity);
         entity.setPos(vec3);
-        pM.spawnParticle(l, Particle.SOUL,null,
+        pM.particle(l, Particle.SOUL,null,
                 25,0.25,0.25,0.25, 0.25);
     }
 }

@@ -6,8 +6,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.bossMob;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class bigFireball extends ArmorStand implements customProjectile {
+public class bigFireball extends ArmorStand implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     Location targetPrevLoc;
     private LivingEntity shooter;
@@ -53,8 +53,8 @@ public class bigFireball extends ArmorStand implements customProjectile {
         ParticleManager pM = new ParticleManager(bukkitE.getWorld());
         Location projectileLoc = bukkitE.getLocation();
 
-        pM.spawnSphere(projectileLoc, Particle.FLAME, 1,25,0.0,null);
-        pM.spawnParticle(projectileLoc, Particle.SQUID_INK, null,
+        pM.sphere(projectileLoc, Particle.FLAME, 1,25,0.0,null);
+        pM.particle(projectileLoc, Particle.SQUID_INK, null,
                 10,0,0,0,0.0);
 
         if(tickCount % 10 == 0){
@@ -63,7 +63,7 @@ public class bigFireball extends ArmorStand implements customProjectile {
         }
 
         if(tickCount >= lifetimeTicks) {
-            pM.spawnParticle(projectileLoc, Particle.EXPLOSION_EMITTER, null,
+            pM.particle(projectileLoc, Particle.EXPLOSION_EMITTER, null,
                     1,0.05,0.05,0.05,0.5);
             handleFireballDamage();
             this.discard();
@@ -93,7 +93,7 @@ public class bigFireball extends ArmorStand implements customProjectile {
         }
     }
 
-    public void handleProjectileImpact(LivingEntity damagedEntity){
+    public void handleImpact(LivingEntity damagedEntity){
     }
 
 }

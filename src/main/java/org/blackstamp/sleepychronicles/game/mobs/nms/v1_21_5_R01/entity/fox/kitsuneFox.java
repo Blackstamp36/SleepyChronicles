@@ -9,12 +9,10 @@ import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
-@NMSEntity
 public class kitsuneFox extends Fox {
 
     public kitsuneFox(EntityType<? extends Fox> type, Level world) {

@@ -4,7 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.ghast.emperorOfDarkness;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -68,7 +68,7 @@ public class eodDashGoal extends Goal {
             bukkitP.damage(dashDamage, entity.getBukkitLivingEntity());
             bukkitP.playSound(bukkitP.getLocation(), Sound.ENTITY_GENERIC_EXPLODE,0.75F,1.25F);
             bukkitP.playSound(bukkitP.getLocation(), Sound.ENTITY_ALLAY_ITEM_TAKEN,0.85F,1.25F);
-            pM.spawnParticle(l, Particle.EXPLOSION_EMITTER,null,
+            pM.particle(l, Particle.EXPLOSION_EMITTER,null,
                     particleCount,0,0,0,1.0);
         }
 }

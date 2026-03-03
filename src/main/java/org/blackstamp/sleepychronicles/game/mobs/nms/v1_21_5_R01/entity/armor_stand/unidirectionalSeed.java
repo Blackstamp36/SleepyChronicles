@@ -6,15 +6,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class unidirectionalSeed extends ArmorStand implements customProjectile {
+public class unidirectionalSeed extends ArmorStand implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     private LivingEntity caster;
     private int lifetimeTicks;
@@ -51,11 +51,11 @@ public class unidirectionalSeed extends ArmorStand implements customProjectile {
         ParticleManager pM = new ParticleManager(bukkitE.getWorld());
         Location projectileLoc = new Location(bukkitE.getWorld(), bukkitE.getX(), bukkitE.getY() + 1.25, bukkitE.getZ());
 
-        pM.spawnParticle(projectileLoc, Particle.EXPLOSION, null,
+        pM.particle(projectileLoc, Particle.EXPLOSION, null,
                 1,0.0,0.0,0.0,0.25);
-        pM.spawnParticle(projectileLoc, Particle.CHERRY_LEAVES, null,
+        pM.particle(projectileLoc, Particle.CHERRY_LEAVES, null,
                 particleCount,0.25,0.5,0.25,0.25);
-        pM.spawnParticle(projectileLoc, Particle.ENCHANTED_HIT, null,
+        pM.particle(projectileLoc, Particle.ENCHANTED_HIT, null,
                 particleCount * 2,0.25,0.5,0.25,0.25);
 
         if (tickCount >= lifetimeTicks) {
@@ -67,10 +67,10 @@ public class unidirectionalSeed extends ArmorStand implements customProjectile {
         setPos(position().add(movement));
 
         if(!cM.getPlayerCollisions(this).isEmpty())
-            for (Entity e : cM.getPlayerCollisions(this)) handleProjectileImpact((LivingEntity) e);
+            for (Entity e : cM.getPlayerCollisions(this)) handleImpact((LivingEntity) e);
     }
 
-    public void handleProjectileImpact(LivingEntity damagedEntity){
+    public void handleImpact(LivingEntity damagedEntity){
         if(damagedEntity == null) return;
 
         org.bukkit.entity.LivingEntity bukkitDE = damagedEntity.getBukkitLivingEntity();

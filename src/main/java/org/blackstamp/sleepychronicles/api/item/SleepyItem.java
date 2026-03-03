@@ -1,11 +1,9 @@
 package org.blackstamp.sleepychronicles.api.item;
 
 import co.aikar.commands.annotation.Optional;
-import org.blackstamp.sleepychronicles.api.SleepyPalette;
-import org.blackstamp.sleepychronicles.api.data.PersistentData;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 public class SleepyItem extends ItemManager {
@@ -34,14 +32,39 @@ public class SleepyItem extends ItemManager {
         return this;
     }
 
-    public SleepyItem setLore(String lore, boolean extra){
-        if(extra) super.addLore("");
-        super.setLore(lore);
+    public SleepyItem setAmount(int value){
+        super.setAmount(value);
         return this;
     }
 
-    public SleepyItem setID(String value) {
+    public SleepyItem addLore(String value, String color, boolean extra){
+        super.addLore(value, color, extra);
+
+        return this;
+    }
+
+    public SleepyItem setLore(String value, String color){
+        super.setLore(value, color);
+        return this;
+    }
+
+    public SleepyItem setIcon(char value, String color){
+        addLore("[" + value + "]", color, true);
+        return this;
+    }
+
+    public SleepyItem setID(String value){
         super.setID(value);
+        return this;
+    }
+
+    public SleepyItem setFamily(ItemFamily family){
+        super.setFamily(family);
+        return this;
+    }
+
+    public SleepyItem setGlint(boolean value){
+        super.setGlint(value);
         return this;
     }
 }

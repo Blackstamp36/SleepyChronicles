@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.ghast.emperorOfDarkness;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -73,7 +73,7 @@ public class eodSupernovaGoal extends Goal {
                 if(tickCount++ >= 80) {
                     entity.setNoAi(false);
                     bukkitE.setGlowing(false);
-                    pM.spawnParticle(currentLoc, Particle.EXPLOSION_EMITTER, null,
+                    pM.particle(currentLoc, Particle.EXPLOSION_EMITTER, null,
                             25,5.25,5.25,5.25,1.0);
                     for (org.bukkit.entity.Player nearby : entity.getBukkitLivingEntity().getLocation().getNearbyPlayers(16)){
                         nearby.damage(supernovaDamage, entity.getBukkitLivingEntity());
@@ -85,9 +85,9 @@ public class eodSupernovaGoal extends Goal {
                 }
 
                 if(tickCount % 20 == 0) {
-                    pM.spawnSphere(currentLoc, Particle.END_ROD,
+                    pM.sphere(currentLoc, Particle.END_ROD,
                             16, 500, 0.0,null);
-                    pM.spawnSphere(currentLoc, Particle.SQUID_INK,
+                    pM.sphere(currentLoc, Particle.SQUID_INK,
                             16, 250, 0.0,null);
 
                     for (org.bukkit.entity.Player nearby : entity.getBukkitLivingEntity().getLocation().getNearbyPlayers(32))

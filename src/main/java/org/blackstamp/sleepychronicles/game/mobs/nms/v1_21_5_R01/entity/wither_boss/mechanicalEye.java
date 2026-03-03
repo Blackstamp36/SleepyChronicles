@@ -18,13 +18,11 @@ import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.wither_bo
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.wither_boss.mEPhase1.meMechanicalLungeGoal;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.wither_boss.mEPhase1.meGreenFlamesGoal;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.boss.BarColor;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@NMSEntity
 public class mechanicalEye extends WitherBoss implements bossMob {
 
     @Setter

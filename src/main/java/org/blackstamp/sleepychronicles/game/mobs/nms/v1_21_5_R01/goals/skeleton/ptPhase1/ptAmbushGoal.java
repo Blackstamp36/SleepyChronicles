@@ -5,7 +5,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.skeleton.planterrorBoss;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.potion.PotionEffect;
@@ -68,7 +68,7 @@ public class ptAmbushGoal extends Goal {
         org.bukkit.entity.LivingEntity bukkitT = target.getBukkitLivingEntity();
 
         entity.teleportTo(target.getX(), target.getY(), target.getZ());
-        pM.spawnParticle(bukkitE.getLocation(), Particle.PORTAL, null,
+        pM.particle(bukkitE.getLocation(), Particle.PORTAL, null,
                 25,0.05,0.05,0.05,1.0);
         bukkitT.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,20,0,false,false));
         if(bukkitT instanceof org.bukkit.entity.Player p)

@@ -14,7 +14,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.blackstamp.sleepychronicles.global.GlobalClass.playerMaxSummons;
-import static org.blackstamp.sleepychronicles.SleepyChronicles.chatPrefix;
 
 public interface summonableMob {
     void setSummonerUUID(UUID uuid);
@@ -42,7 +41,7 @@ public interface summonableMob {
         UUID uuid = summoner.getUniqueId();
 
         if(global.hasMaxSummons(summoner)){
-            summoner.sendMessage(chatPrefix + "§cYou've reached your max summons! (" + playerMaxSummons.get(uuid) + ")");
+            summoner.sendMessage("§cYou've reached your max summons! (" + playerMaxSummons.get(uuid) + ")");
             summoner.playSound(summoner.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,0.85F,0.25F);
             return;
         }

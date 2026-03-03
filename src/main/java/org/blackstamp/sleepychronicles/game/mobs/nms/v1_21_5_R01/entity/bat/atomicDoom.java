@@ -7,15 +7,15 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.armor_stand.endProphecy;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.util.Vector;
 
-public class atomicDoom extends Bat implements customProjectile {
+public class atomicDoom extends Bat implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     private final Location targetPrevLoc;
     private LivingEntity caster;
@@ -53,11 +53,11 @@ public class atomicDoom extends Bat implements customProjectile {
 
         if(tickCount % 3 == 0) {
             ParticleManager pM = new ParticleManager(bukkitE.getWorld());
-            pM.spawnParticle(projectileLoc, Particle.GUST, null,
+            pM.particle(projectileLoc, Particle.GUST, null,
                     1, 0.0, 0.0, 0.0, 0.5);
-            pM.spawnParticle(projectileLoc, Particle.WITCH, null,
+            pM.particle(projectileLoc, Particle.WITCH, null,
                     particleCount, 0.25, 0.5, 0.25, 0.0);
-            pM.spawnParticle(projectileLoc, Particle.RAID_OMEN, null,
+            pM.particle(projectileLoc, Particle.RAID_OMEN, null,
                     particleCount, 0.25, 0.5, 0.25, 0.0);
         }
 
@@ -78,7 +78,7 @@ public class atomicDoom extends Bat implements customProjectile {
     private void handleAreaImpact(){
         ParticleManager pM = new ParticleManager(bukkitE.getWorld());
         Location projectileLoc = new Location(bukkitE.getWorld(), bukkitE.getX(), bukkitE.getY() + 1.25, bukkitE.getZ());
-        pM.spawnParticle(projectileLoc, Particle.EXPLOSION_EMITTER, null,
+        pM.particle(projectileLoc, Particle.EXPLOSION_EMITTER, null,
                 1,0.0,0.0,0.0,0.5);
 
         fireEndProphecies();
@@ -98,6 +98,6 @@ public class atomicDoom extends Bat implements customProjectile {
     }
 
     @Override
-    public void handleProjectileImpact(LivingEntity damagedEntity) {
+    public void handleImpact(LivingEntity damagedEntity) {
     }
 }

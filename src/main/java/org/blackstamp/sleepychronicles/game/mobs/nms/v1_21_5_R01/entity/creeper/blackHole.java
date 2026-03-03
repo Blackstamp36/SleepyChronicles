@@ -7,8 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -23,7 +22,6 @@ import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
-@NMSEntity
 public class blackHole extends Creeper {
     @Setter
     @Getter
@@ -86,7 +84,7 @@ public class blackHole extends Creeper {
 
             nearbyMonsters.setVelocity(direction);
 
-            pM.spawnParticle(l, Particle.GLOW_SQUID_INK, null,
+            pM.particle(l, Particle.GLOW_SQUID_INK, null,
                     20,0.25,0.25,0.25,1.0);
         }
     }
@@ -106,9 +104,9 @@ public class blackHole extends Creeper {
             if (nearbyMonsters instanceof Player || nearbyMonsters.isInvulnerable()) continue;
             nearbyMonsters.damage(summoner.getHealth() * 2);
         }
-        pM.spawnParticle(l, Particle.EXPLOSION_EMITTER,null,
+        pM.particle(l, Particle.EXPLOSION_EMITTER,null,
                 1,0,0,0,1.0);
-        pM.spawnParticle(l, Particle.SMOKE,null,
+        pM.particle(l, Particle.SMOKE,null,
                 25,0.25,0.25,0.25,1.0);
         entity.remove(RemovalReason.DISCARDED);
     }

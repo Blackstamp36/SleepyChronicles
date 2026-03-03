@@ -15,7 +15,6 @@ import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.iron_gole
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.iron_golem.quantumBeastPhase1.qbHomingWavesGoal;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.iron_golem.quantumBeastPhase2.qbSpeedBoostGoal;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -25,7 +24,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-@NMSEntity
 public class quantumBeast extends IronGolem {
     @Setter
     @Getter

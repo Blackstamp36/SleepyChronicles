@@ -7,7 +7,7 @@ import org.reflections.Reflections;
 
 public class RegistrableUtils {
     public static void registerListeners() {
-        Reflections reflections = new Reflections("org.blackstamp.SleepyChronicles");
+        Reflections reflections = new Reflections("org.blackstamp.sleepychronicles.game");
 
         for(Class<?> clazz : reflections.getTypesAnnotatedWith(Registrable.class)) {
             try {

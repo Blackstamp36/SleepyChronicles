@@ -10,10 +10,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.armor_stand.homingProjectile;
+import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.HomingProjectile;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.armor_stand.shockWave;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.ghast.emperorOfDarkness;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -94,7 +94,7 @@ public class eodHomingProjectilesGoal extends Goal {
                 }
 
                 if(tickCount % 10 == 0) {
-                    homingProjectile projectile = new homingProjectile(EntityType.ARMOR_STAND, nmsLevel,
+                    HomingProjectile projectile = new HomingProjectile(EntityType.ARMOR_STAND, nmsLevel,
                             projectileDamage,70 + tickCount, 40 + tickCount,
                             target, entity);
 
@@ -125,7 +125,7 @@ public class eodHomingProjectilesGoal extends Goal {
                 if(tickCount++ >= 60) {
                     entity.setNoAi(false);
                     bukkitE.setGlowing(false);
-                    pM.spawnParticle(currentLoc, Particle.EXPLOSION_EMITTER, null,
+                    pM.particle(currentLoc, Particle.EXPLOSION_EMITTER, null,
                             10,2.0,2.0,2.0,1.0);
                     for (org.bukkit.entity.Player nearby : entity.getBukkitLivingEntity().getLocation().getNearbyPlayers(12)){
                         nearby.damage(sphereDamage, entity.getBukkitLivingEntity());
@@ -137,7 +137,7 @@ public class eodHomingProjectilesGoal extends Goal {
                 }
 
                 if(tickCount % 20 == 0) {
-                    pM.spawnSphere(currentLoc, Particle.END_ROD,
+                    pM.sphere(currentLoc, Particle.END_ROD,
                             12, 500, 0.0,null);
 
                     for (org.bukkit.entity.Player nearby : entity.getBukkitLivingEntity().getLocation().getNearbyPlayers(24))

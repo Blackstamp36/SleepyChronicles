@@ -20,8 +20,7 @@ import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.evoker.tb
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.evoker.tbPhase1.tbLightningOrbGoal;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.evoker.tbPhase2.tbQuantumLightsGoal;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
@@ -29,7 +28,6 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@NMSEntity
 public class theBeliever extends Evoker implements bossMob {
     @Setter
     @Getter
@@ -116,7 +114,7 @@ public class theBeliever extends Evoker implements bossMob {
         Location l = bukkitE.getLocation();
         ParticleManager pM = new ParticleManager(bukkitE.getWorld());
 
-        pM.spawnParticle(l, Particle.ANGRY_VILLAGER,null,
+        pM.particle(l, Particle.ANGRY_VILLAGER,null,
                 15,0.25,0.5,0.25,0.0);
     }
 

@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.iron_golem.quantumBeast.quantumCore;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.iron_golem.quantumBeast.quantumMinion;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -80,7 +80,7 @@ public class qcMinionsSpellGoal extends Goal {
         quantumMinion entity = new quantumMinion(EntityType.ZOMBIE, nmsLevel);
         nmsLevel.addFreshEntity(entity);
         entity.setPos(vec3);
-        pM.spawnParticle(l, Particle.SOUL,null,
+        pM.particle(l, Particle.SOUL,null,
                 50,0.25,0.25,0.25, 0.25);
     }
 

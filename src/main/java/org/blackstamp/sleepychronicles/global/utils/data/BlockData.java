@@ -43,9 +43,7 @@ public class BlockData implements Listener {
         return playerPlacedBlocks.get(block.getLocation());
     }
 
-    // Optional: Clean up method to prevent memory leaks
     public void cleanup() {
-        // Remove entries for blocks that no longer exist
         playerPlacedBlocks.entrySet().removeIf(entry -> {
             Location loc = entry.getKey();
             return loc.getWorld().getBlockAt(loc).getType().isAir();

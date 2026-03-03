@@ -7,8 +7,8 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.bossMob;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class iceShard extends ArmorStand implements customProjectile {
+public class iceShard extends ArmorStand implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     private LivingEntity caster;
     private int lifetimeTicks;
@@ -55,13 +55,13 @@ public class iceShard extends ArmorStand implements customProjectile {
         if (tickCount % 3 == 0) {
             ParticleManager pM = new ParticleManager(bukkitE.getWorld());
             Location projectileLoc = new Location(bukkitE.getWorld(), bukkitE.getX(), bukkitE.getY() + 1.25, bukkitE.getZ());
-            pM.spawnParticle(projectileLoc, Particle.EXPLOSION, null,
+            pM.particle(projectileLoc, Particle.EXPLOSION, null,
                     1, 0.0, 0.0, 0.0, 0.0);
-            pM.spawnParticle(projectileLoc, Particle.SMALL_GUST, null,
+            pM.particle(projectileLoc, Particle.SMALL_GUST, null,
                     particleCount, 0.0, 0.0, 0.0, 0.0);
-            pM.spawnParticle(projectileLoc, Particle.ENTITY_EFFECT, Color.fromRGB(68,115,137),
+            pM.particle(projectileLoc, Particle.ENTITY_EFFECT, Color.fromRGB(68,115,137),
                     particleCount, 0.0, 0.0, 0.0, 0.0);
-            pM.spawnParticle(projectileLoc, Particle.SNOWFLAKE, null,
+            pM.particle(projectileLoc, Particle.SNOWFLAKE, null,
                     particleCount, 0.25, 0.5, 0.25, 0.0);
         }
 
@@ -69,13 +69,13 @@ public class iceShard extends ArmorStand implements customProjectile {
         setPos(position().add(movement));
 
         if(!cM.getPlayerCollisions(this).isEmpty() || tickCount >= lifetimeTicks) {
-            for (Entity e : cM.getPlayerCollisions(this)) handleProjectileImpact((LivingEntity) e);
+            for (Entity e : cM.getPlayerCollisions(this)) handleImpact((LivingEntity) e);
             this.discard();
         }
     }
 
     @Override
-    public void handleProjectileImpact(LivingEntity damagedEntity) {
+    public void handleImpact(LivingEntity damagedEntity) {
         for (org.bukkit.entity.Entity n : this.getBukkitLivingEntity().getLocation().getNearbyEntities(3, 1, 3)) {
             if (!(n instanceof org.bukkit.entity.LivingEntity bukkitDE)) continue;
             if (n instanceof bossMob) continue;

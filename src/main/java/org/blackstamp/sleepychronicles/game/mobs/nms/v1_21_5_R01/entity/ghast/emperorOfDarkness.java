@@ -17,7 +17,6 @@ import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.ghast.eod
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.ghast.eodPhase2.eodRandomTeleportGoal;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.ghast.eodPhase2.eodSupernovaGoal;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -27,7 +26,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-@NMSEntity
 public class emperorOfDarkness extends Ghast implements bossMob {
     @Setter
     @Getter

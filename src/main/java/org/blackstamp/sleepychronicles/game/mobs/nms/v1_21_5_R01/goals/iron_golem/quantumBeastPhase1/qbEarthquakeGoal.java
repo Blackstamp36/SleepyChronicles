@@ -10,7 +10,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.iron_golem.quantumBeast.quantumBeast;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -79,18 +79,18 @@ public class qbEarthquakeGoal extends Goal {
                         nearby.damage(earthquakeDamage, entity.getBukkitLivingEntity());
                         nearby.playSound(nearby.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.85F, 0.75F);
                     }
-                    pM.spawnParticle(eqLoc, Particle.EXPLOSION_EMITTER, null,
+                    pM.particle(eqLoc, Particle.EXPLOSION_EMITTER, null,
                             1, 0.0, 0.0, 0.0, 1.0);
                     this.cancel();
                     return;
                 }
 
                 if(tickCount % 10 == 0) {
-                    pM.spawnParticle(eqLoc, Particle.BLOCK, Material.DIRT.createBlockData(),
+                    pM.particle(eqLoc, Particle.BLOCK, Material.DIRT.createBlockData(),
                             particleCount * 2, 0.75, 0.25, 0.75, 1.0);
-                    pM.spawnCircle(eqLoc, Particle.BLOCK, 3,
+                    pM.circle(eqLoc, Particle.BLOCK, 3,
                             particleCount, 0.0, Material.DIRT.createBlockData());
-                    pM.spawnCircle(eqLoc, Particle.SMALL_GUST, 3,
+                    pM.circle(eqLoc, Particle.SMALL_GUST, 3,
                             20, 0.0, null);
                     for (org.bukkit.entity.Player nearby : eqLoc.getNearbyPlayers(6)){
                         nearby.playSound(nearby.getLocation(), Sound.BLOCK_ROOTED_DIRT_BREAK, 0.85F, 0.75F);

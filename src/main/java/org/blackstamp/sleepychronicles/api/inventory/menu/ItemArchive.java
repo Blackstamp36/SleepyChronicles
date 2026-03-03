@@ -24,7 +24,7 @@ public class ItemArchive extends MenuTemplate {
     private int page = 0;
     private final int totalPages = (int) Math.ceil((double) stackList.size() / blankSlots);
 
-    public ItemArchive(Player p){ super(p, p.getName(), "Items", 54); }
+    public ItemArchive(Player p){ super(p, p.getName(), "items", 54); }
 
     @Override
     public void initInventory(){
@@ -51,7 +51,6 @@ public class ItemArchive extends MenuTemplate {
         Inventory clicked = e.getClickedInventory();
 
         if(clicked != super.inventory) return;
-        if(!e.isLeftClick()) return;
         e.setCancelled(true);
 
         final ItemStack currentItem = e.getCurrentItem();

@@ -5,16 +5,16 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 
-public class lightningOrb extends ArmorStand implements customProjectile {
+public class lightningOrb extends ArmorStand implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     private final LivingEntity caster;
     private int lifetimeTicks;
@@ -57,9 +57,9 @@ public class lightningOrb extends ArmorStand implements customProjectile {
             ParticleManager pM = new ParticleManager(bukkitE.getWorld());
             Location playerL = n.getLocation();
 
-            pM.spawnParticle(playerL, Particle.ELECTRIC_SPARK, null,
+            pM.particle(playerL, Particle.ELECTRIC_SPARK, null,
                     particleCount, 0.5,0.25,0.5,0.0);
-            pM.spawnParticle(playerL, Particle.ENCHANTED_HIT, null,
+            pM.particle(playerL, Particle.ENCHANTED_HIT, null,
                     particleCount, 0.5,0.25,0.5,0.0);
 
             n.playSound(playerL, Sound.ITEM_TRIDENT_THUNDER, 0.45F, 0.75F);
@@ -72,6 +72,6 @@ public class lightningOrb extends ArmorStand implements customProjectile {
     }
 
     @Override
-    public void handleProjectileImpact(LivingEntity damagedEntity) {
+    public void handleImpact(LivingEntity damagedEntity) {
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.armor_stand.homingProjectile;
+import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.HomingProjectile;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.ghast.emperorOfDarkness;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.bukkit.Bukkit;
@@ -92,7 +92,7 @@ public class eodHomingRainGoal extends Goal {
 
             Vec3 newPos = new Vec3(x, y, z);
 
-            homingProjectile p = new homingProjectile(EntityType.ARMOR_STAND, nmsLevel,
+            HomingProjectile p = new HomingProjectile(EntityType.ARMOR_STAND, nmsLevel,
                     projectileDamage,70 + (i * 10), 40 + (i * 10),
                     target, entity);
 

@@ -17,5 +17,4 @@ public enum WorldUtils {
     private final Location location;
 
     WorldUtils(Location location) { this.location = location; }
-
 }

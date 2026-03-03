@@ -8,14 +8,14 @@ import java.util.List;
 
 public class CollisionManager {
 
-    public boolean checkCollision(Entity entity, Entity target) {
+    public boolean checkCollision(Entity entity, Entity target){
         BoundingBox projectileBox = entity.getBoundingBox();
         BoundingBox targetBox = target.getBoundingBox();
 
         return projectileBox.overlaps(targetBox);
     }
 
-    public List<net.minecraft.world.entity.Entity> getPlayerCollisions(net.minecraft.world.entity.Entity projectile){
+    public static List<net.minecraft.world.entity.Entity> getPlayerCollisions(net.minecraft.world.entity.Entity projectile){
         return projectile.level().getEntities(projectile, projectile.getBoundingBox(),
                 entity -> entity instanceof Player);
     }

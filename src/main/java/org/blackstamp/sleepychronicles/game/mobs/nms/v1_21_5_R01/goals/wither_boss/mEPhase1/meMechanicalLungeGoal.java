@@ -3,7 +3,7 @@ package org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.wither_b
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.wither_boss.mechanicalEye;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -71,15 +71,15 @@ public class meMechanicalLungeGoal extends Goal {
         entity.setNoAi(false);
         Location l = entity.getBukkitLivingEntity().getLocation();
         ParticleManager pM = new ParticleManager(l.getWorld());
-        pM.spawnParticle(l, Particle.SWEEP_ATTACK,null,
+        pM.particle(l, Particle.SWEEP_ATTACK,null,
                 100,2.5,2.5,2.5,1.0);
-        pM.spawnParticle(l, Particle.EXPLOSION_EMITTER,null,
+        pM.particle(l, Particle.EXPLOSION_EMITTER,null,
                 1,2.5,2.5,2.5,1.0);
 
         for(Player p : l.getNearbyPlayers(5)){
             p.damage(lungeDamage, entity.getBukkitLivingEntity());
             p.playSound(p.getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK,0.85F,0.75F);
-            pM.spawnParticle(p.getLocation(), Particle.WITCH,null,
+            pM.particle(p.getLocation(), Particle.WITCH,null,
                     5,0.5,0.5,0.5,0.5);
         }
     }

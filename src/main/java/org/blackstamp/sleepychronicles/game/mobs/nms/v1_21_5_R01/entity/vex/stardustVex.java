@@ -13,14 +13,12 @@ import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.summonableMob;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.goals.ally.copyOwnerTarget;
 import org.blackstamp.sleepychronicles.global.utils.color.ChatColor;
-import org.blackstamp.sleepychronicles.global.utils.nms.NMSEntity;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-@NMSEntity
 public class stardustVex extends Vex implements summonableMob {
     @Setter
     @Getter

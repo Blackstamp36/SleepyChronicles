@@ -40,7 +40,6 @@ dependencies {
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
-    compileOnly "com.sk89q.worldedit:worldedit-bukkit:7.4.0-SNAPSHOT"
 }
 
 def targetJavaVersion = 24
@@ -72,7 +71,7 @@ processResources {
 }
 
 shadowJar {
-    relocate 'net.dv8tion.jda', 'org.blackstamp.sleepyChronicles.shaded.jda'
+    relocate 'net.dv8tion.jda', 'org.blackstamp.SleepyChronicles.shaded.jda'
     archiveClassifier.set('')
     minimize()
 

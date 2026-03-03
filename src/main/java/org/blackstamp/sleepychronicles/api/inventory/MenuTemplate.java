@@ -1,8 +1,8 @@
 package org.blackstamp.sleepychronicles.api.inventory;
 
 import lombok.Getter;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
+import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,12 +17,13 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 public abstract class MenuTemplate implements Listener, Cloneable {
+
     protected final Inventory inventory;
     protected final Player p;
     protected final String owner;
 
     public MenuTemplate(Player p, String owner, String name, int size) {
-        this.inventory = Bukkit.createInventory(p, size, MiniMessage.miniMessage().deserialize(name));
+        this.inventory = Bukkit.createInventory(p, size, ConstantFields.MINI_MESSAGE.deserialize(name));
         this.p = p;
         this.owner = owner;
 
@@ -63,6 +64,13 @@ public abstract class MenuTemplate implements Listener, Cloneable {
             inventory.setItem(row * 9, item);
             inventory.setItem(8 + (row * 9), item);
         }
+    }
+
+    public void fill(ItemManager manager) { fill(manager.build()); }
+    public void fill(ItemStack item){
+        final int size = inventory.getSize();
+
+        for(int i = 0; i < size; i++) setItem(item, i);
     }
 
     public void empty(){ for(int i = 0; i < inventory.getSize(); i++) inventory.setItem(i, new ItemStack(Material.AIR)); }

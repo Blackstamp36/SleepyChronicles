@@ -5,8 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.customProjectile;
-import org.blackstamp.sleepychronicles.global.utils.manager.ParticleManager;
+import org.blackstamp.sleepychronicles.api.mobs.projectile.CustomProjectile;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class quantumBullet extends ArmorStand implements customProjectile {
+public class quantumBullet extends ArmorStand implements CustomProjectile {
     private org.bukkit.entity.LivingEntity bukkitE = this.getBukkitLivingEntity();
     Location targetPrevLoc;
     private LivingEntity shooter;
@@ -48,12 +48,12 @@ public class quantumBullet extends ArmorStand implements customProjectile {
         ParticleManager pM = new ParticleManager(bukkitE.getWorld());
         Location projectileLoc = new Location(bukkitE.getWorld(), bukkitE.getX(), bukkitE.getY() + 1.25, bukkitE.getZ());
 
-        pM.spawnParticle(projectileLoc, Particle.GUST, null,
+        pM.particle(projectileLoc, Particle.GUST, null,
                 1,0.25,0.5,0.25,1.25);
-        pM.spawnParticle(projectileLoc, Particle.DUST,
+        pM.particle(projectileLoc, Particle.DUST,
                 new Particle.DustOptions(Color.fromRGB(112,186,109),2.5F),
                 1,0.25,0.5,0.25,1.0);
-        pM.spawnParticle(projectileLoc, Particle.LARGE_SMOKE, null,
+        pM.particle(projectileLoc, Particle.LARGE_SMOKE, null,
                 1,0.25,0.5,0.25,0.25);
 
         if (tickCount >= lifetimeTicks) {
@@ -70,11 +70,11 @@ public class quantumBullet extends ArmorStand implements customProjectile {
             bukkitE.setVelocity(newVel);
 
             if(!cM.getPlayerCollisions(this).isEmpty())
-                for (Entity e : cM.getPlayerCollisions(this)) handleProjectileImpact((LivingEntity) e);
+                for (Entity e : cM.getPlayerCollisions(this)) handleImpact((LivingEntity) e);
 
             }
 
-    public void handleProjectileImpact(LivingEntity damagedEntity){
+    public void handleImpact(LivingEntity damagedEntity){
         if(damagedEntity == null) return;
 
         org.bukkit.entity.LivingEntity bukkitDE = damagedEntity.getBukkitLivingEntity();
