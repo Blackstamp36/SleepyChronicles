@@ -10,7 +10,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.HomingProjectile;
+import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.types.HomingProjectile;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.armor_stand.shockWave;
 import org.blackstamp.sleepychronicles.game.mobs.nms.v1_21_5_R01.entity.ghast.emperorOfDarkness;
 import org.blackstamp.sleepychronicles.api.particle.ParticleManager;

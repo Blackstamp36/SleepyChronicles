@@ -1,48 +1,46 @@
-package org.blackstamp.sleepychronicles.game.mobs.custom.projectiles;
+package org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.types;
 
+import com.destroystokyo.paper.ParticleBuilder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.ProjectileSettings;
 import org.blackstamp.sleepychronicles.global.utils.manager.CollisionManager;
-import org.bukkit.Particle;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class BaseProjectile extends ArmorStand {
-    private final int damage;
-    private final Particle particle;
+public class LinearProjectile extends ArmorStand {
+    protected final ProjectileSettings settings;
+    protected int ticks;
 
-    private final net.minecraft.world.entity.LivingEntity caster;
-
-    public int ticks;
-    private final int lifetime;
-    public final int speed;
+    private final LivingEntity caster;
     private final Vec3 vector;
+    private final ParticleBuilder builder;
 
-    public BaseProjectile(EntityType<? extends ArmorStand> entityType, Level level,
-                          net.minecraft.world.entity.LivingEntity caster,
-                          int damage, Particle particle, int lifetime, int speed){
-        super(entityType, level);
-        this.damage = damage;
-        this.particle = particle;
+    public LinearProjectile(Level level, LivingEntity caster, ProjectileSettings settings, @Nullable Vec3 vector){
+        super(EntityType.ARMOR_STAND, level);
         this.caster = caster;
-        this.lifetime = lifetime;
-        this.speed = speed;
-        vector = getInitialVector();
+        this.settings = settings;
+        this.builder = new ParticleBuilder(settings.particle);
+
+        if(vector == null) this.vector = getInitialVector();
+        else this.vector = vector;
 
         registerAttributes();
     }
 
     @Override
     public void tick(){
+        super.tick();
         ticks++;
 
-        if(ticks > lifetime) discard();
+        if(ticks > settings.lifetime) discard();
 
-        spawnParticle();
+        spawnParticle(builder);
         move();
         checkCollisions();
     }
@@ -57,7 +55,7 @@ public abstract class BaseProjectile extends ArmorStand {
         final double y = -Math.sin(pitch);
         final double z = Math.cos(yaw) * Math.cos(pitch);
 
-        return new Vec3(x,y,z).normalize().scale(speed);
+        return new Vec3(x,y,z).normalize().scale(settings.speed);
     }
 
     public void move(){
@@ -71,9 +69,15 @@ public abstract class BaseProjectile extends ArmorStand {
     }
 
     public void onHit(LivingEntity entity){
+        if(settings.explosionRadius >= 1.0){
+            Vec3 pos = entity.position();
+
+            this.level().explode(entity, pos.x, pos.y, pos.z, settings.explosionRadius, false, Level.ExplosionInteraction.MOB);
+        }
+
         org.bukkit.entity.LivingEntity bukkitEntity = entity.getBukkitLivingEntity();
 
-        bukkitEntity.damage(damage);
+        bukkitEntity.damage(settings.damage, this.caster.getBukkitLivingEntity());
     }
 
     private void checkCollisions(){
@@ -84,9 +88,12 @@ public abstract class BaseProjectile extends ArmorStand {
                 if(!(e instanceof LivingEntity)) continue;
 
                 onHit((LivingEntity) e);
+                if(this.isAlive()) this.discard();
                 break;
             }
     }
 
-    public abstract void spawnParticle();
+    public void spawnParticle(ParticleBuilder builder){
+        builder.location(getBukkitLivingEntity().getLocation()).spawn();
+    }
 }

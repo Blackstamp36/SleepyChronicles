@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttacks;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
-import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.HomingProjectile;
+import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.types.HomingProjectile;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.potion.PotionEffect;
