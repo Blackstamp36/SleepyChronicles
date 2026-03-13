@@ -2,7 +2,6 @@ package org.blackstamp.sleepychronicles.api.mobs;
 
 import co.aikar.commands.annotation.Optional;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -16,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
-import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.security.SleepyToken;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Location;
@@ -28,9 +26,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.reflections.Reflections;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class SleepyMob {
@@ -63,6 +59,8 @@ public class SleepyMob {
     public void setDamage(double value){ entity.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(value); }
 
     public void setMovementSpeed(double value){ entity.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(value); }
+
+    public void setSilent(boolean value){ entity.setSilent(value); }
 
     public int getDamage(){ return (int) entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(); }
 

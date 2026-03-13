@@ -10,21 +10,23 @@ import org.bukkit.Particle;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-public enum SleepyProjectiles { // todo: rewrite boss class (Darkness Emperor) and its projectiles!
+public enum SleepyProjectiles { // todo: rewrite boss attack class (Darkness Emperor) and its projectiles!
 
-    DARK_SPARK(new ProjectileSettings(Particle.DRAGON_BREATH, 0.0F, 50, 1,1));
+    DARK_SPARK(new ProjectileSettings(Particle.DRAGON_BREATH, 0.0F, 50, 1,30));
 
     private final ProjectileSettings settings;
 
     SleepyProjectiles(ProjectileSettings settings){ this.settings = settings; }
 
-    public void shootLinear(Level level, LivingEntity caster, @Nullable Vec3 vector){
+    public void shootLinear(Level level, Vec3 pos, LivingEntity caster, @Nullable Vec3 vector){
         LinearProjectile projectile = new LinearProjectile(level, caster, settings, vector);
+        projectile.setPos(pos);
         level.addFreshEntity(projectile);
     }
 
-    public void shootHoming(Level level, LivingEntity caster, LivingEntity target, int delay){
+    public void shootHoming(Level level, Vec3 pos, LivingEntity caster, LivingEntity target, int delay){
         HomingProjectile projectile = new HomingProjectile(level, caster, settings, target, delay);
+        projectile.setPos(pos);
         level.addFreshEntity(projectile);
     }
 }

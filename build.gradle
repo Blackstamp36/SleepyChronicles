@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
-    id 'com.gradleup.shadow' version '9.0.0-rc3'
+    id "com.gradleup.shadow" version "9.0.0-rc3"
 }
 
 group = 'org.blackstamp'
@@ -10,11 +10,11 @@ version = '1.0.0'
 
 repositories {
     mavenCentral()
-    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
-    maven {url = "https://repo.papermc.io/repository/maven-public/" }
-    maven {url = "https://oss.sonatype.org/content/groups/public/" }
-    maven {url = "https://maven.enginehub.org/repo/" }
-    maven { url = "https://jitpack.io" }
+    maven{ url = "https://repo.aikar.co/content/groups/aikar/"}
+    maven{url = "https://repo.papermc.io/repository/maven-public/"}
+    maven{url = "https://oss.sonatype.org/content/groups/public/"}
+    maven{url = "https://maven.enginehub.org/repo/"}
+    maven{ url = "https://jitpack.io"}
 }
 
 dependencies {
@@ -22,20 +22,20 @@ dependencies {
     implementation("net.dv8tion:JDA:6.0.0-rc.2")
 
     // FAWE
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
+    implementation("com.intellectualsites.bom:bom-newest:1.52")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 
     // ACF
-    implementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
     // Kyori Adventure
-    implementation "net.kyori:adventure-api:4.20.0"
-    implementation "net.kyori:adventure-text-serializer-gson:4.20.0"
-    implementation "net.kyori:adventure-platform-bukkit:4.3.4"
+    implementation("net.kyori:adventure-api:4.20.0")
+    implementation("net.kyori:adventure-text-serializer-gson:4.20.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.4")
 
     // Reflections
-    implementation "com.github.SasuMC:sasu-reflections:1.0"
+    implementation("com.github.SasuMC:sasu-reflections:1.0")
 
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.38")

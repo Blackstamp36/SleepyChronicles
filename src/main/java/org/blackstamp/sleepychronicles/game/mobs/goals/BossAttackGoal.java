@@ -1,15 +1,15 @@
-package org.blackstamp.sleepychronicles.game.mobs.goals.darkness_emperor;
+package org.blackstamp.sleepychronicles.game.mobs.goals;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttacks;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 
-public class DarknessEmperorGoal extends Goal {
-    BossAttacks attack;
-    BossMob boss;
+public class BossAttackGoal extends Goal {
+    private BossAttacks attack;
+    private final BossMob boss;
 
-    public DarknessEmperorGoal(BossMob boss){ this.boss = boss; }
+    public BossAttackGoal(BossMob boss){ this.boss = boss; }
 
     @Override
     public boolean canUse(){

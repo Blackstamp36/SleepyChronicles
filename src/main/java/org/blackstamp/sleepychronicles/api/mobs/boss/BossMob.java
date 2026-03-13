@@ -23,8 +23,10 @@ public abstract class BossMob extends SleepyMob {
         if(color == null) color = SleepyPalette.VANILLA.getColor1();
         setName(name, color);
         setID(convertToID(name));
+        registerAttributes();
     }
 
     public void switchToPhase(int value){ phase = value; }
+    public abstract void registerAttributes();
     public abstract BossAttacks getNextAttack();
 }

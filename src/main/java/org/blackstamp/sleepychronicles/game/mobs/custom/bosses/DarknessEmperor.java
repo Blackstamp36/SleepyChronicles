@@ -7,16 +7,32 @@ import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttacks;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossWrapperAware;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.game.mobs.goals.darkness_emperor.DarknessEmperorAttacks;
-import org.blackstamp.sleepychronicles.game.mobs.goals.darkness_emperor.DarknessEmperorGoal;
+import org.blackstamp.sleepychronicles.game.mobs.goals.BossAttackGoal;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DarknessEmperor extends BossMob {
-    public DarknessEmperor(Level level, String name, String color){
-        super(new DarknessEmperorEntity(level), level, name, color);
+    private final static Random RANDOM = ThreadLocalRandom.current();
+    private final static String NAME = "Darkness Emperor";
+    private final static String COLOR = "#5e17a1";
+    private final static int MAX_HEALTH = 1000;
+
+    public DarknessEmperor(Level level){
+        super(new DarknessEmperorEntity(level), level, NAME, COLOR);
+    }
+
+    @Override
+    public void registerAttributes(){
+        this.setMaxHealth(MAX_HEALTH);
+        this.setSilent(true);
     }
 
     @Override
     public BossAttacks getNextAttack(){
-        return DarknessEmperorAttacks.HOMING_RAIN;
+        final int attack = RANDOM.nextInt(DarknessEmperorAttacks.values().length);
+
+        return DarknessEmperorAttacks.values()[attack];
     }
 
     private static class DarknessEmperorEntity extends Ghast implements BossWrapperAware {
@@ -28,7 +44,7 @@ public class DarknessEmperor extends BossMob {
         }
 
         public void registerGoals(){
-            super.goalSelector.addGoal(0,new DarknessEmperorGoal(wrapper));
+            super.goalSelector.addGoal(0,new BossAttackGoal(wrapper));
         }
 
         @Override
