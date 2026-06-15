@@ -25,15 +25,19 @@ public abstract class BossMob extends SleepyMob {
     @Getter private BossState state;
     @Getter private final MovementType movementType;
     @Getter private final BossAttack[] attacks;
+    @Getter private final String themeKey;
+    @Getter private final int themeTicks;
     @Getter private int stateTicks = 0;
     @Getter private final HashMap<UUID,Float> aggroTable = new HashMap<>();
 
     public BossMob(EntityType<? extends Mob> type, Level world, String name, @Optional String color,
-                   MovementType movementType, BossAttack[] attacks){
+                   MovementType movementType, BossAttack[] attacks, String themeKey, int themeTicks){
         super(type,world,name,color);
 
         this.movementType = movementType;
         this.attacks = attacks;
+        this.themeKey = themeKey;
+        this.themeTicks = themeTicks;
 
         setState(BossState.IDLE);
     }

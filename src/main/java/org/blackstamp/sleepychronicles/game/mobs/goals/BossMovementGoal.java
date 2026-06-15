@@ -19,13 +19,13 @@ public class BossMovementGoal extends Goal {
     private final double speed;
     private final double highSpeed;
     private final double slowSpeed;
-    private final int radius;
+    private final int retreatRadius;
     private final double maxDistance;
     private final double minDistance;
 
-    public BossMovementGoal(BossMob boss, int radius, double speed, double maxDistance, double minDistance){
+    public BossMovementGoal(BossMob boss, int retreatRadius, double speed, double maxDistance, double minDistance){
         this.boss = boss;
-        this.radius = radius;
+        this.retreatRadius = retreatRadius;
         this.speed = speed;
         this.highSpeed = speed * 1.5;
         this.slowSpeed = speed * 0.75;
@@ -63,7 +63,7 @@ public class BossMovementGoal extends Goal {
 
                 if(distance > maxDistance) navigation.moveTo(target, slowSpeed);
                 else if(distance < minDistance){
-                    Vec3 retreatPos = navStrategy.calculateRetreatPos(boss,target,radius);
+                    Vec3 retreatPos = navStrategy.calculateRetreatPos(boss,target, retreatRadius);
                     navigation.moveTo(retreatPos.x,retreatPos.y,retreatPos.z,highSpeed);
                 }else{
                     Vec3 strafePos = navStrategy.calculateStrafePos(boss,target,true);
