@@ -1,11 +1,11 @@
-package org.blackstamp.sleepychronicles.game.mobs.goals.darkness_emperor;
+package org.blackstamp.sleepychronicles.game.mobs.goals.boss;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttacks;
+import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttack;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.SleepyProjectiles;
 import org.bukkit.Bukkit;
@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public enum DarknessEmperorAttacks implements BossAttacks {
+public enum DarknessEmperorAttacks implements BossAttack {
     HOMING_RAIN{
         private static final Random RANDOM = ThreadLocalRandom.current();
         private static final int COUNT = 8;
@@ -54,6 +54,12 @@ public enum DarknessEmperorAttacks implements BossAttacks {
                         ), RANDOM.nextInt(5));
             }
         }
+
+        @Override public double getMinDistance(){ return 5.0D; }
+        @Override public double getMaxDistance(){ return 10.0D; }
+        @Override public int getWindupTicks(){ return 40; }
+        @Override public int getRecoveryTicks(){ return 60; }
+        @Override public int getCooldownTicks(){ return 60; }
     },
 
     LEVITATION_SPELL{
@@ -61,5 +67,11 @@ public enum DarknessEmperorAttacks implements BossAttacks {
         public void cast(BossMob boss, LivingEntity target){
 
         }
+
+        @Override public double getMinDistance(){ return 5.0D; }
+        @Override public double getMaxDistance(){ return 10.0D; }
+        @Override public int getWindupTicks(){ return 40; }
+        @Override public int getRecoveryTicks(){ return 40; }
+        @Override public int getCooldownTicks(){ return 60; }
     }
 }

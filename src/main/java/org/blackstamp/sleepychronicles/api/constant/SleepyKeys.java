@@ -11,9 +11,9 @@ public final class SleepyKeys {
     public static final NamespacedKey ITEM_FAMILY;
 
     // mobs
-    public static final NamespacedKey MOB_ID;
-    public static final NamespacedKey MOB_TOKEN;
-    public static final NamespacedKey MOB_FAMILY;
+    public static final String MOB_ID;
+    public static final String MOB_TOKEN;
+    public static final String MOB_FAMILY;
 
     // trinkets
     public static final NamespacedKey TRINKETS_INV;
@@ -26,9 +26,9 @@ public final class SleepyKeys {
         ITEM_OWNER = PersistentData.key("item_owner");
         ITEM_FAMILY = PersistentData.key("item_family");
 
-        MOB_ID = PersistentData.key("mob_id");
-        MOB_TOKEN = PersistentData.key("mob_token");
-        MOB_FAMILY = PersistentData.key("mob_family");
+        MOB_ID = "mob_id";
+        MOB_TOKEN = "mob_token";
+        MOB_FAMILY = "mob_family";
 
         TRINKETS_INV = PersistentData.key("trinkets_inv");
 
