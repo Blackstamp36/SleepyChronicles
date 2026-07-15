@@ -13,30 +13,33 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public enum SleepyItems{
-    NULL_POWDER(() -> new SleepyItem(Material.GUNPOWDER, SleepyPalette.NULL)
+    NULL_POWDER("null_powder", () -> new SleepyItem(Material.GUNPOWDER, SleepyPalette.NULL)
             .setDisplay("Null-powder")
             .setID("null_powder")
             .setGlint(true)
     ),
-    BOB_FLESH(() -> new SleepyItem(Material.ROTTEN_FLESH, SleepyPalette.BOB)
+    BOB_FLESH("bob_flesh", () -> new SleepyItem(Material.ROTTEN_FLESH, SleepyPalette.BOB)
             .setDisplay("Bob's Flesh")
             .setID("bob_flesh")
             .setGlint(true)
     ),
-    MEMENTO_MORI(() -> new SleepyItem(Material.SADDLE, SleepyPalette.TRINKET)
+    MEMENTO_MORI("memento_mori", () -> new SleepyItem(Material.SADDLE, SleepyPalette.TRINKET)
             .setDisplay("Memento-mori")
-            .setID("memento_mori")
             .setLore("Winner takes it all!", ConstantColors.GRAY)
             .setIcon(SleepyIcons.TRINKET_ICON, ConstantColors.GREEN)
             .setFamily(ItemFamily.TRINKETS)
             .setGlint(true)
     );
 
+    private final String id;
     private final Supplier<SleepyItem> template;
 
-    SleepyItems(Supplier<SleepyItem> template){ this.template = template; }
+    SleepyItems(String id, Supplier<SleepyItem> template){
+        this.id = id;
+        this.template = template;
+    }
 
     public static @NotNull ArrayList<SleepyItems> getList(){ return new ArrayList<>(List.of(SleepyItems.values())); }
-    public String getID(){ return template.get().getID(); }
-    public ItemStack build(){ return template.get().build(); }
+    public String getID(){ return this.id; }
+    public ItemStack build(){ return template.get().setID(this.id).build(); }
 }

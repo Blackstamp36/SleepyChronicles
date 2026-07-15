@@ -49,19 +49,16 @@ public class ItemManager implements Cloneable {
         meta.displayName(ConstantFields.MINI_MESSAGE
                 .deserialize(display)
                 .decoration(TextDecoration.ITALIC,false));
-        item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setDisplay(Component display){
         meta.displayName(display.decoration(TextDecoration.ITALIC,false));
-        item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setID(String value){
         setPersistentData(SleepyKeys.ITEM_ID, value);
-        item.setItemMeta(meta);
         return this.setCustomModelData(value);
     }
 
@@ -76,13 +73,11 @@ public class ItemManager implements Cloneable {
 
     public ItemManager addEnchant(Enchantment enchantment, int level){
         meta.addEnchant(enchantment, level, true);
-        item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager removeEnchant(Enchantment enchantment){
         meta.removeEnchant(enchantment);
-        item.setItemMeta(meta);
         return this;
     }
 
@@ -90,19 +85,16 @@ public class ItemManager implements Cloneable {
         meta.setUnbreakable(value);
         meta.setDamageResistant(DamageTypeTags.IS_EXPLOSION);
         meta.setDamageResistant(DamageTypeTags.IS_FIRE);
-        item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setGlint(boolean value){
         meta.setEnchantmentGlintOverride(value);
-        item.setItemMeta(meta);
         return this;
     }
 
     public ItemManager setFlags(ItemFlag... flags){
         meta.addItemFlags(flags);
-        item.setItemMeta(meta);
         return this;
     }
 
@@ -113,7 +105,6 @@ public class ItemManager implements Cloneable {
 
         skull.setOwningPlayer(p);
         setPersistentData(SleepyKeys.ITEM_OWNER, nickname);
-        item.setItemMeta(meta);
         return this;
     }
 
@@ -125,13 +116,11 @@ public class ItemManager implements Cloneable {
         cmdComponent.setStrings(valueArray);
 
         meta.setCustomModelDataComponent(cmdComponent);
-        item.setItemMeta(meta);
         return this;
     }
 
     public void setPersistentData(NamespacedKey key, String value){
         PersistentData.set(meta, key, PersistentDataType.STRING, value);
-        item.setItemMeta(meta);
     }
 
     public String getPersistentData(NamespacedKey key){ return PersistentData.get(meta, key, PersistentDataType.STRING); }
@@ -139,7 +128,6 @@ public class ItemManager implements Cloneable {
     public ItemManager setFamily(ItemFamily family){
         setPersistentData(SleepyKeys.ITEM_FAMILY, family.getName());
 
-        item.setItemMeta(meta);
         return this;
     }
 
@@ -158,7 +146,6 @@ public class ItemManager implements Cloneable {
                 .deserialize(color + value)
                 .decoration(TextDecoration.ITALIC,false));
         meta.lore(lore);
-        item.setItemMeta(meta);
         return this;
     }
 
@@ -166,7 +153,6 @@ public class ItemManager implements Cloneable {
         final List<Component> lore = splitLoreLines(value, color);
 
         meta.lore(lore);
-        item.setItemMeta(meta);
         return this;
     }
 
@@ -195,7 +181,10 @@ public class ItemManager implements Cloneable {
         return lore;
     }
 
-    public ItemStack build(){ return item; }
+    public ItemStack build(){
+        item.setItemMeta(meta);
+        return item;
+    }
 
     public net.minecraft.world.item.ItemStack getAsNMS() { return CraftItemStack.asNMSCopy(item); }
 

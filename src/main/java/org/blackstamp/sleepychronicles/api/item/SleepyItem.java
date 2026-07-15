@@ -39,7 +39,6 @@ public class SleepyItem extends ItemManager {
 
     public SleepyItem addLore(String value, String color, boolean extra){
         super.addLore(value, color, extra);
-
         return this;
     }
 
