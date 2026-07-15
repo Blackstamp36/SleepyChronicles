@@ -11,6 +11,8 @@ import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import java.util.*;
 
 public class BossAggroGoal extends Goal {
+    // todo: 1. check for errors in goals. like attack or dodge.
+    // todo: 2. view for possible errors in the 'BossMob' class.
 
     private final BossMob boss;
     private final float decay;

@@ -43,8 +43,7 @@ public class SleepyMob extends Mob {
     }
 
     public void setMobName(String name, @NotNull String color){
-        this.setCustomName(Component.literal(name).withStyle(Style.EMPTY
-                .withColor(TextColor.parseColor(color).getOrThrow())));
+        this.setCustomName(TextFormatter.toComponent(name,color));
     }
 
     public void setItem(ItemStack item, EquipmentSlot slot){

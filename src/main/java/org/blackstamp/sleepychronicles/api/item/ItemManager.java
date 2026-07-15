@@ -39,7 +39,7 @@ public class ItemManager implements Cloneable {
     }
 
     public ItemManager(Material material) throws IllegalArgumentException{
-        if(material == null) throw new IllegalArgumentException("Item cannot be null!");
+        if(material == null) throw new IllegalArgumentException("Material cannot be null!");
 
         this.item = ItemStack.of(material);
         this.meta = item.getItemMeta();

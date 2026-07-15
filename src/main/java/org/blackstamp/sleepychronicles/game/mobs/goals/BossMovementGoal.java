@@ -23,7 +23,7 @@ public class BossMovementGoal extends Goal {
     private final double maxDistance;
     private final double minDistance;
 
-    public BossMovementGoal(BossMob boss, int retreatRadius, double speed, double maxDistance, double minDistance){
+    public BossMovementGoal(BossMob boss, int retreatRadius, double minDistance, double maxDistance, double speed){
         this.boss = boss;
         this.retreatRadius = retreatRadius;
         this.speed = speed;
