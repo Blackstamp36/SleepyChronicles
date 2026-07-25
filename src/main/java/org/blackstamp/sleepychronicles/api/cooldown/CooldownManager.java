@@ -23,7 +23,7 @@ public class CooldownManager {
     }
 
     public void setCooldown(UUID uuid, String name, long millis){
-        cooldownMap.computeIfAbsent(uuid, _ -> new HashMap<>()).put(name, System.currentTimeMillis() + millis);
+        cooldownMap.computeIfAbsent(uuid, c -> new HashMap<>()).put(name, System.currentTimeMillis() + millis);
     }
 
     public int getRemainingTime(UUID uuid, String name){

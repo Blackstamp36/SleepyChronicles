@@ -62,14 +62,15 @@ public class StaffCommand extends BaseCommand {
         Location l = p.getLocation();
         Level level = ((CraftWorld) l.getWorld()).getHandle();
 
-        if(amount == null) amount = 1;
+        if(amount == null || amount < 1) amount = 1;
 
         for(int i = 0; i < amount; i++){
-            SleepyMob entity = MobUtils.instantiateMob(mob, level);
+            SleepyMob entity = MobUtils.instantiate(mob, level);
 
             if(entity == null) break;
+            entity.setPos(l.x(),l.y(),l.z());
+            level.addFreshEntity(entity);
 
-            entity.addFreshEntity(l);
             ChatUtils.sendStaffMessage(p, "Summoning " + amount + "x " + mob);
         }
     }

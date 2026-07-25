@@ -8,6 +8,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 import java.util.*;
 
@@ -69,7 +70,7 @@ public class BossAggroGoal extends Goal {
     }
 
     @Override
-    public void start(){ boss.setTarget(aggroPlayer); }
+    public void start(){ boss.setTarget(aggroPlayer, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY); }
 
     private boolean isValid(Player p){
         if(p == null) return false;

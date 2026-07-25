@@ -4,9 +4,6 @@ import co.aikar.commands.annotation.Optional;
 import lombok.Getter;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,8 +13,13 @@ import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.security.SleepyToken;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftMob;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
@@ -26,6 +28,8 @@ public class SleepyMob extends Mob {
     @Getter private final String mobName;
     @Getter private final String mobId;
     @Getter private String mobToken;
+
+    private CraftMob sleepyBukkitWrapper;
 
     @Getter private EntityType<? extends Mob> type;
 
@@ -94,5 +98,15 @@ public class SleepyMob extends Mob {
         if(entity == null) return;
 
         entity.teleportTo(l.x(),l.y(),l.z());
+    }
+
+    @Override
+    public @NonNull CraftEntity getBukkitEntity() {
+        if(this.sleepyBukkitWrapper == null) {
+            CraftServer server = (CraftServer) Bukkit.getServer();
+            this.sleepyBukkitWrapper = new SleepyCraftMob(server, this);
+        }
+
+        return this.sleepyBukkitWrapper;
     }
 }

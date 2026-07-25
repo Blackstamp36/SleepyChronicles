@@ -27,7 +27,7 @@ public class DarknessEmperor extends BossMob {
             10, 10, 10,
             10, 10,
             10, 10, 10,
-            SoundEvent.createVariableRangeEvent(ResourceLocation.parse("THEME_KEY")), 10, // THEME_KEY is just an example
+            SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")), 10, // "theme_key" is just an example
             new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness","#9d78bc"),
                     BossEvent.BossBarColor.PURPLE,
                     BossEvent.BossBarOverlay.NOTCHED_6)

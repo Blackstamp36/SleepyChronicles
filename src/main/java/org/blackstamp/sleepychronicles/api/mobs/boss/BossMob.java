@@ -49,6 +49,8 @@ public abstract class BossMob extends SleepyMob {
         this.config = config;
 
         setState(BossState.IDLE);
+
+        this.initGoals();
     }
 
     @Override
@@ -139,7 +141,12 @@ public abstract class BossMob extends SleepyMob {
     }
 
     @Override
-    public void registerGoals(){
+    public void registerGoals() {
+        this.goalSelector.getAvailableGoals().clear();
+        this.targetSelector.getAvailableGoals().clear();
+    }
+
+    public void initGoals(){
         BossConfig config = this.getConfig();
 
         this.goalSelector.getAvailableGoals().clear();
@@ -162,7 +169,7 @@ public abstract class BossMob extends SleepyMob {
                 config.retreatRadius(),
                 config.maxDistance(), this.getConfig().minDistance(),
                 config.speed()
-                ));
+        ));
 
         goalSelector.addGoal(2, new BossAttackGoal(this));
     }

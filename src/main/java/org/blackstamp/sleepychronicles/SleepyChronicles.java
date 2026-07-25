@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.blackstamp.sleepychronicles.api.cooldown.CooldownManager;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.mobs.MobUtils;
+import org.blackstamp.sleepychronicles.api.mobs.SleepyMobs;
 import org.blackstamp.sleepychronicles.api.player.PlayerUtils;
 import org.blackstamp.sleepychronicles.game.spawn.SpawnManager;
 import org.blackstamp.sleepychronicles.global.commands.StaffCommand;
@@ -43,7 +44,6 @@ public final class SleepyChronicles extends JavaPlugin {
         new SpawnManager();
 
         RegistrableUtils.registerListeners();
-        MobUtils.initializeMobConstructors();
         SpawnManager.getInstance().register();
     }
 
@@ -51,9 +51,9 @@ public final class SleepyChronicles extends JavaPlugin {
         PaperCommandManager paperCommandManager = new PaperCommandManager(this);
 
         paperCommandManager.getCommandCompletions().registerAsyncCompletion(
-                "@SleepyMobs", _ -> MobUtils.getMobNames());
+                "@SleepyMobs", c -> SleepyMobs.getIDs());
         paperCommandManager.getCommandCompletions().registerAsyncCompletion(
-                "@PlayersOnline", _ -> PlayerUtils.getOnlinePlayers());
+                "@PlayersOnline", c -> PlayerUtils.getOnlinePlayers());
         paperCommandManager.registerCommand(new StaffCommand());
     }
 }
