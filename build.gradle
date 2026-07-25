@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
     id "com.gradleup.shadow" version "9.0.0-rc3"
 }
@@ -15,6 +15,7 @@ repositories {
     maven{url = "https://oss.sonatype.org/content/groups/public/"}
     maven{url = "https://maven.enginehub.org/repo/"}
     maven{ url = "https://jitpack.io"}
+    maven { url = "https://intellectualsites.com" }
 }
 
 dependencies {
@@ -22,7 +23,7 @@ dependencies {
     implementation("net.dv8tion:JDA:6.0.0-rc.2")
 
     // FAWE
-    implementation("com.intellectualsites.bom:bom-newest:1.52")
+    implementation platform("com.intellectualsites.bom:bom-newest:1.52")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 
@@ -42,7 +43,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 }
 
-def targetJavaVersion = 24
+def targetJavaVersion = 21
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
@@ -54,7 +55,7 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 24
+    options.release = 21
 
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
@@ -74,32 +75,8 @@ shadowJar {
     relocate 'net.dv8tion.jda', 'org.blackstamp.SleepyChronicles.shaded.jda'
     archiveClassifier.set('')
     minimize()
-
-    doLast {
-        copy {
-            from shadowJar.archiveFile
-            into "C:/Users/Martin Godoy/Desktop/misc/server/plugins"
-        }
-    }
 }
 
-
-tasks {
-    runServer {
-        minecraftVersion("1.21")
-    }
-
-    assemble {
-        dependsOn(shadowJar)
-    }
-
-    tasks.reobfJar {
-        finalizedBy("copyReobfJarToServer")
-    }
-
-    tasks.register("copyReobfJarToServer", Copy) {
-        from shadowJar
-        into "C://Users//Martin Godoy//Desktop//misc//server//plugins"
-    }
-
+tasks.assemble {
+    dependsOn(shadowJar)
 }

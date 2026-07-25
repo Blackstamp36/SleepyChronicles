@@ -11,7 +11,7 @@ public class RegistrableUtils {
 
         for(Class<?> clazz : reflections.getTypesAnnotatedWith(Registrable.class)) {
             try {
-                if (!(clazz.getDeclaredConstructor().newInstance() instanceof Listener listener)) continue;
+                if(!(clazz.getDeclaredConstructor().newInstance() instanceof Listener listener)) continue;
                 Bukkit.getServer().getPluginManager().registerEvents(listener, SleepyChronicles.getInstance());
             } catch (Exception exception) {
                 exception.fillInStackTrace();

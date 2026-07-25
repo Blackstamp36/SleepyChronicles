@@ -9,11 +9,10 @@ public class FlightStrategy implements NavigationStrategy {
 
     @Override
     public Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, int radius) {
-        Mob entity = boss.getEntity();
-        Vec3 retreatDir = target.position().subtract(entity.position()).normalize();
-        Vec3 targetPos = entity.position().add(retreatDir.scale(radius));
+        Vec3 retreatDir = target.position().subtract(boss.position()).normalize();
+        Vec3 targetPos = boss.position().add(retreatDir.scale(radius));
 
-        boolean isReachable = entity.level().noCollision(entity, entity.getBoundingBox().move(targetPos));
+        boolean isReachable = boss.level().noCollision(boss, boss.getBoundingBox().move(targetPos));
 
         if(isReachable) return targetPos;
         else return null;
@@ -21,8 +20,7 @@ public class FlightStrategy implements NavigationStrategy {
 
     @Override
     public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft){
-        Mob entity = boss.getEntity();
-        Vec3 retreatDir = target.position().subtract(entity.position()).normalize();
+        Vec3 retreatDir = target.position().subtract(boss.position()).normalize();
 
         Vec3 retreatVec = retreatDir.cross(upVec).normalize();
 

@@ -72,4 +72,7 @@ public class BossMovementGoal extends Goal {
             }
         }
     }
+
+    @Override
+    public void stop(){ boss.setState(BossState.IDLE); }
 }

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
+import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
 import org.blackstamp.sleepychronicles.api.mobs.boss.strategies.FlightStrategy;
 import org.blackstamp.sleepychronicles.api.mobs.boss.strategies.GroundStrategy;
 import org.blackstamp.sleepychronicles.api.mobs.boss.strategies.NavigationStrategy;
@@ -80,5 +81,11 @@ public class BossDodgeGoal extends Goal {
         currentEvadingTicks--;
 
         if(evadePos != null) boss.getMoveControl().setWantedPosition(evadePos.x,evadePos.y,evadePos.z,speed);
+    }
+
+    @Override
+    public void stop(){
+        evadePos = null;
+        boss.setState(BossState.IDLE);
     }
 }

@@ -1,9 +1,7 @@
 package org.blackstamp.sleepychronicles.api.mobs.boss.strategies;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 
@@ -11,19 +9,29 @@ public class GroundStrategy implements NavigationStrategy {
 
     @Override
     public Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, int radius){
-        Mob entity = boss.getEntity();
-        Vec3 playerPos = target.position();
+        double xDiff = boss.getX() - target.getX();
+        double zDiff = boss.getZ() - target.getZ();
 
-        if(entity instanceof PathfinderMob pathfinderMob)
-            return DefaultRandomPos.getPosAway(pathfinderMob,radius,radius,playerPos);
+        Vec3 retreatPos = new Vec3(xDiff,0,zDiff)
+                .normalize()
+                .scale(radius)
+                .add(boss.position());
 
-        else return null;
+        int maxDepth = 5;
+
+        for(int i = 1; i <= maxDepth; i++){
+            BlockPos blockPos = new BlockPos((int) retreatPos.x, (int) retreatPos.y - i, (int) retreatPos.z);
+
+            if(!boss.level().getBlockState(blockPos).isAir())
+                return new Vec3(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
+        }
+
+        return null;
     }
 
     @Override
     public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft){
-        Mob entity = boss.getEntity();
-        Vec3 retreatDir = target.position().subtract(entity.position()).normalize();
+        Vec3 retreatDir = target.position().subtract(boss.position()).normalize();
 
         Vec3 retreatVec = retreatDir.cross(upVec).normalize();
 

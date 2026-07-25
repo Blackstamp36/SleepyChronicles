@@ -7,7 +7,6 @@ import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.mobs.MobUtils;
 import org.blackstamp.sleepychronicles.api.player.PlayerUtils;
 import org.blackstamp.sleepychronicles.game.spawn.SpawnManager;
-import org.blackstamp.sleepychronicles.global.GlobalClass;
 import org.blackstamp.sleepychronicles.global.commands.StaffCommand;
 import org.blackstamp.sleepychronicles.global.utils.registrable.RegistrableUtils;
 import org.bukkit.Bukkit;
@@ -17,7 +16,7 @@ public final class SleepyChronicles extends JavaPlugin {
 
     @Getter private static SleepyChronicles instance;
 
-    GlobalClass global = new GlobalClass();
+    // GlobalClass global = new GlobalClass();
 
     @Override
     public void onEnable() {
@@ -26,7 +25,7 @@ public final class SleepyChronicles extends JavaPlugin {
         loadFields();
         loadCommands();
 
-        global.createAftermathDimension();
+        // global.createAftermathDimension();
 
         Bukkit.getConsoleSender().sendMessage("S̸̝̈́͐̍͛̓̆͛͘͝͠l̸͇͕̤͒̄͐̋̒͝e̸̛̛̓͗͊̈̔̊͒͜ḛ̸̖̗̒͋̎̇͆͘͠ṕ̵̪͎͚̪͚̲̱̎̋̔͒̍̎͐ͅy̵̧̡̳͉̹̞͉̙͙͌̍̚͜ ̴͎̀̽͠ͅC̴̖͖̘͚̿͊͋̄̈́̀h̸̢̺̪̣̳̟̘̠̓̂͘r̴͉̐͒͆͛͝ǫ̸̨̜͍̹̞͚̙̩͂͂ṉ̵̺͚̪̹̔̓́̊̅͜͝ǐ̸͈̼̻̈͘c̵̢͍̥̦͓̤͖̍̅̎̆̓̈́͘l̴̪̅̐̓̒́̃͆̋̐͐e̸͚̭͇̠͋̐̽̌̾̎̕͝ͅs̵̢̟̲̤̦̟̠̿̽̽̉̚");
         Bukkit.getConsoleSender().sendMessage("");

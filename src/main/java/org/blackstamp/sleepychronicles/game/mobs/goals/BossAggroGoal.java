@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
+import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
 
 import java.util.*;
 
@@ -81,4 +82,7 @@ public class BossAggroGoal extends Goal {
 
         return dimension == bossDimension;
     }
+
+    @Override
+    public void stop(){ boss.setState(BossState.IDLE); }
 }

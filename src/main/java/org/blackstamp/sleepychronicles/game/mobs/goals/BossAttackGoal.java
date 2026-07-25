@@ -78,4 +78,7 @@ public class BossAttackGoal extends Goal {
             }
         }
     }
+
+    @Override
+    public void stop(){ boss.setState(BossState.IDLE); }
 }

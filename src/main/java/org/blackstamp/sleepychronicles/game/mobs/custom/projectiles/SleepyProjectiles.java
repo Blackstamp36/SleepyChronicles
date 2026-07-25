@@ -18,13 +18,13 @@ public enum SleepyProjectiles { // todo: rewrite boss attack class (Darkness Emp
 
     SleepyProjectiles(ProjectileSettings settings){ this.settings = settings; }
 
-    public void shootLinear(Level level, Vec3 pos, LivingEntity caster, @Nullable Vec3 vector){
+    public void shootLinear(Level level, LivingEntity caster, Vec3 pos, @Nullable Vec3 vector){
         LinearProjectile projectile = new LinearProjectile(level, caster, settings, vector);
         projectile.setPos(pos);
         level.addFreshEntity(projectile);
     }
 
-    public void shootHoming(Level level, Vec3 pos, LivingEntity caster, LivingEntity target, int delay){
+    public void shootHoming(Level level, LivingEntity caster, Vec3 pos, LivingEntity target, int delay){
         HomingProjectile projectile = new HomingProjectile(level, caster, settings, target, delay);
         projectile.setPos(pos);
         level.addFreshEntity(projectile);
