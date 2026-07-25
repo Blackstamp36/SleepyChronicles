@@ -5,12 +5,11 @@ import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
 public class MobUtils {
+    public static final Map<String, Function<Level, SleepyMob>> MOB_REGISTRY = new HashMap<>();
 
     private static final HashMap<String, Constructor<? extends SleepyMob>> MOB_CONSTRUCTORS = new HashMap<>();
     public static void initializeMobConstructors(){

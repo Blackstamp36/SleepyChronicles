@@ -35,7 +35,8 @@ public class DarknessEmperor extends BossMob {
 
     public DarknessEmperor(Level level){
         super(EntityType.GHAST, level, BOSS_CONFIG.name(), BOSS_CONFIG.color(),
-                MovementType.FLIGHT, DarknessEmperorAttacks.values(),
+                MovementType.FLIGHT,
+                DarknessEmperorAttacks.values(),
                 BOSS_CONFIG
         );
     }
