@@ -2,8 +2,8 @@ package org.blackstamp.sleepychronicles.game.mobs.goals;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.phys.Vec3;
+import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
@@ -22,6 +22,9 @@ public class BossMovementGoal extends Goal {
     private final int retreatRadius;
     private final double maxDistance;
     private final double minDistance;
+
+    private final static int RECALC_TIME = 15;
+    private int tickTimer = RECALC_TIME;
 
     public BossMovementGoal(BossMob boss, int retreatRadius, double minDistance, double maxDistance, double speed){
         this.boss = boss;
@@ -52,22 +55,29 @@ public class BossMovementGoal extends Goal {
 
         boss.lookAt(target);
 
-        PathNavigation navigation = boss.getNavigation();
+        if(this.tickTimer-- > 0) return;
+
+        this.tickTimer = RECALC_TIME;
+
         BossState state = boss.getState();
 
         switch(state){
-            case BossState.APPROACHING -> navigation.moveTo(target, speed);
+            case BossState.APPROACHING ->
+                    navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight()/2), target.getZ(), speed);
 
             case BossState.STALKING -> {
                 float distance = boss.distanceTo(target);
 
-                if(distance > maxDistance) navigation.moveTo(target, slowSpeed);
-                else if(distance < minDistance){
+                if(distance > maxDistance){
+                    navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight() / 2), target.getZ(), slowSpeed);
+
+                }else if(distance < minDistance){
                     Vec3 retreatPos = navStrategy.calculateRetreatPos(boss,target, retreatRadius);
-                    navigation.moveTo(retreatPos.x,retreatPos.y,retreatPos.z,highSpeed);
+                    navStrategy.move(boss,retreatPos.x(),retreatPos.y(),retreatPos.z(),highSpeed);
+
                 }else{
                     Vec3 strafePos = navStrategy.calculateStrafePos(boss,target,true);
-                    navigation.moveTo(strafePos.x,strafePos.y,strafePos.z,slowSpeed);
+                    navStrategy.move(boss, strafePos.x(),strafePos.y(),strafePos.z(),slowSpeed);
                 }
             }
         }

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossConfig;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
@@ -21,12 +22,12 @@ public class DarknessEmperor extends BossMob {
     private final static float KNOCKBACK_RESISTANCE = 1F;
 
     private final static BossConfig BOSS_CONFIG = new BossConfig(
-            "Darkness Emperor",
+            "Senior of Darkness",
             "#5e17a1",
             0.75D,
             10, 10, 10,
-            10, 10,
-            10, 10, 10,
+            0.75F, 40,
+            10, 30,25, 10,
             SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")), 10, // "theme_key" is just an example
             new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness","#9d78bc"),
                     BossEvent.BossBarColor.PURPLE,

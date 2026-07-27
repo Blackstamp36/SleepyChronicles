@@ -154,7 +154,10 @@ public abstract class BossMob extends SleepyMob {
         targetSelector.addGoal(0, new BossAggroGoal(
                 this,
                 config.decay(),
-                config.decayTicks()));
+                config.decayTicks(),
+                config.aggroRadius(),
+                config.maxDistance()
+                ));
 
         goalSelector.addGoal(0, new BossDodgeGoal(
                 this,

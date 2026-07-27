@@ -9,4 +9,5 @@ public interface NavigationStrategy {
 
     Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, int radius);
     Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean rightStrafe);
+    void move(BossMob boss, double x, double y, double z, double speed);
 }

@@ -39,4 +39,9 @@ public class GroundStrategy implements NavigationStrategy {
 
         return retreatVec;
     }
+
+    @Override
+    public void move(BossMob boss, double x, double y, double z, double speed){
+        boss.getNavigation().moveTo(x,y,z,speed);
+    }
 }

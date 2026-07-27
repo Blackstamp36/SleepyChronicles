@@ -101,7 +101,7 @@ public class SleepyMob extends Mob {
     }
 
     @Override
-    public @NonNull CraftEntity getBukkitEntity() {
+    public @NonNull CraftEntity getBukkitEntity(){
         if(this.sleepyBukkitWrapper == null) {
             CraftServer server = (CraftServer) Bukkit.getServer();
             this.sleepyBukkitWrapper = new SleepyCraftMob(server, this);

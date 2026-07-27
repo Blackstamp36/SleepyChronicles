@@ -1,7 +1,6 @@
 package org.blackstamp.sleepychronicles.api.mobs.boss.strategies;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 
@@ -27,5 +26,10 @@ public class FlightStrategy implements NavigationStrategy {
         if(strafeLeft) retreatVec.scale(-1);
 
         return retreatVec;
+    }
+
+    @Override
+    public void move(BossMob boss, double x, double y, double z, double speed){
+        boss.getMoveControl().setWantedPosition(x,y,z,speed);
     }
 }
