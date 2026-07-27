@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.SleepyMob;
 import org.blackstamp.sleepychronicles.game.mobs.goals.BossAggroGoal;
@@ -71,6 +72,8 @@ public abstract class BossMob extends SleepyMob {
 
             }else this.setThemeCooldown(this.getThemeCooldown() - 1);
         }
+
+        SleepyChronicles.getInstance().getLogger().warning("STATE: " + this.getState());
     }
 
     private void playTheme(Collection<ServerPlayer> players){

@@ -8,7 +8,7 @@ import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 public class GroundStrategy implements NavigationStrategy {
 
     @Override
-    public Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, int radius){
+    public Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, double radius){
         double xDiff = boss.getX() - target.getX();
         double zDiff = boss.getZ() - target.getZ();
 

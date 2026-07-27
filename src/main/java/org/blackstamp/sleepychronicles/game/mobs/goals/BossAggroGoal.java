@@ -36,7 +36,6 @@ public class BossAggroGoal extends Goal {
 
     @Override
     public boolean canUse(){
-
         UUID highestAggro = null;
         float highestValue = 0;
 
@@ -89,7 +88,6 @@ public class BossAggroGoal extends Goal {
     @Override
     public void tick(){
         if(boss.getTarget() != aggroedPlayer) boss.setTarget(aggroedPlayer, EntityTargetEvent.TargetReason.FOLLOW_LEADER);
-        checkDistance(boss.getTarget());
     }
 
     @Override
@@ -103,9 +101,8 @@ public class BossAggroGoal extends Goal {
 
     private void checkDistance(LivingEntity target){
         if(target == null || !(boss.getState() == BossState.IDLE)) return;
-        double distance = boss.distanceTo(target);
 
-        SleepyChronicles.getInstance().getLogger().warning("DISTANCE: " + distance + " || MAX_DISTANCE: " + maxDistance);
+        double distance = boss.distanceTo(target);
 
         if(distance > maxDistance) boss.setState(BossState.APPROACHING);
         else boss.setState(BossState.STALKING);
