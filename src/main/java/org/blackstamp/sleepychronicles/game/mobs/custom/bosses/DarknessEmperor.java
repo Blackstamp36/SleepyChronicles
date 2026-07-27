@@ -40,12 +40,11 @@ public class DarknessEmperor extends BossMob {
                 DarknessEmperorAttacks.values(),
                 BOSS_CONFIG
         );
-    }
 
-    public static AttributeSupplier.Builder createAttributes(){
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, MAX_HEALTH)
-                .add(Attributes.SCALE,SCALE)
-                .add(Attributes.KNOCKBACK_RESISTANCE,KNOCKBACK_RESISTANCE);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTH);
+        this.getAttribute(Attributes.SCALE).setBaseValue(SCALE);
+        this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
+
+        this.setHealth(MAX_HEALTH);
     }
 }

@@ -44,8 +44,16 @@ public class BossMovementGoal extends Goal {
 
     @Override
     public boolean canUse(){
-        return boss.getState().equals(BossState.STALKING)
-                || boss.getState().equals(BossState.APPROACHING);
+        LivingEntity target = boss.getTarget();
+
+        if(target == null || !target.isAlive()) return false;
+
+        BossState state = boss.getState();
+
+        return (state != BossState.ATTACKING
+                || state != BossState.WINDING_UP
+                || state != BossState.RECOVERING
+        );
     }
 
     @Override
@@ -93,5 +101,8 @@ public class BossMovementGoal extends Goal {
     }
 
     @Override
-    public void stop(){ boss.setState(BossState.IDLE); }
+    public void stop(){
+        if(boss.getTarget() == null || !boss.getTarget().isAlive())
+            boss.setState(BossState.IDLE);
+    }
 }

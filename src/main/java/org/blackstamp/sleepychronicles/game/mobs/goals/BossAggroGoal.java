@@ -97,10 +97,20 @@ public class BossAggroGoal extends Goal {
     }
 
     @Override
-    public void stop(){ boss.setState(BossState.IDLE); }
+    public void stop(){
+        if(boss.getTarget() == null || !boss.getTarget().isAlive())
+            boss.setState(BossState.IDLE);
+    }
 
     private void checkDistance(LivingEntity target){
-        if(target == null || !(boss.getState() == BossState.IDLE)) return;
+        BossState state = boss.getState();
+
+        if(state == BossState.ATTACKING
+                || state == BossState.WINDING_UP
+                || state == BossState.RECOVERING
+        ) return;
+
+        if(target == null || !target.isAlive()) return;
 
         double distance = boss.distanceTo(target);
 
