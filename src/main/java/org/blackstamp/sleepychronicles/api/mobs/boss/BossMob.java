@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -50,6 +51,9 @@ public abstract class BossMob extends SleepyMob {
         this.config = config;
 
         setState(BossState.IDLE);
+
+        if(getMovementType() == MovementType.FLIGHT)
+            this.setNoGravity(true);
 
         this.initGoals();
     }
@@ -179,6 +183,9 @@ public abstract class BossMob extends SleepyMob {
 
         goalSelector.addGoal(2, new BossAttackGoal(this));
     }
+
+    @Override
+    public boolean shouldDespawnInPeaceful() { return true; }
 
     public void switchToPhase(int value){ phase = value; }
 }

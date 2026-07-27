@@ -30,6 +30,19 @@ public class FlightStrategy implements NavigationStrategy {
 
     @Override
     public void move(BossMob boss, double x, double y, double z, double speed){
-        boss.getMoveControl().setWantedPosition(x,y,z,speed);
+        double dx = x - boss.getX();
+        double dy = y - boss.getY();
+        double dz = z - boss.getZ();
+
+        Vec3 distanceVec = new Vec3(dx,dy,dz);
+
+        if(distanceVec.lengthSqr() < 0.01){
+            boss.setDeltaMovement(Vec3.ZERO);
+            return;
+        }
+
+        Vec3 velocity = distanceVec.normalize().scale(speed * 0.1);
+
+        boss.setDeltaMovement(velocity);
     }
 }

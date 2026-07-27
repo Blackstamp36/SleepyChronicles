@@ -16,7 +16,7 @@ import java.util.EnumSet;
 public class BossMovementGoal extends Goal {
     private final BossMob boss;
     private final NavigationStrategy navStrategy;
-    private final double speed;
+
     private final double highSpeed;
     private final double slowSpeed;
 
@@ -24,15 +24,13 @@ public class BossMovementGoal extends Goal {
     private final double maxDistance;
     private final double minDistance;
 
-    private final static int RECALC_TIME = 15;
-    private int tickTimer = RECALC_TIME;
+    private int tickTimer = 0;
 
     public BossMovementGoal(BossMob boss, double retreatRadius, double minDistance, double maxDistance, double speed){
         this.boss = boss;
         this.retreatRadius = retreatRadius;
-        this.speed = speed;
-        this.highSpeed = speed * 1.5;
-        this.slowSpeed = speed * 0.75;
+        this.highSpeed = speed * 1.25;
+        this.slowSpeed = speed * 0.85;
         this.maxDistance = maxDistance;
         this.minDistance = minDistance;
 
@@ -62,12 +60,12 @@ public class BossMovementGoal extends Goal {
 
         if(target == null) return;
 
-        boss.lookAt(target);
-
+        int recalcTime = (boss.getMovementType() == MovementType.FLIGHT) ? 2 : 15;
         if(this.tickTimer-- > 0) return;
 
-        this.tickTimer = RECALC_TIME;
+        this.tickTimer = recalcTime;
 
+        boss.lookAt(target);
         float distance = boss.distanceTo(target);
 
         if(boss.getState() == BossState.STALKING && distance > maxDistance){
@@ -82,19 +80,20 @@ public class BossMovementGoal extends Goal {
 
         switch(state){
             case BossState.APPROACHING ->
-                    navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight()/2), target.getZ(), speed);
+                    navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight()/2), target.getZ(), highSpeed);
 
             case BossState.STALKING -> {
                 if(distance > maxDistance){
-                    navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight() / 2), target.getZ(), slowSpeed);
+                    navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight()/2), target.getZ(), slowSpeed);
 
                 }else if(distance < minDistance){
                     Vec3 retreatPos = navStrategy.calculateRetreatPos(boss,target, retreatRadius);
-                    navStrategy.move(boss,retreatPos.x(),retreatPos.y(),retreatPos.z(),highSpeed);
 
+                    navStrategy.move(boss,retreatPos.x(),retreatPos.y(),retreatPos.z(),highSpeed);
+                    boss.setState(BossState.RETREATING);
                 }else{
                     Vec3 strafePos = navStrategy.calculateStrafePos(boss,target,true);
-                    navStrategy.move(boss, strafePos.x(),strafePos.y(),strafePos.z(),slowSpeed);
+                    navStrategy.move(boss, strafePos.x(),strafePos.y(),strafePos.z(),highSpeed);
                 }
             }
         }

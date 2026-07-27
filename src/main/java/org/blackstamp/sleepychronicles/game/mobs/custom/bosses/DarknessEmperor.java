@@ -20,15 +20,16 @@ public class DarknessEmperor extends BossMob {
     private final static int MAX_HEALTH = 1000;
     private final static float SCALE = 0.55F;
     private final static float KNOCKBACK_RESISTANCE = 1F;
+    private final static float SPEED = 1.25F;
 
     private final static BossConfig BOSS_CONFIG = new BossConfig(
             "Senior of Darkness",
             "#5e17a1",
-            0.75D,
+            SPEED,
             10, 10, 10,
             0.75F, 40,
-            10, 30,25, 10,
-            SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")), 10, // "theme_key" is just an example
+            10, 30,16, 8,
+            SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")), 1, // "theme_key" is just an example
             new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness","#9d78bc"),
                     BossEvent.BossBarColor.PURPLE,
                     BossEvent.BossBarOverlay.NOTCHED_6)
