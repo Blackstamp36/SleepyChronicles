@@ -77,10 +77,6 @@ public class LinearProjectile extends ArmorStand {
         if(this.level() instanceof ServerLevel level){
             entity.hurtServer(level, this.damageSources().mobAttack(this.caster), settings.damage);
         }
-
-        org.bukkit.entity.LivingEntity bukkitEntity = entity.getBukkitLivingEntity();
-
-        bukkitEntity.damage(settings.damage, this.caster.getBukkitLivingEntity());
     }
 
     private void checkCollisions(){

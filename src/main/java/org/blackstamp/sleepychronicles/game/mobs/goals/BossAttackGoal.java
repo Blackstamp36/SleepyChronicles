@@ -29,7 +29,8 @@ public class BossAttackGoal extends Goal {
         return boss.getState() == BossState.WINDING_UP
                 || boss.getState() == BossState.ATTACKING
                 || boss.getState() == BossState.STALKING
-                || boss.getState() == BossState.APPROACHING;
+                || boss.getState() == BossState.APPROACHING
+                || boss.getState() == BossState.RECOVERING;
     }
 
     @Override
@@ -78,7 +79,7 @@ public class BossAttackGoal extends Goal {
             }
 
             case BossState.RECOVERING -> {
-                if(boss.getStateTicks() >= attack.getRecoveryTicks()) {
+                if(boss.getStateTicks() >= attack.getRecoveryTicks()){
                     boss.setState(BossState.IDLE);
                     boss.setQueuedAttack(null);
                 }
@@ -88,7 +89,9 @@ public class BossAttackGoal extends Goal {
 
     @Override
     public void stop(){
-        if(boss.getTarget() == null || !boss.getTarget().isAlive())
+        if(boss.getTarget() == null || !boss.getTarget().isAlive()) {
             boss.setState(BossState.IDLE);
+            boss.setQueuedAttack(null);
+        }
     }
 }

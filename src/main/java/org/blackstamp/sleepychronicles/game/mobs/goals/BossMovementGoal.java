@@ -69,7 +69,7 @@ public class BossMovementGoal extends Goal {
 
         float distance = boss.distanceTo(target);
 
-        if(boss.getState() == BossState.STALKING && distance > maxDistance){
+        if(boss.getState() == BossState.IDLE || (boss.getState() == BossState.STALKING && distance > maxDistance)){
             boss.setState(BossState.APPROACHING);
         }
 
@@ -87,8 +87,6 @@ public class BossMovementGoal extends Goal {
                 if(distance > maxDistance){
                     navStrategy.move(boss, target.getX(), target.getY() + (target.getBbHeight()/2), target.getZ(), slowSpeed);
 
-                }else if(distance <= minDistance){
-                   boss.setState(BossState.WINDING_UP);
                 }else{
                     Vec3 strafePos = navStrategy.calculateStrafePos(boss,target,true, strafeRadius);
                     navStrategy.move(boss, strafePos.x(),strafePos.y(),strafePos.z(),highSpeed);

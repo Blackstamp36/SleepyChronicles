@@ -44,7 +44,11 @@ public class BossAggroGoal extends Goal {
                     Player.class,  boss.getBoundingBox().inflate(aggroRadius)
                     );
 
-            for(Player p : nearbyPlayers) if(isValid(p)) boss.getAggroTable().put(p.getUUID(), 0.1F);
+            for(Player p : nearbyPlayers){
+                UUID uuid = p.getUUID();
+
+                if(boss.isPlayerValid(p)) boss.getAggroTable().putIfAbsent(uuid, 0.1F);
+            }
         }
 
         for(Iterator<Map.Entry<UUID,Float>> it = boss.getAggroTable().entrySet().iterator(); it.hasNext();){
@@ -65,7 +69,7 @@ public class BossAggroGoal extends Goal {
                 aggroValue = decayedValue;
             }
 
-            if(!isValid(p)){
+            if(!boss.isPlayerValid(p)){
                 it.remove();
                 continue;
             }
@@ -81,6 +85,8 @@ public class BossAggroGoal extends Goal {
             return true;
         }
 
+        this.aggroedPlayer = null;
+        boss.setTarget(null);
         boss.setState(BossState.IDLE);
         return false;
     }
@@ -116,18 +122,6 @@ public class BossAggroGoal extends Goal {
 
         if(distance > maxDistance) boss.setState(BossState.APPROACHING);
         else boss.setState(BossState.STALKING);
-    }
-
-    private boolean isValid(Player p){
-        if(p == null) return false;
-        if(!(p instanceof ServerPlayer serverPlayer)) return false;
-        if(!serverPlayer.gameMode().equals(GameType.SURVIVAL)) return false;
-        if(!serverPlayer.isAlive()) return false;
-
-        ResourceKey<Level> dimension = p.level().dimension();
-        ResourceKey<Level> bossDimension = boss.level().dimension();
-
-        return dimension == bossDimension;
     }
 
     private void showAggroTable(HashMap<UUID,Float> table){

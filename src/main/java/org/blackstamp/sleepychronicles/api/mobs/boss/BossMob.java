@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
@@ -152,7 +154,21 @@ public abstract class BossMob extends SleepyMob {
         this.setYHeadRot(targetYaw);
     }
 
+    public boolean isPlayerValid(Player p){
+        if(p == null) return false;
+        if(!(p instanceof ServerPlayer serverPlayer)) return false;
+        if(!serverPlayer.gameMode().equals(GameType.SURVIVAL)) return false;
+        if(!serverPlayer.isAlive()) return false;
+
+        ResourceKey<Level> dimension = p.level().dimension();
+        ResourceKey<Level> bossDimension = this.level().dimension();
+
+        return dimension == bossDimension;
+    }
+
     public void setState(BossState value){
+        if(this.state == value) return;
+
         this.state = value;
         this.stateTicks = 0;
     }
