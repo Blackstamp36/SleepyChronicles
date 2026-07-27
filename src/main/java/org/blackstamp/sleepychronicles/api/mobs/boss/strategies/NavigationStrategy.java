@@ -5,9 +5,9 @@ import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 
 public interface NavigationStrategy {
-    Vec3 upVec = new Vec3(0,1,0);
+    Vec3 UP_VECTOR = new Vec3(0,1,0);
 
     Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, double radius);
-    Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean rightStrafe);
+    Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean rightStrafe, double radius);
     void move(BossMob boss, double x, double y, double z, double speed);
 }

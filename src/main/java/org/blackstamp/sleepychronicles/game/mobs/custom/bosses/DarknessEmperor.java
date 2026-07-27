@@ -28,7 +28,10 @@ public class DarknessEmperor extends BossMob {
             SPEED,
             10, 10, 10,
             0.75F, 40,
-            10, 30,16, 8,
+            10,
+            3,
+            30,
+            16, 8,
             SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")), 1, // "theme_key" is just an example
             new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness","#9d78bc"),
                     BossEvent.BossBarColor.PURPLE,
@@ -47,5 +50,6 @@ public class DarknessEmperor extends BossMob {
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
 
         this.setHealth(MAX_HEALTH);
+        this.collides = false;
     }
 }

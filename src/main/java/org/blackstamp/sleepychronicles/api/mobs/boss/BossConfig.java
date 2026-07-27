@@ -13,6 +13,7 @@ public record BossConfig(
     float decay,
     int decayTicks,
     double retreatRadius,
+    double strafeRadius,
     double aggroRadius,
     double maxDistance,
     double minDistance,

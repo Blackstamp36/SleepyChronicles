@@ -8,24 +8,22 @@ public class FlightStrategy implements NavigationStrategy {
 
     @Override
     public Vec3 calculateRetreatPos(BossMob boss, LivingEntity target, double radius) {
-        Vec3 retreatDir = target.position().subtract(boss.position()).normalize();
+        Vec3 retreatDir = boss.position().subtract(target.position()).normalize();
         Vec3 targetPos = boss.position().add(retreatDir.scale(radius));
 
         boolean isReachable = boss.level().noCollision(boss, boss.getBoundingBox().move(targetPos));
 
-        if(isReachable) return targetPos;
-        else return null;
+        return isReachable ? targetPos :  boss.position();
     }
 
     @Override
-    public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft){
-        Vec3 retreatDir = target.position().subtract(boss.position()).normalize();
+    public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft, double radius){
+        Vec3 bossDir = target.position().subtract(boss.position()).normalize();
+        Vec3 strafeDir = bossDir.cross(UP_VECTOR).normalize();
 
-        Vec3 retreatVec = retreatDir.cross(upVec).normalize();
+        if(strafeLeft) strafeDir = strafeDir.scale(-1);
 
-        if(strafeLeft) retreatVec.scale(-1);
-
-        return retreatVec;
+        return boss.position().add(strafeDir).scale(radius);
     }
 
     @Override
@@ -44,5 +42,8 @@ public class FlightStrategy implements NavigationStrategy {
         Vec3 velocity = distanceVec.normalize().scale(speed * 0.1);
 
         boss.setDeltaMovement(velocity);
+
+        LivingEntity target = boss.getTarget();
+        boss.lookAt(target);
     }
 }

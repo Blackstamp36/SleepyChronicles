@@ -10,7 +10,7 @@ import org.bukkit.Particle;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-public enum SleepyProjectiles { // todo: rewrite boss attack class (Darkness Emperor) and its projectiles!
+public enum SleepyProjectiles {
 
     DARK_SPARK(new ProjectileSettings(Particle.DRAGON_BREATH, 0.0F, 50, 1,30));
 

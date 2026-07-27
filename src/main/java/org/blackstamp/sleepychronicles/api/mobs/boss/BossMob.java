@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -77,7 +76,7 @@ public abstract class BossMob extends SleepyMob {
             }else this.setThemeCooldown(this.getThemeCooldown() - 1);
         }
 
-        SleepyChronicles.getInstance().getLogger().warning("STATE: " + this.getState());
+        if(tickCount % 40 == 0) SleepyChronicles.getInstance().getLogger().warning("STATE: " + this.getState());
     }
 
     private void playTheme(Collection<ServerPlayer> players){
@@ -139,7 +138,15 @@ public abstract class BossMob extends SleepyMob {
         if(target == null) return;
 
         LookControl look = this.getLookControl();
-        look.setLookAt(target);
+        look.setLookAt(target, 15F, 15F);
+
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        float targetYaw = (float) (Math.atan2(dz, dx) * (180.0 / Math.PI)) - 90.0F;
+
+        this.setYRot(targetYaw);
+        this.setYBodyRot(targetYaw);
+        this.setYHeadRot(targetYaw);
     }
 
     public void setState(BossState value){
@@ -170,6 +177,7 @@ public abstract class BossMob extends SleepyMob {
                 this,
                 config.evadeCooldown(),
                 config.evadingTicks(),
+                config.strafeRadius(),
                 config.evadeRadius(),
                 config.speed()
         ));
@@ -177,6 +185,7 @@ public abstract class BossMob extends SleepyMob {
         goalSelector.addGoal(1, new BossMovementGoal(
                 this,
                 config.retreatRadius(),
+                config.strafeRadius(),
                 config.maxDistance(), this.getConfig().minDistance(),
                 config.speed()
         ));

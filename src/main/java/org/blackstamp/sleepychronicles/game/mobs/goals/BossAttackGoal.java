@@ -19,12 +19,17 @@ public class BossAttackGoal extends Goal {
         this.boss = boss;
         this.entity = boss;
 
-        this.setFlags(EnumSet.of(Flag.MOVE,Flag.TARGET));
+        this.setFlags(EnumSet.noneOf(Flag.class));
     }
 
     @Override
     public boolean canUse(){
-        return entity.getTarget() != null;
+        if(boss.getTarget() == null) return false;
+
+        return boss.getState() == BossState.WINDING_UP
+                || boss.getState() == BossState.ATTACKING
+                || boss.getState() == BossState.STALKING
+                || boss.getState() == BossState.APPROACHING;
     }
 
     @Override
@@ -33,52 +38,57 @@ public class BossAttackGoal extends Goal {
 
         if(target == null) return;
 
-        BossAttack attack = boss.getQueuedAttack();
+        BossState state = boss.getState();
 
-        switch(boss.getState()){
-            case APPROACHING -> {
-                if(!(boss.getTickCooldown() <= 0)) return;
+        if(state == BossState.APPROACHING || state == BossState.STALKING){
+            if (!(boss.getTickCooldown() <= 0)) return;
 
-                List<BossAttack> validAttacks = new ArrayList<>();
-                double distance = entity.distanceTo(target);
-                double minDistance = attack.getMinDistance();
-                double maxDistance = attack.getMaxDistance();
+            List<BossAttack> validAttacks = new ArrayList<>();
+            double distance = entity.distanceTo(target);
 
-                for(BossAttack valid : boss.getAttacks())
-                    if(distance >= minDistance && distance <= maxDistance) validAttacks.add(valid);
+            for (BossAttack valid : boss.getAttacks()) // Add all valid attacks to a list.
+                if (distance >= valid.getMinDistance() && distance <= valid.getMaxDistance())
+                    validAttacks.add(valid);
 
-                if(!validAttacks.isEmpty()){
-                    BossAttack chosenAttack = validAttacks.get(boss.getRandom().nextInt(validAttacks.size()));
-                    boss.setQueuedAttack(chosenAttack);
-                    boss.setState(BossState.WINDING_UP);
+            if (!validAttacks.isEmpty()) { // Select a random attack and add it to the queue.
+                BossAttack chosenAttack = validAttacks.get(boss.getRandom().nextInt(validAttacks.size()));
+                boss.setQueuedAttack(chosenAttack);
 
-                }else{
-                    if(distance > maxDistance) boss.setState(BossState.APPROACHING);
-                    else boss.setState(BossState.STALKING);
-                }
+                boss.setState(BossState.WINDING_UP);
+            }
+            return;
+        }
+
+        BossAttack attack = boss.getQueuedAttack(); // Now we have our attack properly queued, so we can get its data.
+        if(attack == null){
+            boss.setState(BossState.IDLE);
+            return;
+        }
+
+        switch(state){
+            case BossState.WINDING_UP -> {
+                if(boss.getStateTicks() >= attack.getWindupTicks())
+                    boss.setState(BossState.ATTACKING);
             }
 
-            case WINDING_UP -> {
-                int windupTicks = attack.getWindupTicks();
+            case BossState.ATTACKING -> {
+                attack.cast(boss, boss.getTarget());
 
-                if(boss.getStateTicks() >= windupTicks) boss.setState(BossState.ATTACKING);
-            }
-
-            case ATTACKING -> {
-                BossAttack queuedAttack = boss.getQueuedAttack();
-                queuedAttack.cast(boss,target);
-                boss.setTickCooldown(queuedAttack.getCooldownTicks());
                 boss.setState(BossState.RECOVERING);
             }
 
-            case RECOVERING -> {
-                int recoveryTicks = attack.getRecoveryTicks();
-
-                if(boss.getStateTicks() >= recoveryTicks) boss.setState(BossState.APPROACHING);
+            case BossState.RECOVERING -> {
+                if(boss.getStateTicks() >= attack.getRecoveryTicks()) {
+                    boss.setState(BossState.IDLE);
+                    boss.setQueuedAttack(null);
+                }
             }
         }
     }
 
     @Override
-    public void stop(){ boss.setState(BossState.IDLE); }
+    public void stop(){
+        if(boss.getTarget() == null || !boss.getTarget().isAlive())
+            boss.setState(BossState.IDLE);
+    }
 }

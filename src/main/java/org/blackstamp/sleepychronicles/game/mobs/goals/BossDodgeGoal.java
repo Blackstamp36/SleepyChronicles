@@ -17,18 +17,22 @@ public class BossDodgeGoal extends Goal {
     private final BossMob boss;
     private final int evadeCooldown;
     private final int evadingTicks;
-    private final int radius;
+
     private final NavigationStrategy navStrategy;
     private final double speed;
+
+    private final double radius;
+    private final double strafeRadius;
 
     private int currentEvadingTicks;
     private int currentEvadeCooldown;
     private Vec3 evadePos = null;
 
-    public BossDodgeGoal(BossMob boss, int evadeCooldown, int evadingTicks, int radius, double speed){
+    public BossDodgeGoal(BossMob boss, int evadeCooldown, int evadingTicks, double strafeRadius, double radius, double speed){
         this.boss = boss;
         this.evadeCooldown = evadeCooldown;
         this.evadingTicks = evadingTicks;
+        this.strafeRadius = strafeRadius;
         this.radius = radius;
         this.speed = speed;
 
@@ -72,7 +76,7 @@ public class BossDodgeGoal extends Goal {
         currentEvadingTicks = evadingTicks;
 
         this.evadePos = navStrategy.calculateStrafePos(
-                boss,boss.getTarget(),boss.getRandom().nextBoolean()
+                boss,boss.getTarget(),boss.getRandom().nextBoolean(),strafeRadius
         );
     }
 
