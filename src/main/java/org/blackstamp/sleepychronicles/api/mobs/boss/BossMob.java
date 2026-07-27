@@ -68,7 +68,7 @@ public abstract class BossMob extends SleepyMob {
         this.stateTicks++;
         if(this.tickCooldown > 0) tickCooldown--;
 
-        if(!config.bar().getPlayers().isEmpty()) {
+        if(!config.bar().getPlayers().isEmpty()){
             if(this.getThemeCooldown() <= 0){
                 playTheme(config.bar().getPlayers());
                 this.setThemeCooldown(config.themeTicks());
@@ -76,7 +76,10 @@ public abstract class BossMob extends SleepyMob {
             }else this.setThemeCooldown(this.getThemeCooldown() - 1);
         }
 
-        if(tickCount % 40 == 0) SleepyChronicles.getInstance().getLogger().warning("STATE: " + this.getState());
+        if(tickCount % 40 == 0) {
+            SleepyChronicles.getInstance().getLogger().warning("STATE: " + this.getState());
+            SleepyChronicles.getInstance().getLogger().warning("STATE_TICKS: " + this.stateTicks);
+        }
     }
 
     private void playTheme(Collection<ServerPlayer> players){

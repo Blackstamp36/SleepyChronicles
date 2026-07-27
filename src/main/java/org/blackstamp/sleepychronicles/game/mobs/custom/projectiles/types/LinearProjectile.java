@@ -1,6 +1,7 @@
 package org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.types;
 
 import com.destroystokyo.paper.ParticleBuilder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,10 +47,8 @@ public class LinearProjectile extends ArmorStand {
     }
 
     public Vec3 getInitialVector(){
-        org.bukkit.entity.LivingEntity entity = caster.getBukkitLivingEntity();
-
-        final double yaw = Math.toRadians(entity.getYaw());
-        final double pitch = Math.toRadians(entity.getPitch());
+        final double yaw = Math.toRadians(this.caster.getYRot());
+        final double pitch = Math.toRadians(this.caster.getXRot());
 
         final double x = -Math.sin(yaw) * Math.cos(pitch);
         final double y = -Math.sin(pitch);
@@ -75,6 +74,10 @@ public class LinearProjectile extends ArmorStand {
             this.level().explode(entity, pos.x, pos.y, pos.z, settings.explosionRadius, false, Level.ExplosionInteraction.MOB);
         }
 
+        if(this.level() instanceof ServerLevel level){
+            entity.hurtServer(level, this.damageSources().mobAttack(this.caster), settings.damage);
+        }
+
         org.bukkit.entity.LivingEntity bukkitEntity = entity.getBukkitLivingEntity();
 
         bukkitEntity.damage(settings.damage, this.caster.getBukkitLivingEntity());
@@ -94,6 +97,7 @@ public class LinearProjectile extends ArmorStand {
     }
 
     public void spawnParticle(ParticleBuilder builder){
-        builder.location(getBukkitLivingEntity().getLocation()).spawn();
+        builder.location(this.level().getWorld(), this.getX(), this.getY(), this.getZ())
+                .spawn();
     }
 }
