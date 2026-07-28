@@ -20,7 +20,8 @@ public class BossDodgeGoal extends Goal {
     private final int evadingTicks;
 
     private final NavigationStrategy navStrategy;
-    private final double speed;
+
+    private final double highSpeed;
 
     private final double radius;
     private final double strafeRadius;
@@ -35,7 +36,7 @@ public class BossDodgeGoal extends Goal {
         this.evadingTicks = evadingTicks;
         this.strafeRadius = strafeRadius;
         this.radius = radius;
-        this.speed = speed;
+        this.highSpeed = speed * 1.25;
 
         if(boss.getMovementType().equals(MovementType.FLIGHT)) this.navStrategy = new FlightStrategy();
         else this.navStrategy = new GroundStrategy();
@@ -67,9 +68,7 @@ public class BossDodgeGoal extends Goal {
     }
 
     @Override
-    public boolean canContinueToUse(){
-        return currentEvadingTicks > 0 && evadePos != null;
-    }
+    public boolean canContinueToUse(){ return currentEvadingTicks > 0 && evadePos != null; }
 
     @Override
     public void start(){
@@ -89,9 +88,7 @@ public class BossDodgeGoal extends Goal {
     public void tick(){
         currentEvadingTicks--;
 
-        if(evadePos != null){
-            navStrategy.move(boss,evadePos.x(), evadePos.y(), evadePos.z(),speed);
-        }
+        if(evadePos != null) navStrategy.move(boss,evadePos.x(), evadePos.y(), evadePos.z(),highSpeed);
     }
 
     @Override

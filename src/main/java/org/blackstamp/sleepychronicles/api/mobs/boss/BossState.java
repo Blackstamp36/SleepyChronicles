@@ -1,7 +1,8 @@
 package org.blackstamp.sleepychronicles.api.mobs.boss;
 
 public enum BossState {
-    ATTACKING,IDLE,
-    RETREATING,STALKING,APPROACHING,
-    WINDING_UP,RECOVERING,EVADING
+    IDLE,
+    APPROACHING,STALKING,RETREATING,
+    ATTACKING,WINDING_UP,RECOVERING,
+    EVADING
 }
