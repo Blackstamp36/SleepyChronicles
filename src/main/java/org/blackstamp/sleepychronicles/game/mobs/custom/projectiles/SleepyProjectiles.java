@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.game.mobs.custom.projectiles;
 
 import lombok.Getter;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.types.HomingProjectile;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public enum SleepyProjectiles {
 
-    DARK_SPARK(new ProjectileSettings(Particle.DRAGON_BREATH, 0.0F, 50, 1,30));
+    DARK_SPARK(new ProjectileSettings(Particle.WITCH,5,Items.PURPLE_WOOL,0.0F,50,1,30));
 
     private final ProjectileSettings settings;
 

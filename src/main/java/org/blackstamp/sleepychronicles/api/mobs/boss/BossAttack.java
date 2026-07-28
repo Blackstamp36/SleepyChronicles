@@ -9,4 +9,5 @@ public interface BossAttack {
     int getWindupTicks();
     int getRecoveryTicks();
     int getCooldownTicks();
+    int getWeight();
 }

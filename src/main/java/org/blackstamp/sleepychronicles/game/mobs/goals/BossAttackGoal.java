@@ -51,10 +51,31 @@ public class BossAttackGoal extends Goal {
                 if (distance >= valid.getMinDistance() && distance <= valid.getMaxDistance())
                     validAttacks.add(valid);
 
-            if (!validAttacks.isEmpty()) { // Select a random attack and add it to the queue.
-                BossAttack chosenAttack = validAttacks.get(boss.getRandom().nextInt(validAttacks.size()));
-                boss.setQueuedAttack(chosenAttack);
+            if(!validAttacks.isEmpty()){ // todo: Test how it goes.
+                BossAttack previous = boss.getPreviousAttack();
 
+                if(validAttacks.size() > 1 && previous != null) validAttacks.remove(previous);
+
+                int totalWeight = 0;
+                for(BossAttack attack : validAttacks){
+                    totalWeight += attack.getWeight();
+                }
+
+                int randomTicket = boss.getRandom().nextInt(totalWeight);
+                int currentWeight = 0;
+
+                BossAttack chosenAttack = validAttacks.getFirst();
+
+                for(BossAttack attack : validAttacks){
+                    currentWeight += attack.getWeight();
+                    if(randomTicket < currentWeight){
+                        chosenAttack = attack;
+                        break;
+                    }
+                }
+
+                boss.setPreviousAttack(chosenAttack);
+                boss.setQueuedAttack(chosenAttack);
                 boss.setState(BossState.WINDING_UP);
             }
             return;

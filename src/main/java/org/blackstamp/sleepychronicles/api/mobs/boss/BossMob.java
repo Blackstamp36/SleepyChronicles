@@ -33,8 +33,11 @@ import java.util.UUID;
 
 public abstract class BossMob extends SleepyMob {
     @Setter @Getter private BossAttack queuedAttack = null;
+    @Setter @Getter private BossAttack previousAttack = null;
+
     @Setter @Getter private int tickCooldown = 0;
     @Setter @Getter private int themeCooldown = 0;
+
     @Getter private int phase = 1;
     @Getter private BossState state;
     @Getter private final MovementType movementType;
@@ -214,6 +217,9 @@ public abstract class BossMob extends SleepyMob {
 
     @Override
     public boolean shouldDespawnInPeaceful() { return true; }
+
+    @Override
+    public boolean isPushable() { return false; }
 
     public void switchToPhase(int value){ phase = value; }
 }

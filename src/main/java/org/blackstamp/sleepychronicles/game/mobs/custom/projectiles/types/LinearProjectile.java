@@ -4,8 +4,11 @@ import com.destroystokyo.paper.ParticleBuilder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.ProjectileSettings;
@@ -41,9 +44,11 @@ public class LinearProjectile extends ArmorStand {
 
         if(ticks > settings.lifetime) discard();
 
-        spawnParticle(builder);
+        spawnParticle(builder, settings.particleAmount);
         move();
         checkCollisions();
+
+        if(tickCount % 5 == 0) this.setYRot(this.getYRot() + 45.0F);
     }
 
     public Vec3 getInitialVector(){
@@ -65,6 +70,9 @@ public class LinearProjectile extends ArmorStand {
         this.setInvisible(true);
         this.setInvulnerable(true);
         this.setSilent(true);
+
+        this.setSmall(true);
+        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(settings.item));
     }
 
     public void onHit(LivingEntity entity){
@@ -92,8 +100,10 @@ public class LinearProjectile extends ArmorStand {
             }
     }
 
-    public void spawnParticle(ParticleBuilder builder){
+    public void spawnParticle(ParticleBuilder builder, int amount){
         builder.location(this.level().getWorld(), this.getX(), this.getY(), this.getZ())
+                .count(amount)
+                .offset(0.5F,0.25F,0.5F)
                 .spawn();
     }
 }

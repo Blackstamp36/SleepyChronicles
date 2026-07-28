@@ -60,6 +60,7 @@ public enum DarknessEmperorAttacks implements BossAttack {
         @Override public int getWindupTicks(){ return 40; }
         @Override public int getRecoveryTicks(){ return 60; }
         @Override public int getCooldownTicks(){ return 60; }
+        @Override public int getWeight(){ return 2; }
     },
 
     LEVITATION_SPELL{
@@ -76,7 +77,7 @@ public enum DarknessEmperorAttacks implements BossAttack {
             Level nmsLevel = target.level();
             int castDuration = ThreadLocalRandom.current().nextInt(4,9) * 20;
 
-            bukkitT.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,
+            bukkitT.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS,
                     castDuration,0, false,false));
 
             new BukkitRunnable(){
@@ -89,7 +90,9 @@ public enum DarknessEmperorAttacks implements BossAttack {
                     if(tickCount >= castDuration) this.cancel();
 
                     if(tickCount % 20 == 0){
-                        SleepyProjectiles.DARK_SPARK.shootLinear(nmsLevel, boss, boss.position(), null);
+                        Vec3 newDir = target.position().subtract(boss.position()).normalize();
+
+                        SleepyProjectiles.DARK_SPARK.shootLinear(nmsLevel, boss, boss.position(), newDir);
 
                         bukkitT.playSound(bukkitT.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.85F,1.75F);
                     }
@@ -97,10 +100,11 @@ public enum DarknessEmperorAttacks implements BossAttack {
             }.runTaskTimer(SleepyChronicles.getInstance(), 0, 1);
         }
 
-        @Override public double getMinDistance(){ return 2.5D; }
+        @Override public double getMinDistance(){ return 2.0D; }
         @Override public double getMaxDistance(){ return 6.0D; }
         @Override public int getWindupTicks(){ return 40; }
         @Override public int getRecoveryTicks(){ return 40; }
         @Override public int getCooldownTicks(){ return 50; }
+        @Override public int getWeight(){ return 2; }
     }
 }

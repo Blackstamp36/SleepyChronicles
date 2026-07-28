@@ -47,7 +47,7 @@ public class BossAggroGoal extends Goal {
             for(Player p : nearbyPlayers){
                 UUID uuid = p.getUUID();
 
-                if(boss.isPlayerValid(p)) boss.getAggroTable().putIfAbsent(uuid, 0.1F);
+                if(boss.isPlayerValid(p)) boss.getAggroTable().putIfAbsent(uuid, 1F);
             }
         }
 
