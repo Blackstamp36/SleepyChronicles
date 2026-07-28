@@ -1,5 +1,6 @@
 package org.blackstamp.sleepychronicles.game.mobs.goals;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
@@ -39,7 +40,7 @@ public class BossDodgeGoal extends Goal {
         if(boss.getMovementType().equals(MovementType.FLIGHT)) this.navStrategy = new FlightStrategy();
         else this.navStrategy = new GroundStrategy();
 
-        this.setFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     @Override
@@ -72,24 +73,30 @@ public class BossDodgeGoal extends Goal {
 
     @Override
     public void start(){
+        boss.setState(BossState.EVADING);
+
         currentEvadeCooldown = evadeCooldown;
         currentEvadingTicks = evadingTicks;
 
-        this.evadePos = navStrategy.calculateStrafePos(
-                boss,boss.getTarget(),boss.getRandom().nextBoolean(),strafeRadius
-        );
+        LivingEntity entity = boss.getTarget();
+
+        if(entity == null) entity = boss;
+
+        this.evadePos = navStrategy.calculateStrafePos(boss,entity,boss.getRandom().nextBoolean(),strafeRadius);
     }
 
     @Override
     public void tick(){
         currentEvadingTicks--;
 
-        if(evadePos != null) boss.getMoveControl().setWantedPosition(evadePos.x,evadePos.y,evadePos.z,speed);
+        if(evadePos != null){
+            navStrategy.move(boss,evadePos.x(), evadePos.y(), evadePos.z(),speed);
+        }
     }
 
     @Override
     public void stop(){
         evadePos = null;
-        boss.setState(BossState.IDLE);
+        if(boss.isAlive()){ boss.setState(BossState.IDLE); }
     }
 }
