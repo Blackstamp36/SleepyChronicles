@@ -1,16 +1,11 @@
-package org.blackstamp.sleepychronicles.game.mobs.goals;
+package org.blackstamp.sleepychronicles.game.mobs.goals.boss;
 
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
-import org.bukkit.Bukkit;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import java.util.*;

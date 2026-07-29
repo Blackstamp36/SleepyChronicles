@@ -1,17 +1,18 @@
 package org.blackstamp.sleepychronicles.api.mobs;
 
-import co.aikar.commands.annotation.Optional;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
-import org.blackstamp.sleepychronicles.api.security.SleepyToken;
-import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
+import org.blackstamp.sleepychronicles.api.mobs.attacks.SleepyAttack;
+import org.blackstamp.sleepychronicles.api.mobs.config.BaseConfig;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -26,60 +27,66 @@ import java.util.*;
 public class SleepyMob extends Mob {
     @Getter private final Level world;
     @Getter private final String mobName;
-    @Getter private final String mobId;
-    @Getter private String mobToken;
+    @Getter private final String color;
+    @Getter private BaseConfig config;
+
+    @Setter @Getter private int tickCooldown = 0;
 
     private CraftMob sleepyBukkitWrapper;
 
     @Getter private EntityType<? extends Mob> type;
 
-    public SleepyMob(EntityType<? extends Mob> type, Level world, String name, @Optional String color){
+    public SleepyMob(EntityType<? extends Mob> type, Level world, BaseConfig config){
         super(type,world);
 
         this.type = type;
         this.world = world;
-        this.mobName = name;
-        this.mobId = TextFormatter.toIDString(name);
-        this.mobToken = SleepyToken.generate();
+        this.config = config;
+        this.mobName = config.name();
 
-        if(color == null) color = SleepyPalette.VANILLA.getColor1();
-        setMobName(name, color);
+        if(config.color() != null) this.color = config.color();
+        else this.color = SleepyPalette.VANILLA.getColor1();
+
+        this.setMobName(this.mobName, color);
+
+        if(config.attributes() != null){
+
+            for(Map.Entry<Holder<Attribute>, Double> entry : config.attributes().entrySet()){
+
+                if(this.getAttributes().hasAttribute(entry.getKey())){
+                    this.setAttribute(entry.getKey(), entry.getValue());
+
+                    if(entry.getKey().equals(Attributes.MAX_HEALTH)){ this.setHealth(this.getMaxHealth()); }
+                }
+
+            }
+        }
     }
 
-    public void setMobName(String name, @NotNull String color){
-        this.setCustomName(TextFormatter.toComponent(name,color));
+    @Override
+    public void tick(){
+        SleepyAttack<SleepyMob> attack = config.attack();
+
+        if(attack == null) return;
+
+        LivingEntity target = this.getTarget();
+        if(target == null) return;
+
+        double distance = this.distanceTo(target);
+
+        if(distance <= attack.getMaxDistance() && this.getTickCooldown() <= 0) {
+            config.attack().cast(this, target);
+            this.setTickCooldown(attack.getCooldownTicks());
+        }
     }
 
-    public void setItem(ItemStack item, EquipmentSlot slot){
-        this.setItemSlot(slot, item);
-    }
+    public void setMobName(String name, @NotNull String color){ this.setCustomName(TextFormatter.toComponent(name,color)); }
 
-    public void setDamage(double value){ Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(value); }
-
-    public void setMovementSpeed(double value){ Objects.requireNonNull(this.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue(value); }
-
-    public int getDamage(){ return (int) Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).getBaseValue(); }
-
-    public void refillHealth(){ this.setHealth(getMaxHealth()); }
+    public void setItem(ItemStack item, EquipmentSlot slot){ this.setItemSlot(slot, item); }
 
     public void setMaxHealth(int max){
         Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(max);
-        this.refillHealth();
-    }
-
-    public void setScale(double value){ Objects.requireNonNull(this.getAttribute(Attributes.SCALE)).setBaseValue(value); }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag){
-        super.addAdditionalSaveData(tag);
-        tag.putString(SleepyKeys.MOB_TOKEN, this.mobToken);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag){
-        super.readAdditionalSaveData(tag);
-
-        tag.getString(SleepyKeys.MOB_TOKEN).ifPresent(s -> this.mobToken = s);
+        this.setHealth(getMaxHealth());
     }
 
     public void setAttribute(@NotNull Holder<Attribute> attribute, @NotNull Double value){
@@ -109,4 +116,10 @@ public class SleepyMob extends Mob {
 
         return this.sleepyBukkitWrapper;
     }
+
+    @Override
+    public SoundEvent getHurtSound(DamageSource source){ return config.hurtSound(); }
+
+    @Override
+    public SoundEvent getDeathSound(){ return config.deathSound(); }
 }

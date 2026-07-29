@@ -1,17 +1,18 @@
-package org.blackstamp.sleepychronicles.game.mobs.goals.boss;
+package org.blackstamp.sleepychronicles.game.mobs.custom.bosses.attacks;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttack;
+import org.blackstamp.sleepychronicles.api.mobs.attacks.BossAttack;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.SleepyProjectiles;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
@@ -27,16 +28,23 @@ public enum DarknessEmperorAttacks implements BossAttack {
         public void cast(BossMob boss, LivingEntity target){
             if(!(target instanceof Player)) return;
 
-            boss.setTickCooldown(getCooldownTicks());
-
             final Vec3 startPos = new Vec3(boss.getX(), boss.getY(), boss.getZ());
             final Level nmsLevel = boss.level();
-            final org.bukkit.entity.Player bukkitT = (org.bukkit.entity.Player) target.getBukkitLivingEntity();
 
-            bukkitT.playSound(bukkitT.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH,0.85F,1.25F);
-            bukkitT.playSound(bukkitT.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,0.85F,1.25F);
-            bukkitT.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,
-                    20,0, false,false));
+            boss.setTickCooldown(getCooldownTicks());
+
+            nmsLevel.playSound(
+                    null, boss.blockPosition(),
+                    SoundEvents.ELDER_GUARDIAN_DEATH, SoundSource.HOSTILE,
+                    1F,1.25F
+            );
+            nmsLevel.playSound(
+                    null, boss.blockPosition(),
+                    SoundEvents.BEACON_DEACTIVATE, SoundSource.HOSTILE,
+                    1F,0.5F
+            );
+
+            target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,20,0,false,false));
 
             for(int i = 0; i < COUNT; i++){
                 final int finalI = i;
@@ -68,17 +76,19 @@ public enum DarknessEmperorAttacks implements BossAttack {
         public void cast(BossMob boss, LivingEntity target){
             if(!(target instanceof Player)) return;
 
+            Level nmsLevel = target.level();
+            int castDuration = ThreadLocalRandom.current().nextInt(4,9) * 15;
+
+            target.addEffect(new MobEffectInstance(MobEffects.LEVITATION,castDuration,0,false,false));
+            target.addEffect(new MobEffectInstance(MobEffects.DARKNESS,castDuration,0,false,false));
+
             boss.setTickCooldown(getCooldownTicks());
 
-            org.bukkit.entity.Player bukkitT = (org.bukkit.entity.Player) target.getBukkitLivingEntity();
-            bukkitT.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,100,0, false,false));
-            bukkitT.playSound(bukkitT.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_BLINDNESS,0.5F,1.25F);
-
-            Level nmsLevel = target.level();
-            int castDuration = ThreadLocalRandom.current().nextInt(4,9) * 20;
-
-            bukkitT.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS,
-                    castDuration,0, false,false));
+            nmsLevel.playSound(
+                    target, target.blockPosition(),
+                    SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.HOSTILE,
+                    1F,1.25F
+            );
 
             new BukkitRunnable(){
                 int tickCount = 0;
@@ -89,12 +99,16 @@ public enum DarknessEmperorAttacks implements BossAttack {
 
                     if(tickCount >= castDuration) this.cancel();
 
-                    if(tickCount % 20 == 0){
+                    if(tickCount % 15 == 0){
                         Vec3 newDir = target.position().subtract(boss.position()).normalize();
 
                         SleepyProjectiles.DARK_SPARK.shootLinear(nmsLevel, boss, boss.position(), newDir);
 
-                        bukkitT.playSound(bukkitT.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.85F,1.75F);
+                        nmsLevel.playSound(
+                                null, boss.blockPosition(),
+                                SoundEvents.GHAST_SHOOT, SoundSource.HOSTILE,
+                                0.85F,1.75F
+                        );
                     }
                 }
             }.runTaskTimer(SleepyChronicles.getInstance(), 0, 1);

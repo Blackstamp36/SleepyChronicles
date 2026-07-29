@@ -1,6 +1,5 @@
 package org.blackstamp.sleepychronicles.api.mobs.boss;
 
-import co.aikar.commands.annotation.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.Holder;
@@ -8,8 +7,6 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -20,40 +17,39 @@ import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.SleepyMob;
-import org.blackstamp.sleepychronicles.game.mobs.goals.BossAggroGoal;
-import org.blackstamp.sleepychronicles.game.mobs.goals.BossAttackGoal;
-import org.blackstamp.sleepychronicles.game.mobs.goals.BossDodgeGoal;
-import org.blackstamp.sleepychronicles.game.mobs.goals.BossMovementGoal;
+import org.blackstamp.sleepychronicles.api.mobs.attacks.BossAttack;
+import org.blackstamp.sleepychronicles.api.mobs.config.BossConfig;
+import org.blackstamp.sleepychronicles.game.mobs.goals.boss.BossAggroGoal;
+import org.blackstamp.sleepychronicles.game.mobs.goals.boss.BossAttackGoal;
+import org.blackstamp.sleepychronicles.game.mobs.goals.boss.BossDodgeGoal;
+import org.blackstamp.sleepychronicles.game.mobs.goals.boss.BossMovementGoal;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class BossMob extends SleepyMob {
+public class BossMob extends SleepyMob {
     @Setter @Getter private BossAttack queuedAttack = null;
     @Setter @Getter private BossAttack previousAttack = null;
 
-    @Setter @Getter private int tickCooldown = 0;
     @Setter @Getter private int themeCooldown = 0;
 
     @Getter private int phase = 1;
     @Getter private BossState state;
     @Getter private final MovementType movementType;
-    @Getter private final BossAttack[] attacks;
+    @Getter private final BossAttack[] bossAttacks;
     @Getter private final BossConfig config;
     @Getter private int stateTicks = 0;
     @Getter private final HashMap<UUID,Float> aggroTable = new HashMap<>();
 
-    public BossMob(EntityType<? extends Mob> type, Level world, String name, @Optional String color,
-                   MovementType movementType, BossAttack[] attacks, BossConfig config){
-        super(type,world,name,color);
+    public BossMob(EntityType<? extends Mob> type, Level world, BossConfig config){
+        super(type,world,config);
 
-        this.movementType = movementType;
-        this.attacks = attacks;
+        this.movementType = config.movementType();
+        this.bossAttacks = config.bossAttacks();
         this.config = config;
 
         setState(BossState.IDLE);
@@ -73,7 +69,6 @@ public abstract class BossMob extends SleepyMob {
         config.bar().setProgress(this.getHealth() / this.getMaxHealth());
 
         this.stateTicks++;
-        if(this.tickCooldown > 0) tickCooldown--;
 
         if(!config.bar().getPlayers().isEmpty()){
             if(this.getThemeCooldown() <= 0){
@@ -81,11 +76,6 @@ public abstract class BossMob extends SleepyMob {
                 this.setThemeCooldown(config.themeTicks());
 
             }else this.setThemeCooldown(this.getThemeCooldown() - 1);
-        }
-
-        if(tickCount % 40 == 0) {
-            SleepyChronicles.getInstance().getLogger().warning("STATE: " + this.getState());
-            SleepyChronicles.getInstance().getLogger().warning("STATE_TICKS: " + this.stateTicks);
         }
     }
 
@@ -212,7 +202,7 @@ public abstract class BossMob extends SleepyMob {
                 config.retreatRadius(),
                 config.strafeRadius(),
                 config.maxDistance(), this.getConfig().minDistance(),
-                config.speed()
+                config.baseSpeed()
         ));
 
         goalSelector.addGoal(2, new BossAttackGoal(this));
@@ -228,10 +218,4 @@ public abstract class BossMob extends SleepyMob {
     public boolean isPickable(){ return true; }
 
     public void switchToPhase(int value){ phase = value; }
-
-    @Override
-    public SoundEvent getHurtSound(DamageSource source){ return config.hurtSound(); }
-
-    @Override
-    public SoundEvent getDeathSound(){ return config.hurtSound(); }
 }

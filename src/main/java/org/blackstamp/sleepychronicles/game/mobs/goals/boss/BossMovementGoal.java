@@ -1,9 +1,8 @@
-package org.blackstamp.sleepychronicles.game.mobs.goals;
+package org.blackstamp.sleepychronicles.game.mobs.goals.boss;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
-import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;

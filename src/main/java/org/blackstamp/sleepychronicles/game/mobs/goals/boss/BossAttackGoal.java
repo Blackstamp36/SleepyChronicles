@@ -1,9 +1,9 @@
-package org.blackstamp.sleepychronicles.game.mobs.goals;
+package org.blackstamp.sleepychronicles.game.mobs.goals.boss;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import org.blackstamp.sleepychronicles.api.mobs.boss.BossAttack;
+import org.blackstamp.sleepychronicles.api.mobs.attacks.BossAttack;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
 
@@ -47,7 +47,7 @@ public class BossAttackGoal extends Goal {
             List<BossAttack> validAttacks = new ArrayList<>();
             double distance = entity.distanceTo(target);
 
-            for (BossAttack valid : boss.getAttacks()) // Add all valid attacks to a list.
+            for (BossAttack valid : boss.getBossAttacks()) // Add all valid attacks to a list.
                 if(distance >= valid.getMinDistance() && distance <= valid.getMaxDistance())
                     validAttacks.add(valid);
 

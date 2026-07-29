@@ -12,7 +12,6 @@ public final class SleepyKeys {
 
     // mobs
     public static final String MOB_ID;
-    public static final String MOB_TOKEN;
     public static final String MOB_FAMILY;
 
     // trinkets
@@ -27,7 +26,6 @@ public final class SleepyKeys {
         ITEM_FAMILY = PersistentData.key("item_family");
 
         MOB_ID = "mob_id";
-        MOB_TOKEN = "mob_token";
         MOB_FAMILY = "mob_family";
 
         TRINKETS_INV = PersistentData.key("trinkets_inv");
