@@ -100,11 +100,11 @@ public enum DarknessEmperorAttacks implements BossAttack {
             }.runTaskTimer(SleepyChronicles.getInstance(), 0, 1);
         }
 
-        @Override public double getMinDistance(){ return 2.0D; }
-        @Override public double getMaxDistance(){ return 6.0D; }
+        @Override public double getMinDistance(){ return 1.0D; }
+        @Override public double getMaxDistance(){ return 10.0D; }
         @Override public int getWindupTicks(){ return 40; }
         @Override public int getRecoveryTicks(){ return 40; }
         @Override public int getCooldownTicks(){ return 50; }
-        @Override public int getWeight(){ return 2; }
+        @Override public int getWeight(){ return 10; }
     }
 }

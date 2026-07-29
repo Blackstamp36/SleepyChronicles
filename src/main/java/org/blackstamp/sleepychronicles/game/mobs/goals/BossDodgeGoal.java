@@ -4,6 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
+import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.mobs.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossState;
@@ -16,27 +17,27 @@ import java.util.List;
 
 public class BossDodgeGoal extends Goal {
     private final BossMob boss;
-    private final int evadeCooldown;
-    private final int evadingTicks;
+    private final int dodgeCooldown;
+    private final int dodgingTicks;
 
     private final NavigationStrategy navStrategy;
 
-    private final double highSpeed;
+    private final double dodgeSpeed;
 
-    private final double radius;
+    private final double dodgeDetectionRadius;
     private final double strafeRadius;
 
-    private int currentEvadingTicks;
-    private int currentEvadeCooldown;
+    private int currentDodgingTicks;
+    private int currentDodgeCooldown;
     private Vec3 evadePos = null;
 
-    public BossDodgeGoal(BossMob boss, int evadeCooldown, int evadingTicks, double strafeRadius, double radius, double speed){
+    public BossDodgeGoal(BossMob boss, int dodgeCooldown, int dodgingTicks, double strafeRadius, double dodgeDetectionRadius, double dodgeSpeed){
         this.boss = boss;
-        this.evadeCooldown = evadeCooldown;
-        this.evadingTicks = evadingTicks;
+        this.dodgeCooldown = dodgeCooldown;
+        this.dodgingTicks = dodgingTicks;
         this.strafeRadius = strafeRadius;
-        this.radius = radius;
-        this.highSpeed = speed * 1.25;
+        this.dodgeDetectionRadius = dodgeDetectionRadius;
+        this.dodgeSpeed = dodgeSpeed;
 
         if(boss.getMovementType().equals(MovementType.FLIGHT)) this.navStrategy = new FlightStrategy();
         else this.navStrategy = new GroundStrategy();
@@ -46,13 +47,13 @@ public class BossDodgeGoal extends Goal {
 
     @Override
     public boolean canUse(){
-        if(currentEvadeCooldown > 0){
-            currentEvadeCooldown--;
+        if(currentDodgeCooldown > 0){
+            currentDodgeCooldown--;
             return false;
         }
 
         List<Projectile> projectileList = boss.level().getEntitiesOfClass(
-                Projectile.class, boss.getBoundingBox().inflate(radius)
+                Projectile.class, boss.getBoundingBox().inflate(dodgeDetectionRadius)
         );
 
         if(projectileList.isEmpty()) return false;
@@ -68,14 +69,14 @@ public class BossDodgeGoal extends Goal {
     }
 
     @Override
-    public boolean canContinueToUse(){ return currentEvadingTicks > 0 && evadePos != null; }
+    public boolean canContinueToUse(){ return currentDodgingTicks > 0 && evadePos != null; }
 
     @Override
     public void start(){
         boss.setState(BossState.EVADING);
 
-        currentEvadeCooldown = evadeCooldown;
-        currentEvadingTicks = evadingTicks;
+        currentDodgeCooldown = dodgeCooldown;
+        currentDodgingTicks = dodgingTicks;
 
         LivingEntity entity = boss.getTarget();
 
@@ -86,9 +87,9 @@ public class BossDodgeGoal extends Goal {
 
     @Override
     public void tick(){
-        currentEvadingTicks--;
+        currentDodgingTicks--;
 
-        if(evadePos != null) navStrategy.move(boss,evadePos.x(), evadePos.y(), evadePos.z(),highSpeed);
+        if(evadePos != null){ navStrategy.move(boss,evadePos.x(), evadePos.y(), evadePos.z(),dodgeSpeed); }
     }
 
     @Override

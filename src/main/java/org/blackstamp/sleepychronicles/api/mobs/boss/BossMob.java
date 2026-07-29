@@ -8,6 +8,8 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -135,6 +137,7 @@ public abstract class BossMob extends SleepyMob {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float value){
         boolean hurt = super.hurtServer(level,source,value);
+
         Entity entity = source.getEntity();
 
         if(hurt) if(entity instanceof Player p) addAggro(p,value);
@@ -197,11 +200,11 @@ public abstract class BossMob extends SleepyMob {
 
         goalSelector.addGoal(0, new BossDodgeGoal(
                 this,
-                config.evadeCooldown(),
-                config.evadingTicks(),
+                config.dodgeCooldown(),
+                config.dodgingTicks(),
                 config.strafeRadius(),
-                config.evadeRadius(),
-                config.speed()
+                config.dodgeDetectionRadius(),
+                config.dodgeSpeed()
         ));
 
         goalSelector.addGoal(1, new BossMovementGoal(
@@ -219,7 +222,16 @@ public abstract class BossMob extends SleepyMob {
     public boolean shouldDespawnInPeaceful() { return true; }
 
     @Override
-    public boolean isPushable() { return false; }
+    public boolean isPushable(){ return false; }
+
+    @Override
+    public boolean isPickable(){ return true; }
 
     public void switchToPhase(int value){ phase = value; }
+
+    @Override
+    public SoundEvent getHurtSound(DamageSource source){ return config.hurtSound(); }
+
+    @Override
+    public SoundEvent getDeathSound(){ return config.hurtSound(); }
 }

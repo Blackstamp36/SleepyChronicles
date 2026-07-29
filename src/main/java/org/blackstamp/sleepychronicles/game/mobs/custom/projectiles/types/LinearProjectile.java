@@ -106,4 +106,10 @@ public class LinearProjectile extends ArmorStand {
                 .offset(0.5F,0.25F,0.5F)
                 .spawn();
     }
+
+    @Override
+    public boolean isPushable(){ return false; }
+
+    @Override
+    public boolean isPickable(){ return false; }
 }

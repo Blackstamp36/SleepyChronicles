@@ -17,13 +17,13 @@ public class FlightStrategy implements NavigationStrategy {
     }
 
     @Override
-    public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft, double radius){
+    public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft, double evadeRadius){
         Vec3 bossDir = target.position().subtract(boss.position()).normalize();
         Vec3 strafeDir = bossDir.cross(UP_VECTOR).normalize();
 
         if(strafeLeft) strafeDir = strafeDir.scale(-1);
 
-        return boss.position().add(strafeDir).scale(radius);
+        return boss.position().add(strafeDir.scale(evadeRadius));
     }
 
     @Override

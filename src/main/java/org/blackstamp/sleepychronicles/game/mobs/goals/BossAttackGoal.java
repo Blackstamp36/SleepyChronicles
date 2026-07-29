@@ -48,23 +48,21 @@ public class BossAttackGoal extends Goal {
             double distance = entity.distanceTo(target);
 
             for (BossAttack valid : boss.getAttacks()) // Add all valid attacks to a list.
-                if (distance >= valid.getMinDistance() && distance <= valid.getMaxDistance())
+                if(distance >= valid.getMinDistance() && distance <= valid.getMaxDistance())
                     validAttacks.add(valid);
 
-            if(!validAttacks.isEmpty()){ // todo: Test how it goes.
+            if(!validAttacks.isEmpty()){
                 BossAttack previous = boss.getPreviousAttack();
 
                 if(validAttacks.size() > 1 && previous != null) validAttacks.remove(previous);
 
                 int totalWeight = 0;
-                for(BossAttack attack : validAttacks){
-                    totalWeight += attack.getWeight();
-                }
+                for(BossAttack attack : validAttacks){ totalWeight += attack.getWeight(); }
 
                 int randomTicket = boss.getRandom().nextInt(totalWeight);
                 int currentWeight = 0;
 
-                BossAttack chosenAttack = validAttacks.getFirst();
+                BossAttack chosenAttack = validAttacks.getFirst(); // We add our fallback, just for it not to be null.
 
                 for(BossAttack attack : validAttacks){
                     currentWeight += attack.getWeight();
@@ -81,7 +79,7 @@ public class BossAttackGoal extends Goal {
             return;
         }
 
-        BossAttack attack = boss.getQueuedAttack(); // Now we have our attack properly queued, so we can get its data.
+        BossAttack attack = boss.getQueuedAttack(); // Now that we have our attack properly queued, we can get its data.
         if(attack == null){
             boss.setState(BossState.IDLE);
             return;

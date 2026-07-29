@@ -3,6 +3,7 @@ package org.blackstamp.sleepychronicles.game.mobs.custom.bosses;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -26,12 +27,14 @@ public class DarknessEmperor extends BossMob {
             "Senior of Darkness",
             "#5e17a1",
             SPEED,
-            10, 10, 10,
+            60, 4, 20, (SPEED * 10),
             0.75F, 40,
             10,
-            3,
+            5,
             30,
             16, 8,
+            SoundEvents.ALLAY_HURT,
+            SoundEvents.ALLAY_DEATH,
             SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")), 1, // "theme_key" is just an example
             new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness","#9d78bc"),
                     BossEvent.BossBarColor.PURPLE,

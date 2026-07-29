@@ -31,13 +31,12 @@ public class GroundStrategy implements NavigationStrategy {
 
     @Override
     public Vec3 calculateStrafePos(BossMob boss, LivingEntity target, boolean strafeLeft, double radius){
-        Vec3 retreatDir = target.position().subtract(boss.position()).normalize();
+        Vec3 bossDir = target.position().subtract(boss.position()).normalize();
+        Vec3 strafeDir = bossDir.cross(UP_VECTOR).normalize();
 
-        Vec3 retreatVec = retreatDir.cross(UP_VECTOR).normalize();
+        if(strafeLeft) strafeDir = strafeDir.scale(-1);
 
-        if(strafeLeft) retreatVec.scale(-1);
-
-        return retreatVec;
+        return boss.position().add(strafeDir).scale(radius);
     }
 
     @Override
