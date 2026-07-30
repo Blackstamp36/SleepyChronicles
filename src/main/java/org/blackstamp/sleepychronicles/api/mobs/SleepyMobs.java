@@ -30,7 +30,7 @@ public enum SleepyMobs {
             .deathSound(SoundEvents.WARDEN_DEATH)
             .movementType(MovementType.FLIGHT)
             .attributes(Map.of(
-                    Attributes.MAX_HEALTH, 20.0D,
+                    Attributes.MAX_HEALTH, 1000.0D,
                     Attributes.SCALE, 0.35D
             ))
             .bossAttacks(DarknessEmperorAttacks.values())
@@ -51,7 +51,8 @@ public enum SleepyMobs {
             .movementType(MovementType.GROUND)
             .attack(null)
             .attributes(Map.of(
-                    Attributes.MAX_HEALTH, 20.0
+                    Attributes.MAX_HEALTH, 20.0D,
+                    Attributes.ATTACK_KNOCKBACK, 1.5D
             ))
             .build()));
 
