@@ -8,6 +8,8 @@ import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
 import org.blackstamp.sleepychronicles.api.inventory.MenuTemplate;
 import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.ItemUtils;
+import org.blackstamp.sleepychronicles.api.item.trinket.TrinketManager;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Material;
@@ -19,11 +21,16 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TrinketBag extends MenuTemplate {
+
     public TrinketBag(Player p, String owner){
         super(p, owner, "trinkets", 27);
     }
@@ -31,7 +38,7 @@ public class TrinketBag extends MenuTemplate {
     @Override
     public void initInventory(){
         super.empty();
-        String trinketData = get();
+        String trinketData = this.get();
 
         super.fill(MenuItems.BLANK.build());
         for(int slot : getTrinketSlots()) super.setItems(ItemStack.of(Material.AIR), slot);
@@ -63,12 +70,12 @@ public class TrinketBag extends MenuTemplate {
         if(isForbidden(cursorItem) || isForbidden(currentItem)) e.setCancelled(true);
     }
 
-    private boolean isForbidden(@NotNull ItemBuilder manager){
-        if(manager.build().getType().equals(Material.AIR)) return false;
-        if(manager.hasID() && manager.getID().equals(MenuItems.BLANK.getID())) return true;
-        if(!manager.hasFamily()) return true;
+    private boolean isForbidden(@NotNull ItemBuilder builder){
+        if(builder.build().getType().equals(Material.AIR)) return false;
+        if(builder.hasID() && builder.getID().equals(MenuItems.BLANK.getID())) return true;
+        if(!builder.hasFamily()) return true;
 
-        return !manager.getFamily().equals(ItemFamily.TRINKETS.getName());
+        return !builder.getFamily().equals(ItemFamily.TRINKETS.getName());
     }
 
     @EventHandler
@@ -82,13 +89,30 @@ public class TrinketBag extends MenuTemplate {
     public void close(InventoryCloseEvent e){
         if(e.getInventory() != super.inventory) return;
         HandlerList.unregisterAll(this);
-        save();
+        this.save();
         ChatUtils.sendMessage(p, "Trinkets saved!");
         p.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.MASTER, 1.0F, 0.75F));
     }
 
     private void save(){
         ItemStack[] savedTrinkets = new ItemStack[getTrinketSlots().length];
+        List<String> memoryTrinkets = new ArrayList<>();
+
+        for(ItemStack item : savedTrinkets){
+            if(item == null || !item.hasItemMeta()) continue;
+
+            ItemMeta meta = item.getItemMeta();
+
+            String id = ItemUtils.getID(meta);
+
+            if(id == null) continue;
+
+            String family = ItemUtils.getFamily(meta);
+
+            if(family.equals(ItemFamily.TRINKETS.getName())){ memoryTrinkets.add(id); }
+        }
+
+        if(!memoryTrinkets.isEmpty()) TrinketManager.CACHE.put(p.getUniqueId(), memoryTrinkets);
 
         for(int i = 0; i < savedTrinkets.length ; i++){
             final int currentSlot = getTrinketSlots()[i];
@@ -106,20 +130,11 @@ public class TrinketBag extends MenuTemplate {
     }
 
     public static boolean hasTrinket(Player p, String value){
-        String data = PersistentData.get(p, SleepyKeys.TRINKETS_INV, PersistentDataType.STRING);
-        ItemStack[] trinkets = (ItemStack[]) Base64Utils.fromBase64(data);
+        List<String> trinkets = TrinketManager.CACHE.get(p.getUniqueId());
 
-        for(ItemStack slot : trinkets) {
-            if(slot == null) continue;
+        if(trinkets.isEmpty()) return false;
 
-            ItemBuilder manager = new ItemBuilder(slot);
-
-            if(!manager.hasID()) continue;
-
-            return manager.getID().equals(value);
-        }
-
-        return false;
+        return trinkets.contains(value);
     }
 
     private int[] getTrinketSlots(){ return new int[]{4, 12, 14, 22}; }

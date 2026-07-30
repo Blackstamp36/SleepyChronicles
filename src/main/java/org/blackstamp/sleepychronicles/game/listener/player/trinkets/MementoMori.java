@@ -23,7 +23,7 @@ public class MementoMori implements Listener {
     };
 
     @EventHandler
-    public void trinket(EntityResurrectEvent e){ // todo: test trinket
+    public void trinket(EntityResurrectEvent e){
         if(!(e.getEntity() instanceof Player p)) return;
         if(!TrinketBag.hasTrinket(p,SleepyItems.MEMENTO_MORI.getID())) return;
 

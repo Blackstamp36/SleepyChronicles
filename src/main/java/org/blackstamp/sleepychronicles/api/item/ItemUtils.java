@@ -7,4 +7,5 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class ItemUtils {
     public static String getID(ItemMeta meta){ return PersistentData.get(meta, SleepyKeys.ITEM_ID, PersistentDataType.STRING); }
+    public static String getFamily(ItemMeta meta){ return PersistentData.get(meta, SleepyKeys.ITEM_FAMILY, PersistentDataType.STRING); }
 }

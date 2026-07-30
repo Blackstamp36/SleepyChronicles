@@ -7,7 +7,6 @@ import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -27,8 +26,6 @@ public class ItemListener implements Listener {
 
         if(ability != null){ ability.onInteract(e); }
     }
-
-    // todo: add other event\ (onHit)
 
     @EventHandler
     public void onArmorHit(EntityDamageEvent e){
