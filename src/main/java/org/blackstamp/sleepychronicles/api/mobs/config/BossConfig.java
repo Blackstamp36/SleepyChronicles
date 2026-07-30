@@ -34,7 +34,7 @@ public record BossConfig(
     double aggroRadius,
     double maxDistance,
     double minDistance,
-    SoundEvent soundEvent,
+    SoundEvent themeSound,
     int themeTicks,
     ServerBossEvent bar
     ) implements BaseConfig{}

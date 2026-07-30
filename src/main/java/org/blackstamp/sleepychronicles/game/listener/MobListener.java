@@ -52,10 +52,6 @@ public class MobListener implements Listener {
         net.minecraft.world.entity.LivingEntity nms = ((CraftLivingEntity) mob).getHandle();
 
         if(!(nms instanceof SleepyLootable lootable)) return;
-        if(mob.getKiller() == null) return;
-        if(lootable.getDrop() == null) return;
-
-        e.getDrops().clear();
-        e.getDrops().add(lootable.getDrop());
+        lootable.onDeath();
     }
 }

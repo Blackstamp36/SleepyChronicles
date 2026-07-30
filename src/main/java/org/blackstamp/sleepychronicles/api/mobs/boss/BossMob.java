@@ -86,7 +86,7 @@ public class BossMob extends SleepyMob {
 
         for(ServerPlayer p : players){
             ClientboundSoundPacket packet = new ClientboundSoundPacket(
-                    Holder.direct(config.soundEvent()),
+                    Holder.direct(config.themeSound()),
                     SoundSource.RECORDS,
                     p.getX(),
                     p.getY(),
