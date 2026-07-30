@@ -65,10 +65,12 @@ public class BossMob extends SleepyMob {
         super.tick();
 
         BossConfig config = this.getConfig();
+        int cooldown = this.getTickCooldown();
 
         config.bar().setProgress(this.getHealth() / this.getMaxHealth());
 
         this.stateTicks++;
+        if(cooldown > 0) this.setTickCooldown(cooldown - 1);
 
         if(!config.bar().getPlayers().isEmpty()){
             if(this.getThemeCooldown() <= 0){

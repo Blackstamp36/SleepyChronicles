@@ -14,6 +14,7 @@ import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.mobs.attacks.SleepyAttack;
 import org.blackstamp.sleepychronicles.api.mobs.config.BaseConfig;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
+import org.blackstamp.sleepychronicles.game.mobs.goals.sleepy_mobs.GenericSkillGoal;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
@@ -47,6 +48,8 @@ public class SleepyMob extends Mob {
         if(config.color() != null) this.color = config.color();
         else this.color = SleepyPalette.VANILLA.getColor1();
 
+        if(config.attack() != null) this.goalSelector.addGoal(1, new GenericSkillGoal(this,config.attack()));
+
         this.setMobName(this.mobName, color);
 
         if(config.attributes() != null){
@@ -63,34 +66,17 @@ public class SleepyMob extends Mob {
         }
     }
 
-    @Override
-    public void tick(){
-        SleepyAttack<SleepyMob> attack = config.attack();
-
-        if(attack == null) return;
-
-        LivingEntity target = this.getTarget();
-        if(target == null) return;
-
-        double distance = this.distanceTo(target);
-
-        if(distance <= attack.getMaxDistance() && this.getTickCooldown() <= 0) {
-            config.attack().cast(this, target);
-            this.setTickCooldown(attack.getCooldownTicks());
-        }
-    }
-
     public void setMobName(String name, @NotNull String color){ this.setCustomName(TextFormatter.toComponent(name,color)); }
 
     public void setItem(ItemStack item, EquipmentSlot slot){ this.setItemSlot(slot, item); }
 
     public void setMaxHealth(int max){
-        Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(max);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(max);
         this.setHealth(getMaxHealth());
     }
 
     public void setAttribute(@NotNull Holder<Attribute> attribute, @NotNull Double value){
-        Objects.requireNonNull(this.getAttribute(attribute)).setBaseValue(value);
+        this.getAttribute(attribute).setBaseValue(value);
     }
 
     public void amplifyAttribute(@NotNull Holder<Attribute> attribute, @NotNull Double amplifier){

@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.global.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
@@ -65,7 +66,7 @@ public class StaffCommand extends BaseCommand {
         if(amount == null || amount < 1) amount = 1;
 
         for(int i = 0; i < amount; i++){
-            SleepyMob entity = MobUtils.instantiate(mob, level);
+            Mob entity = MobUtils.instantiate(mob, level);
 
             if(entity == null) break;
             entity.setPos(l.x(),l.y(),l.z());

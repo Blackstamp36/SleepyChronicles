@@ -22,7 +22,7 @@ public abstract class MenuTemplate implements Listener, Cloneable {
     protected final Player p;
     protected final String owner;
 
-    public MenuTemplate(Player p, String owner, String name, int size) {
+    public MenuTemplate(Player p, String owner, String name, int size){
         this.inventory = Bukkit.createInventory(p, size, ConstantFields.MINI_MESSAGE.deserialize(name));
         this.p = p;
         this.owner = owner;
@@ -50,7 +50,7 @@ public abstract class MenuTemplate implements Listener, Cloneable {
     public void setRow(@NotNull ItemStack item, int from, int to){ for(int i = from; i <= to; i++) inventory.setItem(i, item); }
     public void setRow(@NotNull Material material, int from, int to){ for(int i = from; i <= to; i++) inventory.setItem(i, ItemStack.of(material)); }
 
-    public void setOutline(ItemManager manager) { setOutline(manager.build()); }
+    public void setOutline(ItemManager manager){ setOutline(manager.build()); }
     public void setOutline(ItemStack item){
         final int size = inventory.getSize();
         final int rows = size / 9;
