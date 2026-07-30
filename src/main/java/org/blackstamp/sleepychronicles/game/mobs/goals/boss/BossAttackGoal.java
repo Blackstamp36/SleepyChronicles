@@ -75,6 +75,7 @@ public class BossAttackGoal extends Goal {
                 boss.setPreviousAttack(chosenAttack);
                 boss.setQueuedAttack(chosenAttack);
                 boss.setState(BossState.WINDING_UP);
+                chosenAttack.onWindupStart(boss);
             }
             return;
         }
@@ -87,11 +88,9 @@ public class BossAttackGoal extends Goal {
 
         switch(state){
             case BossState.WINDING_UP -> {
-                if(boss.getStateTicks() == 0) attack.onWindupStart(boss);
+                if(boss.getStateTicks() >= attack.getWindupTicks()){ boss.setState(BossState.ATTACKING); }
 
                 attack.onWindupTick(boss, boss.getStateTicks());
-
-                if(boss.getStateTicks() >= attack.getWindupTicks()){ boss.setState(BossState.ATTACKING); }
             }
 
             case BossState.ATTACKING -> {
