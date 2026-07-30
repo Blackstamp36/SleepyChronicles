@@ -10,7 +10,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class onInteract implements Listener {
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent e){ // todo: add abilities!
+    public void onInteract(PlayerInteractEvent e){
         ItemStack item = e.getItem();
         if(item == null || !item.hasItemMeta()) return;
 

@@ -50,10 +50,8 @@ public enum SleepyMobs { // todo: add custom drops!
                     .build())),
     TEST_MOB("test_mob",level ->
             new VanillaZombie(level,MobConfig.builder()
-            .name("Test Mob")
-            .color(null)
-            .hurtSound(SoundEvents.BEE_HURT)
-            .deathSound(SoundEvents.BEE_DEATH)
+            .name("Test Mob").color(null)
+            .hurtSound(SoundEvents.BEE_HURT).deathSound(SoundEvents.BEE_DEATH)
             .movementType(MovementType.GROUND)
             .attack(null)
             .attributes(Map.of(
