@@ -88,9 +88,9 @@ public class BossAttackGoal extends Goal {
 
         switch(state){
             case BossState.WINDING_UP -> {
-                if(boss.getStateTicks() >= attack.getWindupTicks()){ boss.setState(BossState.ATTACKING); }
-
                 attack.onWindupTick(boss, boss.getStateTicks());
+
+                if(boss.getStateTicks() >= attack.getWindupTicks()){ boss.setState(BossState.ATTACKING); }
             }
 
             case BossState.ATTACKING -> {
