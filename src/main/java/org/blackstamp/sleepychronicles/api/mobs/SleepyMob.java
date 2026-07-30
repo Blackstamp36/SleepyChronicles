@@ -3,6 +3,7 @@ package org.blackstamp.sleepychronicles.api.mobs;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -101,6 +102,24 @@ public class SleepyMob extends Mob {
         }
 
         return this.sleepyBukkitWrapper;
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        if(this.config.drops() != null){
+            for(ItemStack item : this.config.drops()){
+                if(item == null) continue;
+
+                this.spawnAtLocation(level, item);
+            }
+        }else{ super.dropCustomDeathLoot(level, damageSource, recentlyHit); }
+    }
+
+    @Override
+    protected void dropFromLootTable(ServerLevel level, DamageSource source, boolean hitByAPlayer){
+        if(this.config.drops() != null && !this.config.drops().isEmpty()){ return; }
+
+        super.dropFromLootTable(level,source,hitByAPlayer);
     }
 
     @Override
