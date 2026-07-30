@@ -3,7 +3,7 @@ package org.blackstamp.sleepychronicles.api.inventory;
 import lombok.Getter;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
-import org.blackstamp.sleepychronicles.api.item.ItemManager;
+import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,20 +37,20 @@ public abstract class MenuTemplate implements Listener, Cloneable {
     public void close(){ this.close(p); }
     public void close(@NotNull Player p){ p.closeInventory(); }
 
-    public void addItem(@NotNull ItemManager manager) { this.addItem(manager.build()); }
+    public void addItem(@NotNull ItemBuilder manager) { this.addItem(manager.build()); }
     public void addItem(@NotNull ItemStack item) { inventory.addItem(item); }
 
-    public void setItem(@NotNull ItemManager manager, int slot) { this.setItem(manager.build(), slot); }
+    public void setItem(@NotNull ItemBuilder manager, int slot) { this.setItem(manager.build(), slot); }
     public void setItem(@NotNull ItemStack item, int slot) { inventory.setItem(slot, item); }
 
-    public void setItems(@NotNull ItemManager manager, int... slots){ setItems(manager.build(), slots); }
+    public void setItems(@NotNull ItemBuilder manager, int... slots){ setItems(manager.build(), slots); }
     public void setItems(@NotNull ItemStack item, int... slots){ for(int slot : slots) inventory.setItem(slot, item); }
 
-    public void setRow(@NotNull ItemManager manager, int from, int to){ setRow(manager.build(), from, to); }
+    public void setRow(@NotNull ItemBuilder manager, int from, int to){ setRow(manager.build(), from, to); }
     public void setRow(@NotNull ItemStack item, int from, int to){ for(int i = from; i <= to; i++) inventory.setItem(i, item); }
     public void setRow(@NotNull Material material, int from, int to){ for(int i = from; i <= to; i++) inventory.setItem(i, ItemStack.of(material)); }
 
-    public void setOutline(ItemManager manager){ setOutline(manager.build()); }
+    public void setOutline(ItemBuilder manager){ setOutline(manager.build()); }
     public void setOutline(ItemStack item){
         final int size = inventory.getSize();
         final int rows = size / 9;
@@ -66,7 +66,7 @@ public abstract class MenuTemplate implements Listener, Cloneable {
         }
     }
 
-    public void fill(ItemManager manager) { fill(manager.build()); }
+    public void fill(ItemBuilder manager) { fill(manager.build()); }
     public void fill(ItemStack item){
         final int size = inventory.getSize();
 

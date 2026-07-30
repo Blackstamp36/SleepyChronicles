@@ -111,7 +111,7 @@ public enum DarknessEmperorAttacks implements BossAttack {
                         );
                     }
                 }
-            }.runTaskTimer(SleepyChronicles.getInstance(), 0, 1);
+            }.runTaskTimer(SleepyChronicles.getInstance(), 0L, 1L);
         }
 
         @Override public double getMinDistance(){ return 1.0D; }

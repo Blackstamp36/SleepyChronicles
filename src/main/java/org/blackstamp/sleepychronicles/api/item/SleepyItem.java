@@ -6,7 +6,7 @@ import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class SleepyItem extends ItemManager {
+public class SleepyItem extends ItemBuilder {
     String color1;
     String color2;
     String color3;

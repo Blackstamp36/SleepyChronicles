@@ -2,10 +2,9 @@ package org.blackstamp.sleepychronicles.api.inventory.menu;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
 import org.blackstamp.sleepychronicles.api.inventory.MenuTemplate;
-import org.blackstamp.sleepychronicles.api.item.ItemManager;
+import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,7 +53,7 @@ public class ItemArchive extends MenuTemplate {
         e.setCancelled(true);
 
         final ItemStack currentItem = e.getCurrentItem();
-        final ItemManager clickedItem = new ItemManager(currentItem);
+        final ItemBuilder clickedItem = new ItemBuilder(currentItem);
 
         if(currentItem == null || currentItem.getType().isAir() || !currentItem.hasItemMeta()) return;
         if(clickedItem.getID().equals(MenuItems.HOLLOW.getID()) || clickedItem.getID() == null) return;

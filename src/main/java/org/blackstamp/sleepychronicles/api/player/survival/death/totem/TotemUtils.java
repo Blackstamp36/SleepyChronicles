@@ -1,6 +1,6 @@
 package org.blackstamp.sleepychronicles.api.player.survival.death.totem;
 
-import org.blackstamp.sleepychronicles.api.item.ItemManager;
+import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -15,7 +15,7 @@ public class TotemUtils {
     public static String getTotemType(ItemStack totem){
         if(totem == null) return null;
 
-        ItemManager manager = new ItemManager(totem);
+        ItemBuilder manager = new ItemBuilder(totem);
 
         return switch(manager.getID()){
             case null, default -> "totem of undying";

@@ -4,6 +4,9 @@ import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
 import org.blackstamp.sleepychronicles.api.cooldown.CooldownManager;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
+import org.blackstamp.sleepychronicles.api.item.ItemAbility;
+import org.blackstamp.sleepychronicles.api.item.ItemUtils;
+import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.blackstamp.sleepychronicles.api.mobs.MobUtils;
 import org.blackstamp.sleepychronicles.api.mobs.SleepyMobs;
 import org.blackstamp.sleepychronicles.api.player.PlayerUtils;
@@ -11,7 +14,10 @@ import org.blackstamp.sleepychronicles.game.spawn.SpawnManager;
 import org.blackstamp.sleepychronicles.global.commands.StaffCommand;
 import org.blackstamp.sleepychronicles.global.utils.registrable.RegistrableUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public final class SleepyChronicles extends JavaPlugin {
 
@@ -25,6 +31,7 @@ public final class SleepyChronicles extends JavaPlugin {
 
         loadFields();
         loadCommands();
+        loadTasks();
 
         // global.createAftermathDimension();
 
@@ -55,5 +62,26 @@ public final class SleepyChronicles extends JavaPlugin {
         paperCommandManager.getCommandCompletions().registerAsyncCompletion(
                 "@PlayersOnline", c -> PlayerUtils.getOnlinePlayers());
         paperCommandManager.registerCommand(new StaffCommand());
+    }
+
+    private void loadTasks(){
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    for(ItemStack piece : p.getInventory().getArmorContents()){
+
+                        if(piece == null) continue;
+
+                        String id = ItemUtils.getID(piece.getItemMeta());
+
+                        if(id == null) continue;
+
+                        ItemAbility ability = SleepyItems.getAbility(id);
+                        if(ability != null) ability.onArmorTick(p);
+                    }
+                }
+            }
+        }.runTaskTimer(this,0L,20L);
     }
 }

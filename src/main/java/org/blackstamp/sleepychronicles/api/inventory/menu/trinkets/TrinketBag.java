@@ -7,7 +7,7 @@ import org.blackstamp.sleepychronicles.api.data.base64.Base64Utils;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
 import org.blackstamp.sleepychronicles.api.inventory.MenuTemplate;
-import org.blackstamp.sleepychronicles.api.item.ItemManager;
+import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Material;
@@ -57,13 +57,13 @@ public class TrinketBag extends MenuTemplate {
         ItemStack cursorStack = e.getCursor() != null ? e.getCursor() : new ItemStack(Material.AIR);
         ItemStack currentStack = e.getCurrentItem() != null ? e.getCurrentItem() : new ItemStack(Material.AIR);
 
-        final ItemManager cursorItem = new ItemManager(cursorStack);
-        final ItemManager currentItem = new ItemManager(currentStack);
+        final ItemBuilder cursorItem = new ItemBuilder(cursorStack);
+        final ItemBuilder currentItem = new ItemBuilder(currentStack);
 
         if(isForbidden(cursorItem) || isForbidden(currentItem)) e.setCancelled(true);
     }
 
-    private boolean isForbidden(@NotNull ItemManager manager){
+    private boolean isForbidden(@NotNull ItemBuilder manager){
         if(manager.build().getType().equals(Material.AIR)) return false;
         if(manager.hasID() && manager.getID().equals(MenuItems.BLANK.getID())) return true;
         if(!manager.hasFamily()) return true;
@@ -112,7 +112,7 @@ public class TrinketBag extends MenuTemplate {
         for(ItemStack slot : trinkets) {
             if(slot == null) continue;
 
-            ItemManager manager = new ItemManager(slot);
+            ItemBuilder manager = new ItemBuilder(slot);
 
             if(!manager.hasID()) continue;
 
