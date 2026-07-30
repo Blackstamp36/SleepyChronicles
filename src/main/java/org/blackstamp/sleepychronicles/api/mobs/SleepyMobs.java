@@ -22,32 +22,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public enum SleepyMobs {
+public enum SleepyMobs { // todo: add custom drops!
 
     DARKNESS_EMPEROR("darkness_emperor", level ->
             new BossMob(EntityType.GHAST,level,BossConfig.builder()
-                    .name("Senior of Darkness")
-                    .color("#5e17a1")
-                    .hurtSound(SoundEvents.ALLAY_HURT)
-                    .deathSound(SoundEvents.WARDEN_DEATH)
+                    .name("Senior of Darkness").color("#5e17a1")
+                    .hurtSound(SoundEvents.ALLAY_HURT).deathSound(SoundEvents.WARDEN_DEATH)
                     .movementType(MovementType.FLIGHT)
                     .attributes(Map.of(
-                        Attributes.MAX_HEALTH, 1000.0D,
-                        Attributes.SCALE, 0.35D
+                            Attributes.MAX_HEALTH, 1000.0D,
+                            Attributes.SCALE, 0.35D,
+                            Attributes.KNOCKBACK_RESISTANCE, 0.35D
                     ))
                     .baseSpeed(1.25D)
                     .bossAttacks(DarknessEmperorAttacks.values())
-                    .dodgeCooldown(50)
-                    .dodgingTicks(10)
-                    .dodgeDetectionRadius(16)
-                    .dodgeSpeed(10.5D)
-                    .decay(0.75F)
-                    .decayTicks(20)
-                    .retreatRadius(10)
-                    .strafeRadius(5)
-                    .aggroRadius(30)
-                    .maxDistance(8)
-                    .minDistance(16)
+                    .dodgeCooldown(50).dodgingTicks(10).dodgeDetectionRadius(16).dodgeSpeed(10.5D)
+                    .decay(0.75F).decayTicks(20)
+                    .retreatRadius(10).strafeRadius(5).aggroRadius(30)
+                    .maxDistance(8).minDistance(16)
                     .themeSound(SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")))
                     .themeTicks(0)
                     .bar(
