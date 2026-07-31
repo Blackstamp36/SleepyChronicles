@@ -3,7 +3,7 @@ package org.blackstamp.sleepychronicles.game.listener.player.survival.parry;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.cooldown.CooldownManager;
@@ -81,7 +81,7 @@ public class ParryListener implements Listener {
         e.setCancelled(true);
         p.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, PARRY_INVINCIBILITY,0,false,false));
         p.playSound(Sound.sound(Key.key("block.anvil.land"), Sound.Source.MASTER, 0.5F, 1.75F));
-        ChatUtils.sendWarning(p, "✔", ConstantColors.GREEN);
+        ChatManager.sendWarning(p, "✔", ConstantColors.GREEN);
         PARRY_LIST.remove(uuid);
 
         if(!p.isOnline()) return;
@@ -96,7 +96,7 @@ public class ParryListener implements Listener {
         if(!PARRY_LIST.contains(uuid)) return;
         if(!p.isOnline()) return;
 
-        ChatUtils.sendWarning(p, "❌", ConstantColors.RED);
+        ChatManager.sendWarning(p, "❌", ConstantColors.RED);
         p.playSound(Sound.sound(Key.key("entity.zombie.break_wooden_door"), Sound.Source.MASTER, 0.5F, 0.75F));
 
         PARRY_LIST.remove(uuid);

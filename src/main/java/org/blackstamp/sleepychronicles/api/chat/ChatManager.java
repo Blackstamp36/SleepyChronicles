@@ -8,7 +8,7 @@ import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class ChatUtils {
+public class ChatManager {
 
     private static final Sound BROADCAST_SOUND = Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 1.25F);
 

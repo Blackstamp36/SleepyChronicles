@@ -5,7 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
-import org.blackstamp.sleepychronicles.api.mobs.MovementType;
+import org.blackstamp.sleepychronicles.api.mobs.movement.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.attacks.SleepyAttack;
 import org.jetbrains.annotations.Nullable;
 

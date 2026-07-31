@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.mobs.boss.BossMob;
 import org.blackstamp.sleepychronicles.api.mobs.config.BossConfig;
 import org.blackstamp.sleepychronicles.api.mobs.config.MobConfig;
+import org.blackstamp.sleepychronicles.api.mobs.movement.MovementType;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.blackstamp.sleepychronicles.game.mobs.custom.bosses.attacks.DarknessEmperorAttacks;
 import org.blackstamp.sleepychronicles.game.mobs.custom.vanilla.VanillaZombie;

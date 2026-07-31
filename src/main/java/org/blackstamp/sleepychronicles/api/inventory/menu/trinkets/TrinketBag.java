@@ -2,13 +2,13 @@ package org.blackstamp.sleepychronicles.api.inventory.menu.trinkets;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.data.base64.Base64Utils;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
 import org.blackstamp.sleepychronicles.api.inventory.MenuTemplate;
 import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
-import org.blackstamp.sleepychronicles.api.item.ItemUtils;
+import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketManager;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
@@ -81,7 +81,7 @@ public class TrinketBag extends MenuTemplate {
     @EventHandler
     public void open(InventoryOpenEvent e){
         if(e.getInventory() != super.inventory) return;
-        ChatUtils.sendMessage(p, "Showing trinkets!");
+        ChatManager.sendMessage(p, "Showing trinkets!");
         p.playSound(Sound.sound(Key.key("ui.cartography_table.take_result"), Sound.Source.MASTER, 1.0F, 0.75F));
     }
 
@@ -90,7 +90,7 @@ public class TrinketBag extends MenuTemplate {
         if(e.getInventory() != super.inventory) return;
         HandlerList.unregisterAll(this);
         this.save();
-        ChatUtils.sendMessage(p, "Trinkets saved!");
+        ChatManager.sendMessage(p, "Trinkets saved!");
         p.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.MASTER, 1.0F, 0.75F));
     }
 
@@ -103,11 +103,11 @@ public class TrinketBag extends MenuTemplate {
 
             ItemMeta meta = item.getItemMeta();
 
-            String id = ItemUtils.getID(meta);
+            String id = ItemManager.getID(meta);
 
             if(id == null) continue;
 
-            String family = ItemUtils.getFamily(meta);
+            String family = ItemManager.getFamily(meta);
 
             if(family.equals(ItemFamily.TRINKETS.getName())){ memoryTrinkets.add(id); }
         }

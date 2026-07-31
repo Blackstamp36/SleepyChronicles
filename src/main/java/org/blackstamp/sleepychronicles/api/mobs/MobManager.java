@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class MobUtils {
+public class MobManager {
 
     public static @Nullable Mob instantiate(String mob, Level level){
         Function<Level,? extends Mob> sleepy = SleepyMobs.getMob(mob);

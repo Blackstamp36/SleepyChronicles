@@ -4,15 +4,14 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
-import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.inventory.menu.ItemArchive;
 import org.blackstamp.sleepychronicles.api.inventory.menu.trinkets.TrinketBag;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
-import org.blackstamp.sleepychronicles.api.mobs.MobUtils;
-import org.blackstamp.sleepychronicles.api.mobs.SleepyMob;
+import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem.TotemManager;
 import org.blackstamp.sleepychronicles.game.world.dimensions.WorldUtils;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
@@ -32,7 +31,7 @@ public class StaffCommand extends BaseCommand {
     public void give(CommandSender sender, @Optional SleepyItems item, @Optional Integer amount){
         if(!(sender instanceof Player p)) return;
         if(item == null){
-            ChatUtils.sendMessage(p, "Opening items menu!");
+            ChatManager.sendMessage(p, "Opening items menu!");
             new ItemArchive(p).open();
             return;
         }
@@ -42,7 +41,7 @@ public class StaffCommand extends BaseCommand {
         ItemStack stack = item.build().clone();
         stack.setAmount(amount);
         p.getInventory().addItem(stack);
-        ChatUtils.sendStaffMessage(p, "Receiving " + amount + "x " + item.name());
+        ChatManager.sendStaffMessage(p, "Receiving " + amount + "x " + item.name());
     }
 
     @Subcommand("broadcast")
@@ -53,7 +52,7 @@ public class StaffCommand extends BaseCommand {
         StringBuilder builder = new StringBuilder();
         for(String text : args) builder.append(text).append(" ");
 
-        ChatUtils.sendBroadcast(builder.toString());
+        ChatManager.sendBroadcast(builder.toString());
     }
 
     @Subcommand("summon")
@@ -66,13 +65,13 @@ public class StaffCommand extends BaseCommand {
         if(amount == null || amount < 1) amount = 1;
 
         for(int i = 0; i < amount; i++){
-            Mob entity = MobUtils.instantiate(mob, level);
+            Mob entity = MobManager.instantiate(mob, level);
 
             if(entity == null) break;
             entity.setPos(l.x(),l.y(),l.z());
             level.addFreshEntity(entity);
 
-            ChatUtils.sendStaffMessage(p, "Summoning " + amount + "x " + mob);
+            ChatManager.sendStaffMessage(p, "Summoning " + amount + "x " + mob);
         }
     }
 
@@ -81,7 +80,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         p.teleport(world.getLocation());
-        ChatUtils.sendStaffMessage(p, "Teleporting to.. " + ConstantColors.YELLOW + world.name());
+        ChatManager.sendStaffMessage(p, "Teleporting to.. " + ConstantColors.YELLOW + world.name());
     }
 
     @Subcommand("set day ")
@@ -91,7 +90,7 @@ public class StaffCommand extends BaseCommand {
 
         DayManager.getInstance().setDay(day);
 
-        ChatUtils.sendStaffMessage(p, "Day set to.. " + ConstantColors.YELLOW + day);
+        ChatManager.sendStaffMessage(p, "Day set to.. " + ConstantColors.YELLOW + day);
     }
 
     @Subcommand("get day")
@@ -99,7 +98,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
         final int day = DayManager.getInstance().getDay();
 
-        ChatUtils.sendStaffMessage(p, "The current day is " + ConstantColors.YELLOW + day);
+        ChatManager.sendStaffMessage(p, "The current day is " + ConstantColors.YELLOW + day);
     }
 
     @Subcommand("get time")
@@ -107,7 +106,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
         final String timeLeft = DayManager.getInstance().convertToTime(DayManager.getInstance().getTimestamp());
 
-        ChatUtils.sendStaffMessage(p, "Time until next day: " + ConstantColors.YELLOW + timeLeft);
+        ChatManager.sendStaffMessage(p, "Time until next day: " + ConstantColors.YELLOW + timeLeft);
     }
 
     @Subcommand("get trinkets")
@@ -122,7 +121,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         PersistentData.remove(p, SleepyKeys.TRINKETS_INV);
-        ChatUtils.sendStaffMessage(p, "Resetting PersistentData...");
+        ChatManager.sendStaffMessage(p, "Resetting PersistentData...");
     }
 
     @Subcommand("set totems")
@@ -136,7 +135,7 @@ public class StaffCommand extends BaseCommand {
 
         TotemManager.set(p, value);
 
-        ChatUtils.sendStaffMessage(staff, "The totems of " + ConstantColors.YELLOW + p.getName() + ConstantColors.GREEN + " were set to " + value);
+        ChatManager.sendStaffMessage(staff, "The totems of " + ConstantColors.YELLOW + p.getName() + ConstantColors.GREEN + " were set to " + value);
     }
 
     @Subcommand("get totems")
@@ -151,6 +150,6 @@ public class StaffCommand extends BaseCommand {
         String yellow = ConstantColors.YELLOW;
         String green = ConstantColors.GREEN;
 
-        ChatUtils.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
+        ChatManager.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
     }
 }

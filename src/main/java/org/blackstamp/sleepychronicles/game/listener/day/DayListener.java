@@ -2,7 +2,7 @@ package org.blackstamp.sleepychronicles.game.listener.day;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
@@ -19,7 +19,7 @@ public class DayListener implements Listener {
         final int day = e.getDay();
         final String dayAnnounce = "New day! (Day " + ConstantColors.RED + (day - 1) + ConstantColors.BLUE + " → " + ConstantColors.RED + day + ConstantColors.GRAY + ")";
 
-        ChatUtils.sendBroadcast(dayAnnounce);
+        ChatManager.sendBroadcast(dayAnnounce);
 
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0, false, false, false));

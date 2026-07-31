@@ -2,7 +2,7 @@ package org.blackstamp.sleepychronicles.game.listener.item;
 
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.item.ItemAbility;
-import org.blackstamp.sleepychronicles.api.item.ItemUtils;
+import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,7 +35,7 @@ public class ItemListener implements Listener {
 
             if(piece == null) continue;
 
-            String id = ItemUtils.getID(piece.getItemMeta());
+            String id = ItemManager.getID(piece.getItemMeta());
 
             if(id == null) continue;
 

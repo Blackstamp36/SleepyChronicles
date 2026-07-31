@@ -5,15 +5,16 @@ import lombok.Getter;
 import org.blackstamp.sleepychronicles.api.cooldown.CooldownManager;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.item.ItemAbility;
-import org.blackstamp.sleepychronicles.api.item.ItemUtils;
+import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
-import org.blackstamp.sleepychronicles.api.mobs.MobUtils;
 import org.blackstamp.sleepychronicles.api.mobs.SleepyMobs;
 import org.blackstamp.sleepychronicles.api.player.PlayerUtils;
 import org.blackstamp.sleepychronicles.game.spawn.SpawnManager;
+import org.blackstamp.sleepychronicles.game.world.dimensions.AftermathBiomeProvider;
+import org.blackstamp.sleepychronicles.game.world.dimensions.AftermathChunkGenerator;
 import org.blackstamp.sleepychronicles.global.commands.StaffCommand;
 import org.blackstamp.sleepychronicles.global.utils.registrable.RegistrableUtils;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,7 +74,7 @@ public final class SleepyChronicles extends JavaPlugin {
 
                         if(piece == null) continue;
 
-                        String id = ItemUtils.getID(piece.getItemMeta());
+                        String id = ItemManager.getID(piece.getItemMeta());
 
                         if(id == null) continue;
 
@@ -83,5 +84,28 @@ public final class SleepyChronicles extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this,0L,20L);
+    }
+
+    public void createAftermathDimension(){
+        WorldCreator worldCreator = WorldCreator.name("world_aftermath")
+                .environment(World.Environment.NORMAL)
+                .type(WorldType.NORMAL)
+                .biomeProvider(new AftermathBiomeProvider())
+                .generator(new AftermathChunkGenerator());
+
+        World world = worldCreator.createWorld();
+        if (world != null) {
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            world.setTime(13000);
+            world.setStorm(false);
+            world.setThundering(false);
+
+            WorldBorder border = world.getWorldBorder();
+            border.setCenter(0.0, 0.0);
+            border.setSize(10000.0);
+        }
     }
 }

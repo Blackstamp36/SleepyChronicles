@@ -1,6 +1,6 @@
 package org.blackstamp.sleepychronicles.game.listener.player.survival.death;
 
-import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.player.survival.DamageUtils;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
@@ -24,7 +24,7 @@ public class DeathListener implements Listener {
 
         if(p.getLastDamageCause() == null) return;
 
-        ChatUtils.sendBroadcast(ConstantColors.RED + p.getName() + " has died...\n" +
+        ChatManager.sendBroadcast(ConstantColors.RED + p.getName() + " has died...\n" +
                 ConstantColors.SLEEPY + "«☠»" + ConstantColors.GRAY + " Cause of death: " + DamageUtils.getCauseString(p,cause) + ".");
     }
 }

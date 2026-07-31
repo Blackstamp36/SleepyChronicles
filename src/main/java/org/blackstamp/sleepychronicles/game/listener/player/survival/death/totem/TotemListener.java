@@ -1,6 +1,6 @@
 package org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem;
 
-import org.blackstamp.sleepychronicles.api.chat.ChatUtils;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.player.survival.DamageUtils;
 import org.blackstamp.sleepychronicles.api.player.survival.death.totem.TotemUtils;
@@ -34,6 +34,6 @@ public class TotemListener implements Listener {
                 ConstantColors.TOTEM + "«N°" + number + "»" + ConstantColors.GRAY + " Cause of usage: " + DamageUtils.getCauseString(p, cause) + ".";
 
         TotemManager.set(p, number + 1);
-        ChatUtils.sendBroadcast(message);
+        ChatManager.sendBroadcast(message);
     }
 }
