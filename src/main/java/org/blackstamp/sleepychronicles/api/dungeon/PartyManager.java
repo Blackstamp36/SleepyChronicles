@@ -32,6 +32,8 @@ public class PartyManager {
         if(receiverInvites == null) return;
 
         receiverInvites.remove(leader);
+
+        if(receiverInvites.isEmpty()){ PENDING_INVITES.remove(receiver); }
     }
 
     public static boolean hasPendingInvite(UUID receiver, UUID leader){
