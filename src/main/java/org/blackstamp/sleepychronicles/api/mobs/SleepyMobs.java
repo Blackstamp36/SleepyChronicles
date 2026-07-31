@@ -50,6 +50,7 @@ public enum SleepyMobs {
                                     BossEvent.BossBarOverlay.NOTCHED_6
                             ))
                     .build())),
+
     TEST_MOB("test_mob",level ->
             new VanillaZombie(level,MobConfig.builder()
                     .name("Test Mob").color(null)
@@ -68,7 +69,6 @@ public enum SleepyMobs {
     @Getter private final String id;
     private final Function<Level,Mob> mob;
     private static final Map<String, Function<Level,Mob>> REGISTRY = new HashMap<>();
-    private static final Random RANDOM = ThreadLocalRandom.current();
 
     static {
         for(SleepyMobs type : values()){ REGISTRY.put(type.id, type.mob); }

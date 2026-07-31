@@ -21,7 +21,9 @@ public class RunManager {
         Location center = new Location(Bukkit.getWorld("world_aftermath"),xOffset,100,0);
         RunInstance run = new RunInstance(party,dungeon,center,radius);
 
-        for(UUID uuid : party.getMembers()){  }
+        for(UUID uuid : party.getMembers()){ // TODO: add tp logic!
+
+        }
     }
 
     public static RunInstance getRun(UUID uuid){ return ACTIVE_RUNS.get(uuid); }

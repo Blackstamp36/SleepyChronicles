@@ -43,4 +43,6 @@ public class PartyManager {
 
         return receiverInvites.containsKey(leader);
     }
+
+    public static boolean isLeader(UUID uuid, SleepyParty party){ return uuid == party.getLeader(); }
 }
