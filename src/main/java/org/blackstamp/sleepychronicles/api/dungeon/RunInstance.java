@@ -12,16 +12,16 @@ import java.util.UUID;
 
 public class RunInstance {
     private final SleepyParty party;
-    private final String bossID;
+    private final DungeonTypes dungeon;
     private final Location center;
     private final double radius;
     private RunState state = RunState.SCAVENGE;
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 
-    public RunInstance(SleepyParty party, String bossID, Location center, double radius){
+    public RunInstance(SleepyParty party, DungeonTypes dungeon, Location center, double radius){
         this.party = party;
-        this.bossID = bossID;
+        this.dungeon = dungeon;
         this.center = center;
         this.radius = radius;
 

@@ -30,9 +30,10 @@ public final class SleepyChronicles extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        loadFields();
-        loadCommands();
-        loadTasks();
+        this.loadFields();
+        this.loadCommands();
+        this.loadTasks();
+        this.createAftermathDimension();
 
         // global.createAftermathDimension();
 

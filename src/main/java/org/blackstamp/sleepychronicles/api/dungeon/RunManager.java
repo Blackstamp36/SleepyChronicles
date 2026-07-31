@@ -11,14 +11,14 @@ public class RunManager {
     private static final Map<UUID, RunInstance> ACTIVE_RUNS = new HashMap<>();
     private static int runCounter = 0;
 
-    public static void createRun(SleepyParty party, String bossID){
+    public static void createRun(SleepyParty party, DungeonTypes dungeon){
         runCounter++;
 
         double xOffset = runCounter * 1000;
         double radius = 1000D;
 
         Location center = new Location(Bukkit.getWorld("world_aftermath"),xOffset,100,0);
-        RunInstance run = new RunInstance(party,bossID,center,radius);
+        RunInstance run = new RunInstance(party,dungeon,center,radius);
 
         for(UUID uuid : party.getMembers()){  }
     }
