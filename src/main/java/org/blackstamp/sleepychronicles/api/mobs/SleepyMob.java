@@ -12,15 +12,18 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
+import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.mobs.attacks.SleepyAttack;
 import org.blackstamp.sleepychronicles.api.mobs.config.BaseConfig;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.blackstamp.sleepychronicles.game.mobs.goals.sleepy_mobs.GenericSkillGoal;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftMob;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -75,6 +78,13 @@ public class SleepyMob extends Mob {
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(max);
         this.setHealth(getMaxHealth());
     }
+
+    public void setPersistentData(NamespacedKey key, String value){
+        PersistentData.set(this.sleepyBukkitWrapper, key, PersistentDataType.STRING, value);
+    }
+
+    public String getPersistentData(NamespacedKey key){ return PersistentData.get(this.sleepyBukkitWrapper, key, PersistentDataType.STRING); }
+
 
     public void setAttribute(@NotNull Holder<Attribute> attribute, @NotNull Double value){
         this.getAttribute(attribute).setBaseValue(value);

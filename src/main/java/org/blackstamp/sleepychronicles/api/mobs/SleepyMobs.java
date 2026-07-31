@@ -64,7 +64,7 @@ public enum SleepyMobs {
                             Attributes.MAX_HEALTH, 20.0D,
                             Attributes.ATTACK_KNOCKBACK, 1.5D
                     ))
-                    .build()));
+                    .build())); // Add new Dungeon entity.
 
     @Getter private final String id;
     private final Function<Level,Mob> mob;
