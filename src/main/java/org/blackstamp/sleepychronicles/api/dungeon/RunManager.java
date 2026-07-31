@@ -1,5 +1,6 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
+import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -11,7 +12,7 @@ public class RunManager {
     private static final Map<UUID, RunInstance> ACTIVE_RUNS = new HashMap<>();
     private static int runCounter = 0;
 
-    public static void createRun(SleepyParty party, DungeonTypes dungeon){
+    public static void createRun(SleepyParty party, DungeonType dungeon){
         runCounter++;
 
         double xOffset = runCounter * 1000;

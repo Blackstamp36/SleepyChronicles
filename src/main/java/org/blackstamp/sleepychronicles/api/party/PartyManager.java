@@ -1,4 +1,4 @@
-package org.blackstamp.sleepychronicles.api.dungeon;
+package org.blackstamp.sleepychronicles.api.party;
 
 import java.util.HashMap;
 import java.util.Map;

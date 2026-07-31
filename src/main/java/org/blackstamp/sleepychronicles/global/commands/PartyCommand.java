@@ -4,9 +4,9 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.dungeon.PartyInvite;
-import org.blackstamp.sleepychronicles.api.dungeon.PartyManager;
-import org.blackstamp.sleepychronicles.api.dungeon.SleepyParty;
+import org.blackstamp.sleepychronicles.api.party.PartyInvite;
+import org.blackstamp.sleepychronicles.api.party.PartyManager;
+import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 @CommandAlias("p|party")
-public class PartyCommand extends BaseCommand {
+public class PartyCommand extends BaseCommand { // todo: add other essential party commands!
 
     @Subcommand("create")
     public void create(CommandSender sender){

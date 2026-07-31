@@ -3,6 +3,7 @@ package org.blackstamp.sleepychronicles.api.dungeon;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
+import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -12,14 +13,14 @@ import java.util.UUID;
 
 public class RunInstance {
     private final SleepyParty party;
-    private final DungeonTypes dungeon;
+    private final DungeonType dungeon;
     private final Location center;
     private final double radius;
     private RunState state = RunState.SCAVENGE;
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 
-    public RunInstance(SleepyParty party, DungeonTypes dungeon, Location center, double radius){
+    public RunInstance(SleepyParty party, DungeonType dungeon, Location center, double radius){
         this.party = party;
         this.dungeon = dungeon;
         this.center = center;
