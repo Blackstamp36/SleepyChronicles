@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public class DungeonSelector extends MenuTemplate {
 
     public DungeonSelector(Player p, String owner){
-        super(p,owner,"",1);
+        super(p,owner,"",54);
     }
 
     @Override
