@@ -139,7 +139,7 @@ public class ItemBuilder implements Cloneable {
     /**
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
-    public ItemBuilder addLore(String value, String color, boolean newLine){
+    public ItemBuilder addLore(String value, String color, boolean newLine){ // todo: view why the line is jumping to another.
         if(color == null) color = SleepyPalette.VANILLA.getColor1();
 
         final ArrayList<Component> lore = new ArrayList<>();

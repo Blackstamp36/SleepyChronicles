@@ -15,7 +15,8 @@ import java.util.function.Supplier;
 public enum DungeonType {
     TEST(() -> new SleepyItem(Material.GRASS_BLOCK, ItemFamily.TRINKETS)
             .setDisplay("Test")
-            .setLore("Hello! I'm a test!", null),
+            .setLore("Hello! I'm a test!", null)
+            .setIcon('♥', null),
             4,
             100
     );
@@ -39,7 +40,7 @@ public enum DungeonType {
     public ItemStack build(){
         return template.get()
                 .setID(this.getID())
-                .addLore("Max: " + maxSize, BasicPalette.GOLD.getColor(),true)
+                .addLore("" + maxSize, BasicPalette.GOLD.getColor(),false)
                 .build();
     }
     public String getID(){ return this.name().toLowerCase(); }
