@@ -168,28 +168,30 @@ public class ItemBuilder implements Cloneable {
     // This is commented because I forget easily T-T.
     private @NotNull List<Component> splitLoreLines(String value, String color){
         final ArrayList<Component> lore = new ArrayList<>(); // We declare our 'lore' list.
-        final StringBuilder builder = new StringBuilder(BasicPalette.DARK_GRAY.getColor() + "|" + color); // We define the 'first' line.
+        final StringBuilder builder = new StringBuilder();
         final int max = 28; // Max characters per line.
 
         // We check for each word of our 'value' String. in a for-each loop.
         for(String word : value.split("\\s+")){ // Split upon 1 or more blank spaces.
-            final int chars = word.length() + builder.length() + 1; // Current characters on the builder.
-            int current = max; // Temporary variable for our max chars.
 
-            if(lore.isEmpty()) current += builder.length();
+            // If the amount of chars we currently have is higher than the expected, we add it directly to the lore.
+            if(builder.length() + word.length() > max && !builder.isEmpty()){
+                String prefix = lore.isEmpty() ? (BasicPalette.DARK_GRAY.getColor() + "|" + color) : color;
 
-            if(chars > current){ // If the amount of chars we currently have is higher than the expected, we add it directly to the lore.
-                lore.add(ConstantFields.MINI_MESSAGE.deserialize(color + builder).decoration(TextDecoration.ITALIC,false));
-                builder.setLength(0); // We set our current characters to zero.
+                lore.add(ConstantFields.MINI_MESSAGE.deserialize(prefix + builder).decoration(TextDecoration.ITALIC,false));
+                builder.setLength(0); // We set our current characters to zero for the next line.
             }
 
             // If there's any word already in the line, we append with a 'space' it so it doesn't look 'raw'.
-            if(!builder.isEmpty()) builder.append(" ").append(word);
-            else builder.append(word);
+            if(!builder.isEmpty()){ builder.append(" "); }
+
+            builder.append(word);
         }
 
         // Add any word that was left on the builder.
-        if(!builder.isEmpty()) lore.add(ConstantFields.MINI_MESSAGE.deserialize(color + builder).decoration(TextDecoration.ITALIC,false));
+        if(!builder.isEmpty()){
+            lore.add(ConstantFields.MINI_MESSAGE.deserialize(color + builder).decoration(TextDecoration.ITALIC, false));
+        }
 
         return lore; // We return the list (lore) properly.
     }
