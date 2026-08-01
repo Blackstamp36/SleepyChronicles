@@ -1,7 +1,7 @@
 package org.blackstamp.sleepychronicles.api.player.survival;
 
 import net.kyori.adventure.text.Component;
-import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
+import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,12 +17,12 @@ public class DamageUtils {
 
         String show = ConstantFields.MINI_MESSAGE.serialize(name);
 
-        return ConstantColors.DARK_GRAY + switch(type){
-            case PROJECTILE -> "Projectile " + "(" + show + ConstantColors.DARK_GRAY + ")";
-            case BLOCK_EXPLOSION, ENTITY_EXPLOSION -> "Explosion " + "(" + show + ConstantColors.DARK_GRAY + ")";
-            case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> "Attack " + "(" + show + ConstantColors.DARK_GRAY + ")";
-            case SONIC_BOOM -> "Sonic Boom" + "(" + show + ConstantColors.DARK_GRAY + ")";
-            case MAGIC, CUSTOM -> "Magic " + "(" + show + ConstantColors.DARK_GRAY + ")";
+        return BasicPalette.DARK_GRAY.getColor() + switch(type){
+            case PROJECTILE -> "Projectile " + "(" + show + BasicPalette.DARK_GRAY.getColor() + ")";
+            case BLOCK_EXPLOSION, ENTITY_EXPLOSION -> "Explosion " + "(" + show + BasicPalette.DARK_GRAY.getColor() + ")";
+            case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> "Attack " + "(" + show + BasicPalette.DARK_GRAY.getColor() + ")";
+            case SONIC_BOOM -> "Sonic Boom" + "(" + show + BasicPalette.DARK_GRAY.getColor() + ")";
+            case MAGIC, CUSTOM -> "Magic " + "(" + show + BasicPalette.DARK_GRAY.getColor() + ")";
             case FIRE, FIRE_TICK, LAVA, HOT_FLOOR, CAMPFIRE -> "Melting";
             case KILL, SUICIDE -> "Suicide";
             case SUFFOCATION, CRAMMING -> "Suffocation";

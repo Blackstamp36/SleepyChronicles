@@ -14,9 +14,9 @@ import java.util.function.Function;
 
 public enum SleepyNPCs {
 
-    TEST_MOB("test_npc",level -> {
+    TEST_MOB("veil_guardian",level -> {
         Villager npc = new Villager(EntityType.VILLAGER, level);
-        npc.setCustomName(TextFormatter.toComponent("Gatekeeper","#ebc934"));
+        npc.setCustomName(TextFormatter.toComponent("Veil Guardian","#ebc934"));
         npc.setNoAi(true);
         npc.setInvulnerable(true);
         npc.setSpeed(0);

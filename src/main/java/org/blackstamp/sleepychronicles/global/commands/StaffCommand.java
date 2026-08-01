@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.*;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
+import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.inventory.menu.ItemArchive;
@@ -80,7 +80,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         p.teleport(world.getLocation());
-        ChatManager.sendStaffMessage(p, "Teleporting to.. " + ConstantColors.YELLOW + world.name());
+        ChatManager.sendStaffMessage(p, "Teleporting to.. " + BasicPalette.YELLOW + world.name());
     }
 
     @Subcommand("set day ")
@@ -90,7 +90,7 @@ public class StaffCommand extends BaseCommand {
 
         DayManager.getInstance().setDay(day);
 
-        ChatManager.sendStaffMessage(p, "Day set to.. " + ConstantColors.YELLOW + day);
+        ChatManager.sendStaffMessage(p, "Day set to.. " + BasicPalette.YELLOW + day);
     }
 
     @Subcommand("get day")
@@ -98,7 +98,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
         final int day = DayManager.getInstance().getDay();
 
-        ChatManager.sendStaffMessage(p, "The current day is " + ConstantColors.YELLOW + day);
+        ChatManager.sendStaffMessage(p, "The current day is " + BasicPalette.YELLOW + day);
     }
 
     @Subcommand("get time")
@@ -106,7 +106,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
         final String timeLeft = DayManager.getInstance().convertToTime(DayManager.getInstance().getTimestamp());
 
-        ChatManager.sendStaffMessage(p, "Time until next day: " + ConstantColors.YELLOW + timeLeft);
+        ChatManager.sendStaffMessage(p, "Time until next day: " + BasicPalette.YELLOW + timeLeft);
     }
 
     @Subcommand("get trinkets")
@@ -135,7 +135,7 @@ public class StaffCommand extends BaseCommand {
 
         TotemManager.set(p, value);
 
-        ChatManager.sendStaffMessage(staff, "The totems of " + ConstantColors.YELLOW + p.getName() + ConstantColors.GREEN + " were set to " + value);
+        ChatManager.sendStaffMessage(staff, "The totems of " + BasicPalette.YELLOW.getColor() + p.getName() + BasicPalette.GREEN.getColor() + " were set to " + value);
     }
 
     @Subcommand("get totems")
@@ -147,8 +147,8 @@ public class StaffCommand extends BaseCommand {
         if(p == null) return;
 
         Integer totems = TotemManager.get(p);
-        String yellow = ConstantColors.YELLOW;
-        String green = ConstantColors.GREEN;
+        String yellow = BasicPalette.YELLOW.getColor();
+        String green = BasicPalette.GREEN.getColor();
 
         ChatManager.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
     }

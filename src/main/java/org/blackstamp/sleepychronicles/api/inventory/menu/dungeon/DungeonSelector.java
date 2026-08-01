@@ -60,7 +60,7 @@ public class DungeonSelector extends MenuTemplate {
         UUID uuid = p.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, true,"You aren't in a party! Please create one to continue further.");
+            ChatManager.sendMessage(p, true,"You aren't in a party! (/p create)");
             return;
         }
 

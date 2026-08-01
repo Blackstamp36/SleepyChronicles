@@ -1,8 +1,12 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +26,19 @@ public class RunManager {
         RunInstance run = new RunInstance(party,dungeon,center,radius);
 
         for(UUID uuid : party.getMembers()){ // TODO: add tp logic!
+            ACTIVE_RUNS.put(uuid, run);
+            Player p = Bukkit.getPlayer(uuid);
 
+            if(p == null || !p.isOnline()){
+                return;
+            }
+
+            p.teleport(center);
+            p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
+            p.setFoodLevel(20);
+            p.setFireTicks(0);
+
+            p.playSound(p.getLocation(), Sound.AMBIENT_BASALT_DELTAS_ADDITIONS,1.0F,1.0F);
         }
     }
 

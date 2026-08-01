@@ -8,6 +8,7 @@ import org.blackstamp.sleepychronicles.api.party.PartyInvite;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,73 +23,97 @@ public class PartyCommand extends BaseCommand {
         UUID uuid = p.getUniqueId();
         SleepyParty party = new SleepyParty(uuid);
 
-        if(!PartyManager.hasParty(uuid)){
-            PartyManager.addToParty(uuid,party);
-
-            ChatManager.sendMessage(p, false,"Party created successfully!");
+        if(PartyManager.hasParty(uuid)){
+            ChatManager.sendMessage(p, true,"You're already in a party!");
             return;
         }
 
-        ChatManager.sendMessage(p, true,"You're already in a party!");
+        PartyManager.addToParty(uuid,party);
+
+        ChatManager.sendMessage(p, false,"Party created successfully! (/p invite)");
     }
 
     @Subcommand("invite")
-    public void invite(CommandSender sender, Player receiver){
+    public void invite(CommandSender sender, String target){
         if(!(sender instanceof Player p)) return;
 
-        UUID uuid = p.getUniqueId();
+        UUID leaderUUID = p.getUniqueId();
 
-        if(!PartyManager.hasParty(uuid) || receiver == null){
-            ChatManager.sendMessage(p, true,"The invitation couldn't be sent.");
+        if(!PartyManager.hasParty(leaderUUID)){
+            ChatManager.sendMessage(p, true,"You need to create a party first!");
             return;
         }
 
-        UUID receiverUUID = receiver.getUniqueId();
+        Player targetPlayer = Bukkit.getPlayer(target);
 
-        if(!PartyManager.hasParty(receiverUUID)){
-            SleepyParty party = PartyManager.getParty(uuid);
-            int duration = 60;
-            long expiration = System.currentTimeMillis() + (duration * 1000L); // 60s upon expiration.
-
-            PartyManager.addPendingInvite(receiverUUID,uuid,new PartyInvite(party,expiration));
-
-            ChatManager.sendMessage(p, true,"Invitation sent! (" + duration + "s)");
+        if(targetPlayer == null){
+            ChatManager.sendMessage(p, true,"The player is not online!");
+            return;
         }
+
+        UUID targetUUID = targetPlayer.getUniqueId();
+
+        if(PartyManager.hasParty(targetUUID)){
+            ChatManager.sendMessage(p, true,"The player's already in a party!");
+            return;
+        }
+
+        SleepyParty party = PartyManager.getParty(leaderUUID);
+        int duration = 60;
+        long expiration = System.currentTimeMillis() + (duration * 1000L); // 60s upon expiration.
+
+        PartyManager.addPendingInvite(targetUUID, leaderUUID,new PartyInvite(party,expiration));
+
+        ChatManager.sendMessage(p, true,"Invitation sent! (" + duration + "s)");
     }
 
     @Subcommand("accept")
-    public void accept(CommandSender sender, Player leader){
+    public void accept(CommandSender sender, String leader){
         if(!(sender instanceof Player p)) return;
 
         UUID uuid = p.getUniqueId();
-        UUID leaderUUID = leader.getUniqueId();
 
-        if(!PartyManager.hasParty(uuid) && PartyManager.hasPendingInvite(uuid,leaderUUID)){
-            PartyInvite invite = PartyManager.getPendingInvite(uuid,leaderUUID);
+        OfflinePlayer leaderPlayer = Bukkit.getPlayer(leader);
 
-            if(invite == null) return;
-
-            SleepyParty party = invite.targetParty();
-
-            if(System.currentTimeMillis() <= invite.expirationTime()){
-                if(party.getMembers().size() >= 4) return;
-
-                String leaderName = Bukkit.getOfflinePlayer(party.getLeader()).getName();
-
-                PartyManager.removePendingInvite(uuid, leaderUUID);
-                PartyManager.addToParty(uuid,party);
-                party.addMember(uuid);
-                ChatManager.sendMessage(p, false,"Joined the party of "+leaderName+"!");
-
-            }else{
-                PartyManager.removePendingInvite(uuid, leaderUUID);
-                ChatManager.sendMessage(p, true,"The invitation expired.");
-            }
-
+        if(leaderPlayer == null){
+            ChatManager.sendMessage(p, true,"The party that you tried to join doesn't exist.");
             return;
         }
 
-        ChatManager.sendMessage(p, true,"There were some errors with the invitation.");
+        UUID leaderUUID = leaderPlayer.getUniqueId();
+
+        if(PartyManager.hasParty(uuid)){
+            ChatManager.sendMessage(p, true,"You're already in a party.");
+            return;
+        }
+
+        PartyInvite invite = PartyManager.getPendingInvite(uuid,leaderUUID);
+
+        if(invite == null || !PartyManager.hasPendingInvite(uuid, leaderUUID)){
+            ChatManager.sendMessage(p, true,"The invitation doesn't exist.");
+            return;
+        }
+
+        SleepyParty party = invite.targetParty();
+
+        if(party.getMembers().size() >= 10){ // I think I'm gonna erase this. But just for you to see.
+            ChatManager.sendMessage(p, true,"The party is full!"); // Because I don't want to depend on the command
+            return; // for the size of a party. I want that it depends of the dungeon that is being played.
+        }
+
+        if(System.currentTimeMillis() > invite.expirationTime()){
+            PartyManager.removePendingInvite(uuid, leaderUUID);
+            ChatManager.sendMessage(p, true,"The invitation expired.");
+            return;
+        }
+
+        String leaderName = leaderPlayer.getName();
+
+        PartyManager.removePendingInvite(uuid, leaderUUID);
+        PartyManager.addToParty(uuid,party);
+        party.addMember(uuid);
+
+        ChatManager.sendMessage(p, false,"Joined the party of "+leaderName+"!");
     }
 
     @Subcommand("disband")
@@ -96,60 +121,81 @@ public class PartyCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
         UUID uuid = p.getUniqueId();
 
-        if(PartyManager.hasParty(uuid)){
-            SleepyParty party = PartyManager.getParty(uuid);
+        if(!PartyManager.hasParty(uuid)){
+            ChatManager.sendMessage(p, true,"You don't have a party. (/p create)");
+            return;
+        }
 
-            if(PartyManager.isLeader(uuid,party)){
-                party.disbandParty();
-                PartyManager.removeParty(party);
+        SleepyParty party = PartyManager.getParty(uuid);
 
-                ChatManager.sendMessage(p, false,"Party disbanded!");
-                return;
-            }
-
+        if(!PartyManager.isLeader(uuid,party)){
             ChatManager.sendMessage(p, true,"Only the leader may disband the party!");
             return;
         }
 
-        ChatManager.sendMessage(p, true,"You don't have a party...");
+        PartyManager.removeParty(party);
+        party.disbandParty();
+        ChatManager.sendMessage(p, false,"Party disbanded!");
     }
 
     @Subcommand("kick")
-    public void kick(CommandSender sender, Player kicked){
-        if(!(sender instanceof Player p)) return;
+    public void kick(CommandSender sender, String target){
+        if(!(sender instanceof Player leader)) return;
 
-        UUID uuid = p.getUniqueId();
-        UUID kickedUUID = kicked.getUniqueId();
+        UUID leaderUUID = leader.getUniqueId();
+        UUID targetUUID = null;
 
-        if(PartyManager.hasParty(uuid)){
-            SleepyParty party = PartyManager.getParty(uuid);
-
-            if(PartyManager.isLeader(uuid,party)){
-                String kickedName = Bukkit.getOfflinePlayer(kickedUUID).getName();
-
-                if(!party.hasMember(kickedUUID)){
-                    ChatManager.sendMessage(p, true,kickedName + " doesn't belong to the party!");
-                    return;
-                }
-
-                party.removeMember(kickedUUID);
-                PartyManager.removeFromParty(kickedUUID);
-
-                for(UUID memberUUID : party.getMembers()){
-                    Player member = Bukkit.getPlayer(memberUUID);
-
-                    if(member == null || !member.isOnline()) continue;
-
-                    ChatManager.sendMessage(member, false,kickedName + "has been kicked from the party!");
-                }
-
-                return;
-            }
-
-            ChatManager.sendMessage(p, true,"Only the leader may kick members from the party!");
+        if(!PartyManager.hasParty(leaderUUID)){
+            ChatManager.sendMessage(leader, true,"You don't have a party. (/p create)");
             return;
         }
 
-        ChatManager.sendMessage(p, true,"You don't have a party...");
+        SleepyParty party = PartyManager.getParty(leaderUUID);
+
+        if(!PartyManager.isLeader(leaderUUID,party)){
+            ChatManager.sendMessage(leader, true,"Only the leader may kick off members!");
+            return;
+        }
+
+        for(UUID member : party.getMembers()){
+            OfflinePlayer offlineMember = Bukkit.getOfflinePlayer(member);
+            String offlineName = offlineMember.getName();
+
+            if(offlineName != null && offlineName.equalsIgnoreCase(target)){ // UUID found!
+                targetUUID = member;
+                break;
+            }
+        }
+
+        if(targetUUID == null){
+            ChatManager.sendMessage(leader, true,"The player wasn't found in the party.");
+            return;
+        }
+
+        if(targetUUID.equals(leaderUUID)){
+            ChatManager.sendMessage(leader, true,"You cannot.. kick yourself from your party.. try (/p disband)");
+            return;
+        }
+
+        // If we reached here, it means that the UUID is valid!
+        party.removeMember(targetUUID);
+        PartyManager.removeFromParty(targetUUID);
+
+        Player targetPlayer = Bukkit.getPlayer(targetUUID);
+
+        // We reutilize the 'target' var that we had previously declared.
+        target = Bukkit.getOfflinePlayer(targetUUID).getName();
+
+        for(UUID uuid : party.getMembers()){
+            Player onlineMember = Bukkit.getPlayer(uuid);
+
+            if(onlineMember == null) continue;
+
+            ChatManager.sendMessage(onlineMember, false,target + "has been kicked from the party!");
+            }
+
+        if(targetPlayer != null && targetPlayer.isOnline()){
+            ChatManager.sendMessage(targetPlayer, true,"You were kicked from your party!");
+            }
+        }
     }
-}

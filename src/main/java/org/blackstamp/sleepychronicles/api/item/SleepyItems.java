@@ -1,6 +1,6 @@
 package org.blackstamp.sleepychronicles.api.item;
 
-import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
+import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketAbility;
@@ -31,8 +31,8 @@ public enum SleepyItems{
     ),
     MEMENTO_MORI(() -> new SleepyItem(Material.SADDLE, SleepyPalette.TRINKET)
             .setDisplay("Memento-mori")
-            .setLore("Winner takes it all!", ConstantColors.GRAY)
-            .setIcon(SleepyIcons.TRINKET_ICON, ConstantColors.GREEN)
+            .setLore("Winner takes it all!", BasicPalette.GRAY.getColor())
+            .setIcon(SleepyIcons.TRINKET_ICON, BasicPalette.GREEN.getColor())
             .setFamily(ItemFamily.TRINKETS)
             .setGlint(true),
             null,

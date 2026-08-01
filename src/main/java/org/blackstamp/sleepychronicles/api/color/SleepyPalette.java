@@ -17,7 +17,11 @@ public enum SleepyPalette {
 
     SOLAR("#cc9933"),
     VORTEX("#4dcbcb"),
-    STARDUST("#64c7e8");
+    STARDUST("#64c7e8"),
+
+    SLEEPY("#6932a8"),
+    TOTEM("#ced45b"),
+    STAFF("#32a85e");
 
     private final String color1;
     private final String color2;

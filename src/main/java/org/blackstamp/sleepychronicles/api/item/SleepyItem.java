@@ -37,8 +37,8 @@ public class SleepyItem extends ItemBuilder {
         return this;
     }
 
-    public SleepyItem addLore(String value, String color, boolean extra){
-        super.addLore(value, color, extra);
+    public SleepyItem addLore(String value, String color, boolean newLine){
+        super.addLore(value, color, newLine);
         return this;
     }
 

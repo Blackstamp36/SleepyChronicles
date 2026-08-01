@@ -16,27 +16,27 @@ public class PartyManager {
         for(UUID uuid : party.getMembers()){ ACTIVE_PARTIES.remove(uuid); }
     }
 
-    public static void addPendingInvite(UUID receiver, UUID leader, PartyInvite invite){
-        PENDING_INVITES.computeIfAbsent(receiver, k -> new HashMap<>())
+    public static void addPendingInvite(UUID target, UUID leader, PartyInvite invite){
+        PENDING_INVITES.computeIfAbsent(target, k -> new HashMap<>())
                 .put(leader,invite);
     }
 
-    public static PartyInvite getPendingInvite(UUID receiver, UUID leader){
-        Map<UUID,PartyInvite> receiverInvites = PENDING_INVITES.get(receiver);
+    public static PartyInvite getPendingInvite(UUID target, UUID leader){
+        Map<UUID,PartyInvite> receiverInvites = PENDING_INVITES.get(target);
 
         if(receiverInvites == null) return null;
 
         return receiverInvites.get(leader);
     }
 
-    public static void removePendingInvite(UUID receiver, UUID leader){
-        Map<UUID,PartyInvite> receiverInvites = PENDING_INVITES.get(receiver);
+    public static void removePendingInvite(UUID target, UUID leader){
+        Map<UUID,PartyInvite> receiverInvites = PENDING_INVITES.get(target);
 
         if(receiverInvites == null) return;
 
         receiverInvites.remove(leader);
 
-        if(receiverInvites.isEmpty()){ PENDING_INVITES.remove(receiver); }
+        if(receiverInvites.isEmpty()){ PENDING_INVITES.remove(target); }
     }
 
     public static boolean hasPendingInvite(UUID receiver, UUID leader){

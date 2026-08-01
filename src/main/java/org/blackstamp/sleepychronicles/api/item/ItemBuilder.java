@@ -2,9 +2,9 @@ package org.blackstamp.sleepychronicles.api.item;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
-import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
@@ -136,14 +136,17 @@ public class ItemBuilder implements Cloneable {
 
     public boolean hasFamily(){ return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY); }
 
-    public ItemBuilder addLore(String value, String color, boolean extra){
+    /**
+     @param newLine is if you want a new line for the lore-value that you're adding.
+     */
+    public ItemBuilder addLore(String value, String color, boolean newLine){
         if(color == null) color = SleepyPalette.VANILLA.getColor1();
 
         final ArrayList<Component> lore = new ArrayList<>();
 
         if(meta.lore() != null) lore.addAll(meta.lore());
 
-        if(extra) lore.add(Component.text(" "));
+        if(newLine) lore.add(Component.text(" "));
 
         lore.add(ConstantFields.MINI_MESSAGE
                 .deserialize(color + value)
@@ -165,7 +168,7 @@ public class ItemBuilder implements Cloneable {
     // This is commented because I forget easily T-T.
     private @NotNull List<Component> splitLoreLines(String value, String color){
         final ArrayList<Component> lore = new ArrayList<>(); // We declare our 'lore' list.
-        final StringBuilder builder = new StringBuilder(ConstantColors.DARK_GRAY + "|" + color); // We define the 'first' line.
+        final StringBuilder builder = new StringBuilder(BasicPalette.DARK_GRAY.getColor() + "|" + color); // We define the 'first' line.
         final int max = 28; // Max characters per line.
 
         // We check for each word of our 'value' String. in a for-each loop.
