@@ -4,7 +4,6 @@ import co.aikar.commands.annotation.Optional;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-@Getter
 public enum SleepyPalette {
     VANILLA("#ebebeb"),
     TRINKET("#d62411"),
@@ -30,9 +29,12 @@ public enum SleepyPalette {
         this.color3 = color3;
         }
 
-    SleepyPalette(String color){
-        this(color, color, color);
-    }
+    SleepyPalette(String color){ this(color, color, color); }
+    SleepyPalette(String color1, String color2){ this(color1, color2, color1); }
+
+    public String getColor1(){ return brackets(this.color1); }
+    public String getColor2(){ return brackets(this.color2); }
+    public String getColor3(){ return brackets(this.color3); }
 
     public @NotNull String shift(@Optional int index){
         switch(index){
@@ -42,6 +44,8 @@ public enum SleepyPalette {
 
         return "<" + color1 + ">";
         }
+
+    private static String brackets(String color){ return "<" + color + ">"; }
     }
 
 

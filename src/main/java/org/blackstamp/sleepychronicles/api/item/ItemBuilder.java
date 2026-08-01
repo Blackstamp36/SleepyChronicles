@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.api.item;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.constant.ConstantColors;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
@@ -136,6 +137,8 @@ public class ItemBuilder implements Cloneable {
     public boolean hasFamily(){ return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY); }
 
     public ItemBuilder addLore(String value, String color, boolean extra){
+        if(color == null) color = SleepyPalette.VANILLA.getColor1();
+
         final ArrayList<Component> lore = new ArrayList<>();
 
         if(meta.lore() != null) lore.addAll(meta.lore());
@@ -146,10 +149,13 @@ public class ItemBuilder implements Cloneable {
                 .deserialize(color + value)
                 .decoration(TextDecoration.ITALIC,false));
         meta.lore(lore);
+
         return this;
     }
 
     public ItemBuilder setLore(String value, String color){
+        if(color == null) color = SleepyPalette.VANILLA.getColor1();
+
         final List<Component> lore = splitLoreLines(value, color);
 
         meta.lore(lore);

@@ -16,8 +16,10 @@ public class SleepyParty {
         this.members.add(leader);
     }
 
-    public void addMember(UUID uuid){
-        this.getMembers().add(uuid);
-    }
+    public void addMember(UUID uuid){ this.getMembers().add(uuid); }
     public void removeMember(UUID uuid){ this.getMembers().remove(uuid); }
+    public boolean hasMember(UUID uuid){ return this.getMembers().contains(uuid); }
+    public void disbandParty(){
+        for(UUID uuid : members){ removeMember(uuid); }
+    }
 }

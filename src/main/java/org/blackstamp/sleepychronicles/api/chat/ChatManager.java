@@ -14,7 +14,7 @@ public class ChatManager {
 
     @Getter
     public enum ChatPrefix{
-        SLEEPY(ConstantColors.DARK_GRAY + "| " + ConstantColors.SLEEPY + "[SleepyChronicles] " + ConstantColors.DARK_GRAY + "» " + ConstantColors.GRAY),
+        SLEEPY(ConstantColors.DARK_GRAY + "| " + ConstantColors.SLEEPY + "[SleepyChronicles] " + ConstantColors.DARK_GRAY + "» "),
         STAFF(ConstantColors.DARK_GRAY + "| " + ConstantColors.STAFF + "[Staff] " + ConstantColors.GOLD + "» " + ConstantColors.GREEN);
 
         final String prefix;
@@ -22,7 +22,11 @@ public class ChatManager {
         ChatPrefix(String prefix){ this.prefix = prefix; }
     }
 
-    public static void sendMessage(Player p, String value){
+    public static void sendMessage(Player p, boolean isError, String value){
+        value = ConstantColors.GRAY + value;
+
+        if(isError){ value = ConstantColors.RED + value; }
+
         p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + value));
     }
 

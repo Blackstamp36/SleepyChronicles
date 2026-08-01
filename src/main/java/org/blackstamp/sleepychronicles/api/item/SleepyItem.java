@@ -22,9 +22,9 @@ public class SleepyItem extends ItemBuilder {
 
     public SleepyItem(Material material, @Optional String... colors){
         super(material);
-        if(colors[0] != null) color1 = "<" + colors[0] + ">";
-        if(colors[1] != null) color2 = "<" + colors[1] + ">";
-        if(colors[2] != null) color3 = "<" + colors[2] + ">";
+        if(colors[0] != null) color1 = colors[0];
+        if(colors[1] != null) color2 = colors[1];
+        if(colors[2] != null) color3 = colors[2];
     }
 
     public SleepyItem setDisplay(String display){

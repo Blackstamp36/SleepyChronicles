@@ -39,7 +39,8 @@ public class DungeonSelector extends MenuTemplate {
     public void click(InventoryClickEvent e){
         Inventory clicked = e.getClickedInventory();
 
-        if(clicked != super.inventory) return;
+        if(clicked != super.getInventory()) return;
+
         e.setCancelled(true);
 
         final ItemStack currentItem = e.getCurrentItem();
@@ -59,14 +60,14 @@ public class DungeonSelector extends MenuTemplate {
         UUID uuid = p.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, "You aren't in a party! Please create one to continue further.");
+            ChatManager.sendMessage(p, true,"You aren't in a party! Please create one to continue further.");
             return;
         }
 
         SleepyParty party = PartyManager.getParty(uuid);
 
         if(PartyManager.isLeader(uuid,party)){
-            ChatManager.sendMessage(p, "Only the leader may begin the dungeon.");
+            ChatManager.sendMessage(p, true,"Only the leader may begin the dungeon.");
             return;
         }
 

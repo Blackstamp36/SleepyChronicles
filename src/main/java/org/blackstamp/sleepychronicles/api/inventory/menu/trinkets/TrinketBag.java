@@ -67,7 +67,7 @@ public class TrinketBag extends MenuTemplate {
         final ItemBuilder cursorItem = new ItemBuilder(cursorStack);
         final ItemBuilder currentItem = new ItemBuilder(currentStack);
 
-        if(isForbidden(cursorItem) || isForbidden(currentItem)) e.setCancelled(true);
+        if(this.isForbidden(cursorItem) || this.isForbidden(currentItem)) e.setCancelled(true);
     }
 
     private boolean isForbidden(@NotNull ItemBuilder builder){
@@ -81,7 +81,7 @@ public class TrinketBag extends MenuTemplate {
     @EventHandler
     public void open(InventoryOpenEvent e){
         if(e.getInventory() != super.inventory) return;
-        ChatManager.sendMessage(p, "Showing trinkets!");
+        ChatManager.sendMessage(p, false,"Showing trinkets!");
         p.playSound(Sound.sound(Key.key("ui.cartography_table.take_result"), Sound.Source.MASTER, 1.0F, 0.75F));
     }
 
@@ -90,7 +90,7 @@ public class TrinketBag extends MenuTemplate {
         if(e.getInventory() != super.inventory) return;
         HandlerList.unregisterAll(this);
         this.save();
-        ChatManager.sendMessage(p, "Trinkets saved!");
+        ChatManager.sendMessage(p, false,"Trinkets saved!");
         p.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.MASTER, 1.0F, 0.75F));
     }
 

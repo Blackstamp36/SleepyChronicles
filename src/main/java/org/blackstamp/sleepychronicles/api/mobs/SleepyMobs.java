@@ -64,7 +64,7 @@ public enum SleepyMobs {
                             Attributes.MAX_HEALTH, 20.0D,
                             Attributes.ATTACK_KNOCKBACK, 1.5D
                     ))
-                    .build())); // Add new Dungeon entity.
+                    .build()));
 
     @Getter private final String id;
     private final Function<Level,Mob> mob;
@@ -80,6 +80,4 @@ public enum SleepyMobs {
     }
 
     public static Function<Level,Mob> getMob(String id){ return REGISTRY.get(id.toLowerCase()); }
-
-    public static Set<String> getIDs(){ return REGISTRY.keySet(); }
 }

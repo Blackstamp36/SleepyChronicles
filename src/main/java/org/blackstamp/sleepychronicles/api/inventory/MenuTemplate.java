@@ -4,9 +4,12 @@ import lombok.Getter;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -15,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@Registrable
 @Getter
 public abstract class MenuTemplate implements Listener, Cloneable {
 
@@ -80,6 +84,25 @@ public abstract class MenuTemplate implements Listener, Cloneable {
     public void open(InventoryOpenEvent e){}
     public void close(InventoryCloseEvent e){}
     public abstract void click(InventoryClickEvent e);
+
+    @EventHandler
+    public final void onInventoryOpen(InventoryCloseEvent e){
+        if(this.getInventory().equals(e.getInventory())){ this.close(e); }
+    }
+
+    @EventHandler
+    public final void onInventoryClose(InventoryCloseEvent e){
+        if(this.getInventory().equals(e.getInventory())){
+            HandlerList.unregisterAll(this);
+
+            this.close(e);
+        }
+    }
+
+    @EventHandler
+    public final void onInventoryClick(InventoryClickEvent e){
+        if(this.getInventory().equals(e.getInventory())){ this.click(e); }
+    }
 
     @Override
     public MenuTemplate clone() {

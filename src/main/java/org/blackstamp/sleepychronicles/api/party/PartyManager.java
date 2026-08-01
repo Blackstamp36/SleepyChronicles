@@ -12,6 +12,9 @@ public class PartyManager {
     public static SleepyParty getParty(UUID uuid){ return ACTIVE_PARTIES.get(uuid); }
     public static void removeFromParty(UUID uuid){ ACTIVE_PARTIES.remove(uuid); }
     public static boolean hasParty(UUID uuid){ return ACTIVE_PARTIES.containsKey(uuid); }
+    public static void removeParty(SleepyParty party){
+        for(UUID uuid : party.getMembers()){ ACTIVE_PARTIES.remove(uuid); }
+    }
 
     public static void addPendingInvite(UUID receiver, UUID leader, PartyInvite invite){
         PENDING_INVITES.computeIfAbsent(receiver, k -> new HashMap<>())

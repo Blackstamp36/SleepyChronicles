@@ -31,7 +31,7 @@ public class StaffCommand extends BaseCommand {
     public void give(CommandSender sender, @Optional SleepyItems item, @Optional Integer amount){
         if(!(sender instanceof Player p)) return;
         if(item == null){
-            ChatManager.sendMessage(p, "Opening items menu!");
+            ChatManager.sendMessage(p, false,"Opening items menu!");
             new ItemArchive(p).open();
             return;
         }

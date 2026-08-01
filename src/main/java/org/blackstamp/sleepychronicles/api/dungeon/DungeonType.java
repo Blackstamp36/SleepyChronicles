@@ -2,6 +2,8 @@ package org.blackstamp.sleepychronicles.api.dungeon;
 
 import lombok.Getter;
 import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.SleepyItem;
+import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,7 +12,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public enum DungeonType {
-    TEST(() -> new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE)
+    TEST(() -> new SleepyItem(Material.GRASS_BLOCK, ItemFamily.TRINKETS)
             .setDisplay("Test")
             .setLore("Hello! I'm a test!", null),
             100
