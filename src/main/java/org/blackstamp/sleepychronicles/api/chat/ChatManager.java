@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 public class ChatManager {
 
     private static final Sound BROADCAST_SOUND = Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 1.25F);
+    private static final Sound COMMAND_SOUND = Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 1.25F);
+    private static final Sound ERROR_SOUND = Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 1.25F);
 
     @Getter
     public enum ChatPrefix{
@@ -24,10 +26,15 @@ public class ChatManager {
 
     public static void sendMessage(Player p, boolean isError, String value){
         value = ConstantColors.GRAY + value;
+        Sound sound = COMMAND_SOUND;
 
-        if(isError){ value = ConstantColors.RED + value; }
+        if(isError){
+            value = ConstantColors.RED + value;
+            sound = ERROR_SOUND;
+        }
 
         p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + value));
+        p.playSound(sound);
     }
 
     public static void sendWarning(Player p, String value, String color){
