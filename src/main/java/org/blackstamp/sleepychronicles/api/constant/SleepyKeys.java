@@ -10,7 +10,12 @@ public final class SleepyKeys {
     public static final NamespacedKey ITEM_OWNER;
     public static final NamespacedKey ITEM_FAMILY;
 
-    public static final NamespacedKey DOWNED;
+    public static final NamespacedKey IS_DOWNED;
+    public static final NamespacedKey DOWNED_UUID;
+
+    public static final NamespacedKey IS_REVIVE_STAND;
+    public static final NamespacedKey REVIVE_HITS_CURRENT;
+    public static final NamespacedKey REVIVE_HITS_REQUIRED;
 
     // mobs
     public static final NamespacedKey MOB_ID;
@@ -27,7 +32,12 @@ public final class SleepyKeys {
         ITEM_OWNER = PersistentData.key("item_owner");
         ITEM_FAMILY = PersistentData.key("item_family");
 
-        DOWNED = PersistentData.key("downed");
+        IS_DOWNED = PersistentData.key("is_downed");
+        DOWNED_UUID = PersistentData.key("downed_uuid");
+
+        IS_REVIVE_STAND = PersistentData.key("is_revive_stand");
+        REVIVE_HITS_CURRENT = PersistentData.key("revive_hits_current");
+        REVIVE_HITS_REQUIRED = PersistentData.key("revive_hits_required");
 
         MOB_ID = PersistentData.key("mob_id");
         MOB_FAMILY = PersistentData.key("mob_family");

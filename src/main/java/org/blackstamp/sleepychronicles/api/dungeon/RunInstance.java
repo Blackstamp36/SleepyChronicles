@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.api.dungeon;
 
 import lombok.Getter;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
@@ -16,9 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RunInstance {
     @Getter public final SleepyParty party;
@@ -30,6 +29,8 @@ public class RunInstance {
     private final double radius;
     private final int timeLimitSeconds;
     private RunState state = RunState.SCAVENGE;
+
+    @Getter private List<ArmorStand> reviveStands = new ArrayList<>();
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 

@@ -19,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.UUID;
@@ -65,18 +66,39 @@ public class RunListener implements Listener {
         this.showVictory(party);
     }
 
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+
+        RunInstance run = RunManager.getRun(uuid);
+
+        if(run == null) return;
+
+        // Check also if the entire party is empty.
+        // If it is, then remove all remains of the run so it doesn't consume memory.
+    }
+
     private void showVictory(SleepyParty party){ // Execute victory logic..
 
     }
 
     private void applyDowned(Player p){ // Execute downed logic..
-        if(PersistentData.has(p, SleepyKeys.DOWNED)) return;
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED)) return;
 
-        PersistentData.set(p,SleepyKeys.DOWNED, PersistentDataType.BYTE,(byte) 1);
+        PersistentData.set(p,SleepyKeys.IS_DOWNED, PersistentDataType.BYTE,(byte) 1);
 
         ChatManager.sendWarning(p,"You've been downed!",null);
 
         p.setPose(Pose.SLEEPING);
+    }
+
+    private void revivePlayer(Player p){ // Execute revive logic..
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED)) return;
+
+        PersistentData.set(p,SleepyKeys.IS_DOWNED, PersistentDataType.BYTE,(byte) 1);
+
+        ChatManager.sendWarning(p,"You've been downed!",null);
     }
 
     private void checkForWipeCondition(SleepyParty party){
@@ -85,7 +107,7 @@ public class RunListener implements Listener {
         for(UUID memberUUID : party.getMembers()){
             Player member = Bukkit.getPlayer(memberUUID);
 
-            if(member == null || !member.isOnline() || PersistentData.has(member, SleepyKeys.DOWNED)){
+            if(member == null || !member.isOnline() || PersistentData.has(member, SleepyKeys.IS_DOWNED)){
                 downedPlayers++;
             }
         }

@@ -34,7 +34,7 @@ public class LinearProjectile extends ArmorStand {
         if(vector == null) this.vector = getInitialVector();
         else this.vector = vector;
 
-        registerAttributes();
+        this.registerAttributes();
     }
 
     @Override
