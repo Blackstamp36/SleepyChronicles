@@ -35,6 +35,8 @@ public class RunManager {
                 continue;
             }
 
+            generateTestFloor(center); // TEST ONLY!!
+
             p.teleport(center);
             p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
             p.setFoodLevel(20);
@@ -46,4 +48,14 @@ public class RunManager {
 
     public static RunInstance getRun(UUID uuid){ return ACTIVE_RUNS.get(uuid); }
     public static boolean isInRun(UUID uuid){ return ACTIVE_RUNS.containsKey(uuid); }
+
+    private static void generateTestFloor(Location center){
+        Location floor = center.clone().subtract(0, 1, 0);
+
+        for(int x = -5; x <= 5; x++){
+            for(int z = -5; z <= 5; z++){
+                floor.clone().add(x, 0, z).getBlock().setType(org.bukkit.Material.DEEPSLATE_BRICKS);
+            }
+        }
+    }
 }

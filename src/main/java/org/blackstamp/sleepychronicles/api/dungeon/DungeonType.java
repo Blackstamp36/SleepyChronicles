@@ -35,9 +35,9 @@ public enum DungeonType {
         for(DungeonType dungeon : values()){ DUNGEON_MAP.put(dungeon.getID(), dungeon); }
     }
 
-    DungeonType(Supplier<ItemBuilder> template, Location location, int maxSize, double radius){
+    DungeonType(Supplier<ItemBuilder> template, Location center, int maxSize, double radius){
         this.template = template;
-        this.location = location;
+        this.center = center;
         this.maxSize = maxSize;
         this.radius = radius;
     }
