@@ -145,7 +145,7 @@ public class ItemBuilder implements Cloneable {
         final ArrayList<Component> lore = new ArrayList<>();
 
         if(meta.lore() != null){ lore.addAll(meta.lore()); }
-        if(newLine){ lore.add(Component.empty()); }
+        if(lore.isEmpty() || newLine){ lore.add(Component.empty()); }
 
         Component newText = ConstantFields.MINI_MESSAGE
                 .deserialize(color + value)

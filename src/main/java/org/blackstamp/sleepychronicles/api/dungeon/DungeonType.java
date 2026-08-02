@@ -5,6 +5,8 @@ import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
 import org.blackstamp.sleepychronicles.api.item.SleepyItem;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,6 +19,7 @@ public enum DungeonType {
             .setDisplay("Test")
             .setLore("Hello! I'm a test!", null)
             .setIcon('♥', null),
+            new Location(Bukkit.getWorld("world_aftermath"),1000,100,0),
             4,
             100
     );
@@ -24,6 +27,7 @@ public enum DungeonType {
     private final Supplier<ItemBuilder> template;
     @Getter private final int maxSize;
     @Getter private final double radius;
+    @Getter private final Location center;
 
     private static final Map<String, DungeonType> DUNGEON_MAP = new HashMap<>();
 
@@ -31,8 +35,9 @@ public enum DungeonType {
         for(DungeonType dungeon : values()){ DUNGEON_MAP.put(dungeon.getID(), dungeon); }
     }
 
-    DungeonType(Supplier<ItemBuilder> template, int maxSize, double radius){
+    DungeonType(Supplier<ItemBuilder> template, Location location, int maxSize, double radius){
         this.template = template;
+        this.location = location;
         this.maxSize = maxSize;
         this.radius = radius;
     }
