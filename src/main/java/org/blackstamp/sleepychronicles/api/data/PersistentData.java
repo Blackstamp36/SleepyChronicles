@@ -50,11 +50,6 @@ public class PersistentData {
     }
 
     @NotNull
-    public static NamespacedKey key(boolean value){
-        return new NamespacedKey(SleepyChronicles.getInstance(), String.valueOf(value));
-    }
-
-    @NotNull
     private static PersistentDataContainer getDataContainer(PersistentDataHolder holder){
         return holder.getPersistentDataContainer();
     }

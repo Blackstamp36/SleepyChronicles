@@ -27,7 +27,7 @@ public final class SleepyKeys {
         ITEM_OWNER = PersistentData.key("item_owner");
         ITEM_FAMILY = PersistentData.key("item_family");
 
-        DOWNED = PersistentData.key("false");
+        DOWNED = PersistentData.key("downed");
 
         MOB_ID = PersistentData.key("mob_id");
         MOB_FAMILY = PersistentData.key("mob_family");

@@ -1,24 +1,32 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
+import lombok.Getter;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
+import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class RunInstance {
-    private final SleepyParty party;
+    @Getter public final SleepyParty party;
+
+    private final String bossID;
     private final Location center;
     private final double radius;
     private final int timeLimitSeconds;
     private RunState state = RunState.SCAVENGE;
-    private UUID bossUUID;
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 
@@ -26,6 +34,7 @@ public class RunInstance {
         this.party = party;
 
         DungeonConfig config = dungeon.getConfig();
+        this.bossID = config.bossId();
         this.center = config.center();
         this.radius = config.radius();
         this.timeLimitSeconds = config.timeLimitSeconds();
@@ -42,7 +51,7 @@ public class RunInstance {
             public void run(){
                 if(remainingTicks > 0) remainingTicks--;
                 if(remainingTicks <= 0 && state == RunState.SCAVENGE){
-                    spawnBossPortal();
+                    spawnBossPortal(center);
                     state = RunState.BOSS_FIGHT;
                 }
 
@@ -65,7 +74,19 @@ public class RunInstance {
 
     }
 
-    private void spawnBossPortal(){ // Boss spawn logic here..
+    private void spawnBossPortal(Location location){ // Boss spawn logic here..
+        Level level = ((CraftWorld) location.getWorld()).getHandle();
 
+        Mob boss = MobManager.instantiate(bossID, level);
+
+        if(boss == null){
+            SleepyChronicles.getInstance().getLogger().warning("An error has occurred upon summoning the boss!");
+            return;
+        }
+
+        RunManager.registerBoss(boss.getUUID(),this);
+
+        boss.setPos(location.x(),location.y(),location.z());
+        level.addFreshEntity(boss);
     }
 }

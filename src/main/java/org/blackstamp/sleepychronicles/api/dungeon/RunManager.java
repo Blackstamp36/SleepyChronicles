@@ -5,7 +5,6 @@ import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
-import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,7 +19,12 @@ import java.util.UUID;
 
 public class RunManager {
     private static final Map<UUID, RunInstance> ACTIVE_RUNS = new HashMap<>();
+    private static final Map<UUID, RunInstance> ACTIVE_BOSSES = new HashMap<>();
     private static int runCounter = 0;
+
+    public static void registerBoss(UUID uuid, RunInstance run){ ACTIVE_BOSSES.put(uuid, run); }
+    public static RunInstance getBoss(UUID uuid){ return ACTIVE_BOSSES.get(uuid); }
+    public static void clearBoss(UUID uuid){ ACTIVE_BOSSES.remove(uuid); }
 
     public static void createRun(SleepyParty party, DungeonType dungeon){
         runCounter++;
@@ -33,17 +37,14 @@ public class RunManager {
         Player leader = Bukkit.getPlayer(party.getLeader());
 
         for(UUID uuid : party.getMembers()){
-            ACTIVE_RUNS.put(uuid, run);
             Player p = Bukkit.getPlayer(uuid);
 
-            if(p == null || !p.isOnline()){ // Remove player from party and all - logic.
-                ACTIVE_RUNS.remove(uuid);
-
-                party.removeMember(uuid);
-                PartyManager.removeFromParty(uuid);
-
-                continue;
+            if(p == null || !p.isOnline()){
+                ChatManager.sendMessage(leader, true, "Unable to start the run because a member is offline.");
+                return;
             }
+
+            ACTIVE_RUNS.put(uuid, run);
 
             p.teleport(center);
             p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
