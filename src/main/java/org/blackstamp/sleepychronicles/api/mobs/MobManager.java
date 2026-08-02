@@ -4,6 +4,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
+import org.blackstamp.sleepychronicles.api.mobs.boss.SleepyBosses;
 import org.blackstamp.sleepychronicles.api.mobs.npc.SleepyNPCs;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,7 @@ public class MobManager {
 
     static{
         for(SleepyMobs mob : SleepyMobs.values()){ MOB_REGISTRY.put(mob.getId(),SleepyMobs.getMob(mob.getId())); }
+        for(SleepyBosses boss : SleepyBosses.values()){ MOB_REGISTRY.put(boss.getId(),SleepyMobs.getMob(boss.getId())); }
         for(SleepyNPCs npc : SleepyNPCs.values()){ MOB_REGISTRY.put(npc.getId(),SleepyNPCs.getMob(npc.getId())); }
     }
 
