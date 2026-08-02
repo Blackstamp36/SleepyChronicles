@@ -66,7 +66,7 @@ public class DungeonSelector extends MenuTemplate {
 
         SleepyParty party = PartyManager.getParty(uuid);
 
-        if(PartyManager.isLeader(uuid,party)){
+        if(!PartyManager.isLeader(uuid,party)){
             ChatManager.sendMessage(p, true,"Only the leader may begin the dungeon.");
             return;
         }

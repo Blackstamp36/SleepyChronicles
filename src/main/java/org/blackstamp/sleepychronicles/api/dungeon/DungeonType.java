@@ -40,7 +40,7 @@ public enum DungeonType {
     public ItemStack build(){
         return template.get()
                 .setID(this.getID())
-                .addLore("" + maxSize, BasicPalette.GOLD.getColor(),false)
+                .addLore("Max: " + maxSize, BasicPalette.GOLD.getColor(),false)
                 .build();
     }
     public String getID(){ return this.name().toLowerCase(); }

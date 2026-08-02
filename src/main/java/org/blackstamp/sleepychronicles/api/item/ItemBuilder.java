@@ -139,20 +139,28 @@ public class ItemBuilder implements Cloneable {
     /**
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
-    public ItemBuilder addLore(String value, String color, boolean newLine){ // todo: view why the line is jumping to another.
+    public ItemBuilder addLore(String value, String color, boolean newLine){
         if(color == null) color = SleepyPalette.VANILLA.getColor1();
 
         final ArrayList<Component> lore = new ArrayList<>();
 
-        if(meta.lore() != null) lore.addAll(meta.lore());
+        if(meta.lore() != null){ lore.addAll(meta.lore()); }
+        if(newLine){ lore.add(Component.empty()); }
 
-        if(newLine) lore.add(Component.text(" "));
-
-        lore.add(ConstantFields.MINI_MESSAGE
+        Component newText = ConstantFields.MINI_MESSAGE
                 .deserialize(color + value)
-                .decoration(TextDecoration.ITALIC,false));
-        meta.lore(lore);
+                .decoration(TextDecoration.ITALIC,false);
 
+        int lastIndex = lore.size() - 1;
+        Component lastText = lore.get(lastIndex);
+
+        if(!newLine){ lastText = lastText.append(Component.text(" ")); }
+
+        lastText = lastText.append(newText);
+
+        lore.set(lastIndex,lastText);
+
+        meta.lore(lore);
         return this;
     }
 

@@ -1,6 +1,5 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,8 +28,8 @@ public class RunManager {
             ACTIVE_RUNS.put(uuid, run);
             Player p = Bukkit.getPlayer(uuid);
 
-            if(p == null || !p.isOnline()){
-                return;
+            if(p == null || !p.isOnline()){ // Remove player from party and all - logic.
+                continue;
             }
 
             p.teleport(center);
@@ -43,4 +42,5 @@ public class RunManager {
     }
 
     public static RunInstance getRun(UUID uuid){ return ACTIVE_RUNS.get(uuid); }
+    public static boolean isInRun(UUID uuid){ return ACTIVE_RUNS.containsKey(uuid); }
 }
