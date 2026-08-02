@@ -2,10 +2,13 @@ package org.blackstamp.sleepychronicles.game.listener.dungeon;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
+import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,5 +40,19 @@ public class RunListener implements Listener {
         SleepyParty party = PartyManager.getParty(uuid);
     }
 
-    private void checkForWipeCondition(SleepyParty party){}
+    private void checkForWipeCondition(SleepyParty party){
+        int downedPlayers = 0;
+
+        for(UUID memberUUID : party.getMembers()){
+            Player p = Bukkit.getPlayer(memberUUID);
+
+            if(p == null || !p.isOnline() || PersistentData.has(p, SleepyKeys.DOWNED)){ // Execute downed logic.
+
+            }
+        }
+
+        if(downedPlayers == party.getMembers().size()){ // Do wiped logic.
+
+        }
+    }
 }
