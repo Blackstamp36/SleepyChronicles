@@ -7,8 +7,6 @@ import org.blackstamp.sleepychronicles.api.item.SleepyItem;
 import org.blackstamp.sleepychronicles.api.mobs.boss.SleepyBosses;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +17,6 @@ public enum DungeonType {
     TEST(DungeonConfig.builder()
             .bossId(SleepyBosses.DARKNESS_EMPEROR.getId())
             .schematic("")
-            .center(new Location(Bukkit.getWorld("world_aftermath"), 1000, 100, 0))
             .maxPlayers(4)
             .radius(50.0D)
             .timeLimitSeconds(1800)

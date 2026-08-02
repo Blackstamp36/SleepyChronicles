@@ -18,15 +18,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class RunManager { // todo: add an offset when teleporting to dungeons, so the players don't see each other!
+public class RunManager {
     private static final Map<UUID, RunInstance> ACTIVE_RUNS = new HashMap<>();
     private static int runCounter = 0;
 
     public static void createRun(SleepyParty party, DungeonType dungeon){
         runCounter++;
 
+        Location center = new Location(Bukkit.getWorld("world_aftermath"), 1000 * runCounter, 100, 0);
+
         DungeonConfig config = dungeon.getConfig();
-        Location center = config.center();
         RunInstance run = new RunInstance(party,dungeon);
 
         Player leader = Bukkit.getPlayer(party.getLeader());
