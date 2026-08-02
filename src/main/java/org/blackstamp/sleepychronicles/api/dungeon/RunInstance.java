@@ -18,6 +18,7 @@ public class RunInstance {
     private final double radius;
     private final int timeLimitSeconds;
     private RunState state = RunState.SCAVENGE;
+    private UUID bossUUID;
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 

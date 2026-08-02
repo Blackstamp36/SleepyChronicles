@@ -10,6 +10,8 @@ public final class SleepyKeys {
     public static final NamespacedKey ITEM_OWNER;
     public static final NamespacedKey ITEM_FAMILY;
 
+    public static final NamespacedKey DOWNED;
+
     // mobs
     public static final NamespacedKey MOB_ID;
     public static final NamespacedKey MOB_FAMILY;
@@ -24,6 +26,8 @@ public final class SleepyKeys {
         ITEM_ID = PersistentData.key("item_id");
         ITEM_OWNER = PersistentData.key("item_owner");
         ITEM_FAMILY = PersistentData.key("item_family");
+
+        DOWNED = PersistentData.key("false");
 
         MOB_ID = PersistentData.key("mob_id");
         MOB_FAMILY = PersistentData.key("mob_family");

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
-public enum SleepyBosses {
+public enum SleepyBosses { // todo: check for boss uuid!
     DARKNESS_EMPEROR("darkness_emperor", level ->
             new BossMob(EntityType.GHAST,level,BossConfig.builder()
                     .name("Senior of Darkness").color("#5e17a1")
