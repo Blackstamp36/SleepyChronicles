@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,8 @@ import java.util.UUID;
 
 public class RunInstance {
     @Getter public final SleepyParty party;
+
+    @Getter public BukkitTask timeTask = null;
 
     private final String bossID;
     private final Location center;
@@ -43,7 +46,7 @@ public class RunInstance {
     }
 
     private void checkDistance(){
-        new BukkitRunnable(){
+        this.timeTask = new BukkitRunnable(){
             int remainingTicks = timeLimitSeconds * 20; // Time left converted to ticks.
             final double radiusSquared = radius * radius;
 

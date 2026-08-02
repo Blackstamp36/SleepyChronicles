@@ -62,10 +62,10 @@ public class RunListener implements Listener {
         // If we reach here, it means that the run is active and valid!
         SleepyParty party = run.getParty();
 
-
+        this.showVictory(party);
     }
 
-    private void showVictory(){
+    private void showVictory(SleepyParty party){ // Execute victory logic..
 
     }
 
