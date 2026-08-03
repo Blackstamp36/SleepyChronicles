@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.game.listener.dungeon;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
@@ -9,23 +10,33 @@ import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
+import org.blackstamp.sleepychronicles.api.player.PlayerManager;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
 
 @Registrable
 public class RunListener implements Listener {
+    private static final PotionEffect[] downedDebuff = {
+            new PotionEffect(PotionEffectType.SLOWNESS,PotionEffect.INFINITE_DURATION,4),
+            new PotionEffect(PotionEffectType.DARKNESS,PotionEffect.INFINITE_DURATION,0),
+            new PotionEffect(PotionEffectType.GLOWING,PotionEffect.INFINITE_DURATION,0)
+    };
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
@@ -38,11 +49,21 @@ public class RunListener implements Listener {
     }
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent e){
-        Player p = e.getPlayer();
+    public void onLethalDamage(EntityDamageEvent e){
+        if(!(e.getEntity() instanceof Player p)) return;
+
         UUID uuid = p.getUniqueId();
 
         if(!RunManager.isInRun(p.getUniqueId())) return;
+
+        boolean isLethal = (p.getHealth() - e.getFinalDamage()) <= 0;
+
+        if(!isLethal) return;
+
+        p.setHealth(1.0D);
+
+        // So only we don't 'kill' a downed player while in its state.
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
 
         SleepyParty party = PartyManager.getParty(uuid);
 
@@ -83,22 +104,64 @@ public class RunListener implements Listener {
 
     }
 
-    private void applyDowned(Player p){ // Execute downed logic..
-        if(PersistentData.has(p, SleepyKeys.IS_DOWNED)) return;
+    @EventHandler
+    public void onDamageToRevive(EntityDamageByEntityEvent e){
+        Entity damaged = e.getEntity();
 
-        PersistentData.set(p,SleepyKeys.IS_DOWNED, PersistentDataType.BYTE,(byte) 1);
+        if(!(e.getDamager() instanceof Player p)) return;
+        if(!PersistentData.has(damaged,SleepyKeys.IS_REVIVE_STAND.get())) return;
+
+        e.setCancelled(true);
+
+        if(PersistentData.has(p,SleepyKeys.IS_DOWNED.get())) return;
+
+        // We assume that, in effect, it has the required keys.
+        int currentHits = PersistentData.get(damaged,SleepyKeys.REVIVE_HITS_CURRENT.get(), PersistentDataType.INTEGER);
+        int hitsRequired = PersistentData.get(damaged,SleepyKeys.REVIVE_HITS_REQUIRED.get(), PersistentDataType.INTEGER);
+
+        int futureHits = currentHits + 1;
+
+        PersistentData.set(damaged,SleepyKeys.REVIVE_HITS_CURRENT.get(),PersistentDataType.INTEGER, futureHits);
+
+        if(futureHits >= hitsRequired){
+            String revivedUUID = PersistentData.get(damaged,SleepyKeys.DOWNED_UUID.get(), PersistentDataType.STRING);
+
+            Player revivedPlayer = Bukkit.getPlayer(revivedUUID);
+
+            if(revivedPlayer == null || !revivedPlayer.isOnline()) return;
+
+            revivePlayer(revivedPlayer);
+        }
+
+        damaged.customName(Component.text(futureHits + "/" + hitsRequired));
+    }
+
+    // Manager methods.
+
+    private void applyDowned(Player p){ // Execute downed logic..
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
+
+        PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
+
+        // I canceled it but here should spawn the stand.
+        // ReviveStand reviveStand = new ReviveStand();
 
         ChatManager.sendWarning(p,"You've been downed!",null);
 
         p.setPose(Pose.SLEEPING);
+        PlayerManager.addPots(p, downedDebuff);
     }
 
     private void revivePlayer(Player p){ // Execute revive logic..
-        if(PersistentData.has(p, SleepyKeys.IS_DOWNED)) return;
+        if(!PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
 
-        PersistentData.set(p,SleepyKeys.IS_DOWNED, PersistentDataType.BYTE,(byte) 1);
+        PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
+        PlayerManager.clearPots(p,downedEffectTypes);
 
-        ChatManager.sendWarning(p,"You've been downed!",null);
+        // All players have health, so we assume that the output won't be null.
+        p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
+
+        ChatManager.sendWarning(p,"You've been revived!",null);
     }
 
     private void checkForWipeCondition(SleepyParty party){
@@ -107,7 +170,7 @@ public class RunListener implements Listener {
         for(UUID memberUUID : party.getMembers()){
             Player member = Bukkit.getPlayer(memberUUID);
 
-            if(member == null || !member.isOnline() || PersistentData.has(member, SleepyKeys.IS_DOWNED)){
+            if(member == null || !member.isOnline() || PersistentData.has(member, SleepyKeys.IS_DOWNED.get())){
                 downedPlayers++;
             }
         }

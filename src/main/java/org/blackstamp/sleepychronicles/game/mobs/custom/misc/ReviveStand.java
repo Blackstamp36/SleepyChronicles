@@ -2,34 +2,82 @@ package org.blackstamp.sleepychronicles.game.mobs.custom.misc;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.damagesource.DamageSource;
+
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import org.blackstamp.sleepychronicles.api.chat.ChatManager;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
-import org.blackstamp.sleepychronicles.game.mobs.custom.projectiles.ProjectileSettings;
-import org.blackstamp.sleepychronicles.global.utils.manager.CollisionManager;
-import org.jetbrains.annotations.Nullable;
+import org.blackstamp.sleepychronicles.api.player.PlayerManager;
+import org.blackstamp.sleepychronicles.api.text.TextFormatter;
+import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Pose;
+import org.bukkit.potion.PotionEffectType;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ReviveStand extends ArmorStand {
-    private final UUID downedUUID;
 
-    public ReviveStand(Level level, UUID downedUUID){
+    private static final PotionEffectType[] downedEffectTypes = {
+            PotionEffectType.SLOWNESS,
+            PotionEffectType.DARKNESS,
+            PotionEffectType.GLOWING
+    };
+
+    private final UUID downedUUID;
+    private final int requiredHits;
+
+    private int currentHits = 0;
+
+    public ReviveStand(Level level, UUID downedUUID, int downedCount){
         super(EntityType.ARMOR_STAND, level);
 
         this.downedUUID = downedUUID;
-
-        // Set the NBT data..
-        // PersistentData.set(this,);
+        this.requiredHits = downedCount * 8;
 
         this.registerAttributes();
+        this.checkHits(this);
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float value){
+        super.hurtServer(level,source,value);
+
+        if(!(source.getEntity() instanceof Player attacker)) return false;
+        if(PersistentData.has(attacker,SleepyKeys.IS_DOWNED.get())) return false;
+        if(!attacker.getUniqueId().equals(downedUUID)) return false;
+
+        this.currentHits++;
+        this.checkHits(this);
+
+        return false;
+    }
+
+    private void revivePlayer(UUID uuid){ // Execute revive logic..
+        Player p = Bukkit.getPlayer(uuid);
+
+        if(p == null || !p.isOnline()) return;
+
+        PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
+        PlayerManager.clearPots(p,downedEffectTypes);
+
+        p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
+        p.setPose(Pose.STANDING);
+        ChatManager.sendWarning(p,"You've been revived!",null);
+    }
+
+    private void checkHits(LivingEntity entity){
+        entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits,"#00000"));
+
+        if(this.currentHits >= this.requiredHits){
+            this.revivePlayer(this.downedUUID);
+            this.discard();
+        }
     }
 
 
@@ -44,15 +92,13 @@ public class ReviveStand extends ArmorStand {
         this.setInvulnerable(true);
         this.setSilent(true);
 
-        // Revive settings.
+        // Revive Stand settings.
         this.setInvisible(true);
         this.setSmall(true);
-        this.setMarker(true);
     }
 
     @Override
     public boolean isPushable(){ return false; }
-
     @Override
     public boolean isPickable(){ return false; }
 }

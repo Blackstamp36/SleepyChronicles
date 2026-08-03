@@ -1,6 +1,7 @@
 package org.blackstamp.sleepychronicles.game.listener.item;
 
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
+import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.item.ItemAbility;
 import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
@@ -10,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public class ItemListener implements Listener {
@@ -19,7 +21,10 @@ public class ItemListener implements Listener {
         ItemStack item = e.getItem();
         if(item == null || !item.hasItemMeta()) return;
 
-        String id = item.getItemMeta().getPersistentDataContainer().get(SleepyKeys.ITEM_ID, PersistentDataType.STRING);
+        ItemMeta meta = item.getItemMeta();
+
+        String id = PersistentData.get(meta, SleepyKeys.ITEM_ID.get(),PersistentDataType.STRING);
+
         if(id == null) return;
 
         ItemAbility ability = SleepyItems.getAbility(id);

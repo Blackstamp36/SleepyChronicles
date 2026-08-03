@@ -33,7 +33,7 @@ public class MobManager {
 
         Mob nmsMob = mob.apply(level);
 
-        PersistentData.set(nmsMob.getBukkitEntity(), SleepyKeys.MOB_ID, PersistentDataType.STRING,id);
+        PersistentData.set(nmsMob.getBukkitEntity(), SleepyKeys.MOB_ID.get(), PersistentDataType.STRING,id);
 
         return nmsMob;
     }

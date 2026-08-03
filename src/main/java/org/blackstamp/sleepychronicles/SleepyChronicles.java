@@ -8,7 +8,7 @@ import org.blackstamp.sleepychronicles.api.item.ItemAbility;
 import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
-import org.blackstamp.sleepychronicles.api.player.PlayerUtils;
+import org.blackstamp.sleepychronicles.api.player.PlayerManager;
 import org.blackstamp.sleepychronicles.game.spawn.SpawnManager;
 import org.blackstamp.sleepychronicles.game.world.dimensions.AftermathBiomeProvider;
 import org.blackstamp.sleepychronicles.game.world.dimensions.AftermathChunkGenerator;
@@ -63,7 +63,7 @@ public final class SleepyChronicles extends JavaPlugin {
         paperCommandManager.getCommandCompletions().registerAsyncCompletion(
                 "@SleepyMobs", c -> MobManager.getIDs());
         paperCommandManager.getCommandCompletions().registerAsyncCompletion(
-                "@PlayersOnline", c -> PlayerUtils.getOnlinePlayers());
+                "@PlayersOnline", c -> PlayerManager.getOnlinePlayers());
 
         paperCommandManager.registerCommand(new PartyCommand());
         paperCommandManager.registerCommand(new StaffCommand());

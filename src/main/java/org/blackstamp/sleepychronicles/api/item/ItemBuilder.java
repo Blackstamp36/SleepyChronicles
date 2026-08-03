@@ -5,9 +5,9 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
-import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -59,13 +59,13 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemBuilder setID(String value){
-        this.setPersistentData(SleepyKeys.ITEM_ID, value);
+        this.setPersistentData(SleepyKeys.ITEM_ID.get(), value);
         return this.setCustomModelData(value);
     }
 
-    public String getID(){ return getPersistentData(SleepyKeys.ITEM_ID); }
+    public String getID(){ return getPersistentData(SleepyKeys.ITEM_ID.get()); }
 
-    public boolean hasID(){ return PersistentData.has(meta, SleepyKeys.ITEM_ID); }
+    public boolean hasID(){ return PersistentData.has(meta, SleepyKeys.ITEM_ID.get()); }
 
     public ItemBuilder setAmount(int value){
         item.setAmount(value);
@@ -105,11 +105,11 @@ public class ItemBuilder implements Cloneable {
         OfflinePlayer p = Bukkit.getOfflinePlayer(nickname);
 
         skull.setOwningPlayer(p);
-        setPersistentData(SleepyKeys.ITEM_OWNER, nickname);
+        setPersistentData(SleepyKeys.ITEM_OWNER.get(), nickname);
         return this;
     }
 
-    public String getOwner(){ return getPersistentData(SleepyKeys.ITEM_OWNER); }
+    public String getOwner(){ return getPersistentData(SleepyKeys.ITEM_OWNER.get()); }
 
     public ItemBuilder setCustomModelData(String... value){
         ArrayList<String> valueArray = new ArrayList<>(Arrays.asList(value));
@@ -127,14 +127,13 @@ public class ItemBuilder implements Cloneable {
     public String getPersistentData(NamespacedKey key){ return PersistentData.get(meta, key, PersistentDataType.STRING); }
 
     public ItemBuilder setFamily(ItemFamily family){
-        setPersistentData(SleepyKeys.ITEM_FAMILY, family.getName());
-
+        setPersistentData(SleepyKeys.ITEM_FAMILY.get(), family.getName());
         return this;
     }
 
-    public String getFamily(){ return getPersistentData(SleepyKeys.ITEM_FAMILY); }
+    public String getFamily(){ return getPersistentData(SleepyKeys.ITEM_FAMILY.get()); }
 
-    public boolean hasFamily(){ return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY); }
+    public boolean hasFamily(){ return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY.get()); }
 
     /**
      @param newLine is if you want a new line for the lore-value that you're adding.

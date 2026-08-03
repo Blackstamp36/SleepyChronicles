@@ -3,6 +3,7 @@ package org.blackstamp.sleepychronicles.api.inventory.menu.trinkets;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.base64.Base64Utils;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
@@ -11,7 +12,6 @@ import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
 import org.blackstamp.sleepychronicles.api.item.ItemManager;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketManager;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
-import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -121,12 +121,12 @@ public class TrinketBag extends MenuTemplate {
         }
 
         String trinketData = Base64Utils.toBase64(savedTrinkets);
-        PersistentData.set(super.p, SleepyKeys.TRINKETS_INV, PersistentDataType.STRING, trinketData);
+        PersistentData.set(super.p, SleepyKeys.TRINKETS_INV.get(), PersistentDataType.STRING, trinketData);
     }
 
     @Nullable
     private String get(){
-        return PersistentData.get(super.p, SleepyKeys.TRINKETS_INV, PersistentDataType.STRING);
+        return PersistentData.get(super.p, SleepyKeys.TRINKETS_INV.get(), PersistentDataType.STRING);
     }
 
     public static boolean hasTrinket(Player p, String value){

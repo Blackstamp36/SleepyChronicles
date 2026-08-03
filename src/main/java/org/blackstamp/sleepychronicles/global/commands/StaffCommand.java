@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.color.BasicPalette;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.inventory.menu.ItemArchive;
@@ -14,7 +15,6 @@ import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem.TotemManager;
 import org.blackstamp.sleepychronicles.game.world.dimensions.WorldUtils;
-import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -120,7 +120,7 @@ public class StaffCommand extends BaseCommand {
     public void reset(CommandSender sender){
         if(!(sender instanceof Player p)) return;
 
-        PersistentData.remove(p, SleepyKeys.TRINKETS_INV);
+        PersistentData.remove(p, SleepyKeys.TRINKETS_INV.get());
         ChatManager.sendStaffMessage(p, "Resetting PersistentData...");
     }
 

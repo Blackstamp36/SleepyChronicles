@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerUtils {
+public class PlayerManager {
 
     public static List<String> getOnlinePlayers(){
         List<String> online = new ArrayList<>();

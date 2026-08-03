@@ -6,6 +6,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public class ItemManager {
-    public static String getID(ItemMeta meta){ return PersistentData.get(meta, SleepyKeys.ITEM_ID, PersistentDataType.STRING); }
-    public static String getFamily(ItemMeta meta){ return PersistentData.get(meta, SleepyKeys.ITEM_FAMILY, PersistentDataType.STRING); }
+    public static String getID(ItemMeta meta){ return PersistentData.get(meta, SleepyKeys.ITEM_ID.get(), PersistentDataType.STRING); }
+    public static String getFamily(ItemMeta meta){ return PersistentData.get(meta, SleepyKeys.ITEM_FAMILY.get(), PersistentDataType.STRING); }
 }

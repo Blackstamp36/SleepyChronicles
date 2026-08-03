@@ -18,7 +18,7 @@ public class NPCListener implements Listener {
     public void onInteraction(PlayerInteractEntityEvent e){
         Entity mob = e.getRightClicked();
 
-        String id = PersistentData.get(mob, SleepyKeys.MOB_ID, PersistentDataType.STRING);
+        String id = PersistentData.get(mob, SleepyKeys.MOB_ID.get(), PersistentDataType.STRING);
 
         if(id == null) return;
 

@@ -2,7 +2,7 @@ package org.blackstamp.sleepychronicles.game.listener.player.trinkets;
 
 import org.blackstamp.sleepychronicles.api.inventory.menu.trinkets.TrinketBag;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
-import org.blackstamp.sleepychronicles.api.player.PlayerUtils;
+import org.blackstamp.sleepychronicles.api.player.PlayerManager;
 import org.blackstamp.sleepychronicles.api.player.survival.death.totem.TotemUtils;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class MementoMori implements Listener {
 
         boolean rand = ThreadLocalRandom.current().nextBoolean();
 
-        if(rand) PlayerUtils.addPots(p, mementoBuff);
-        else PlayerUtils.clearPots(p, TotemUtils.totemEffects);
+        if(rand) PlayerManager.addPots(p, mementoBuff);
+        else PlayerManager.clearPots(p, TotemUtils.totemEffects);
     }
 }
