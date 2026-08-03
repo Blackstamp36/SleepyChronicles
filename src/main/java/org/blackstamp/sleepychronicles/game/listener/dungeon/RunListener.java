@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.game.listener.dungeon;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
@@ -10,14 +11,17 @@ import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.blackstamp.sleepychronicles.api.player.PlayerManager;
+import org.blackstamp.sleepychronicles.game.mobs.custom.misc.ReviveStand;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -59,13 +63,14 @@ public class RunListener implements Listener {
 
         p.setHealth(1.0D);
 
-        // So only we don't 'kill' a downed player while in its state.
+        // So we don't 'kill' a downed player AGAIN.
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
 
         SleepyParty party = PartyManager.getParty(uuid);
+        RunInstance run = RunManager.getRun(uuid);
 
-        this.setDowned(p);
-        this.checkForWipeCondition(party);
+        this.setDowned(p,run);
+        this.checkForWipeCondition(party,run);
 
         e.setCancelled(true);
     }
@@ -74,7 +79,7 @@ public class RunListener implements Listener {
     public void onBossDeath(EntityDeathEvent e){
         Entity boss = e.getEntity();
         UUID bossUUID = boss.getUniqueId();
-        RunInstance run = RunManager.getBoss(bossUUID);
+        RunInstance run = RunManager.getBossInstance(bossUUID);
 
         if(run == null) return;
 
@@ -99,16 +104,21 @@ public class RunListener implements Listener {
 
     // Manager methods.
 
-    private void setDowned(Player p){ // Execute downed logic..
+    private void setDowned(Player p, RunInstance run){ // Execute downed logic..
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
 
         PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
 
-        // I canceled it but here should spawn the stand.
-        // ReviveStand reviveStand = new ReviveStand();
+        UUID uuid = p.getUniqueId();
+        Level level = ((CraftWorld) p.getLocation().getWorld()).getHandle();
+
+        run.increaseDownedCount(uuid);
+
+        ReviveStand reviveStand = new ReviveStand(level,run,uuid);
+
+        level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
         ChatManager.sendWarning(p,"You've been downed!",null);
-
         p.setPose(Pose.SLEEPING);
         PlayerManager.addPots(p, downedDebuff);
     }
@@ -117,7 +127,7 @@ public class RunListener implements Listener {
 
     }
 
-    private void checkForWipeCondition(SleepyParty party){
+    private void checkForWipeCondition(SleepyParty party, RunInstance run){
         int downedPlayers = 0;
 
         for(UUID memberUUID : party.getMembers()){
@@ -137,6 +147,7 @@ public class RunListener implements Listener {
 
             }
 
+            // Maybe to get the boss, I can register its UUID on the RunInstance? And then I get it from there?
         }
     }
 }

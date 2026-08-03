@@ -2,7 +2,6 @@ package org.blackstamp.sleepychronicles.api.dungeon;
 
 import lombok.Getter;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
@@ -13,6 +12,7 @@ import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -30,7 +30,8 @@ public class RunInstance {
     private final int timeLimitSeconds;
     private RunState state = RunState.SCAVENGE;
 
-    @Getter private List<ArmorStand> reviveStands = new ArrayList<>();
+    private final List<UUID> reviveStands = new ArrayList<>();
+    private final Map<UUID,Integer> downedCount = new HashMap<>();
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 
@@ -46,6 +47,7 @@ public class RunInstance {
         this.checkDistance(); // Initialize the distance task.
     }
 
+    // Distance task.
     private void checkDistance(){
         this.timeTask = new BukkitRunnable(){
             int remainingTicks = timeLimitSeconds * 20; // Time left converted to ticks.
@@ -88,9 +90,29 @@ public class RunInstance {
             return;
         }
 
-        RunManager.registerBoss(boss.getUUID(),this);
+        RunManager.registerBossInstance(boss.getUUID(),this);
 
         boss.setPos(location.x(),location.y(),location.z());
         level.addFreshEntity(boss);
+    }
+
+    private void cleanupRun(boolean isVictory){
+
+    }
+
+    public void increaseDownedCount(UUID uuid){ this.downedCount.put(uuid, this.getDownedCount(uuid) + 1); }
+    public int getDownedCount(UUID uuid){ return this.downedCount.getOrDefault(uuid,0); }
+    public void clearDownedCount(){ this.downedCount.clear(); }
+
+    public void addReviveStand(UUID uuid){ this.reviveStands.add(uuid); }
+    public void removeReviveStand(UUID uuid){ this.reviveStands.remove(uuid); }
+
+    public void clearReviveStands(){
+        for(UUID uuid : reviveStands){
+            Entity stand = Bukkit.getEntity(uuid);
+
+            if(stand != null) stand.remove();
+        }
+        this.reviveStands.clear();
     }
 }

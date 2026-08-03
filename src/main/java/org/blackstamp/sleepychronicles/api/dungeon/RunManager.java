@@ -22,9 +22,9 @@ public class RunManager {
     private static final Map<UUID, RunInstance> ACTIVE_BOSSES = new HashMap<>();
     private static int runCounter = 0;
 
-    public static void registerBoss(UUID uuid, RunInstance run){ ACTIVE_BOSSES.put(uuid, run); }
-    public static RunInstance getBoss(UUID uuid){ return ACTIVE_BOSSES.get(uuid); }
-    public static void clearBoss(UUID uuid){ ACTIVE_BOSSES.remove(uuid); }
+    public static void addBossInstance(UUID uuid, RunInstance run){ ACTIVE_BOSSES.put(uuid, run); }
+    public static RunInstance getBossInstance(UUID uuid){ return ACTIVE_BOSSES.get(uuid); }
+    public static void clearBossInstance(UUID uuid){ ACTIVE_BOSSES.remove(uuid); }
 
     public static void createRun(SleepyParty party, DungeonType dungeon){
         runCounter++;

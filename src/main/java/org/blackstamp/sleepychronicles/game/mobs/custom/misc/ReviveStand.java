@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
+import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.player.PlayerManager;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.Bukkit;
@@ -29,16 +30,22 @@ public class ReviveStand extends ArmorStand {
             PotionEffectType.GLOWING
     };
 
+    private final UUID standUUID;
     private final UUID downedUUID;
     private final int requiredHits;
+    private final RunInstance run;
 
     private int currentHits = 0;
 
-    public ReviveStand(Level level, UUID downedUUID, int downedCount){
+    public ReviveStand(Level level, RunInstance run, UUID downedUUID){
         super(EntityType.ARMOR_STAND, level);
 
+        this.run = run;
+        this.standUUID = this.getUUID();
         this.downedUUID = downedUUID;
-        this.requiredHits = downedCount * 8;
+        this.requiredHits = this.run.getDownedCount(downedUUID) * 8;
+
+        this.run.addReviveStand(standUUID);
 
         this.registerAttributes();
         this.checkHits(this);
@@ -76,6 +83,7 @@ public class ReviveStand extends ArmorStand {
 
         if(this.currentHits >= this.requiredHits){
             this.revivePlayer(this.downedUUID);
+            this.run.removeReviveStand(this.standUUID);
             this.discard();
         }
     }
