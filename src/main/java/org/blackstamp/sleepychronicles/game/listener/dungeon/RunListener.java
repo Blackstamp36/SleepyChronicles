@@ -2,42 +2,27 @@ package org.blackstamp.sleepychronicles.game.listener.dungeon;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.minecraft.world.level.Level;
-import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
-import org.blackstamp.sleepychronicles.api.player.PlayerManager;
-import org.blackstamp.sleepychronicles.game.mobs.custom.misc.ReviveStand;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Pose;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
 
 @Registrable
 public class RunListener implements Listener {
-    private static final PotionEffect[] downedDebuff = {
-            new PotionEffect(PotionEffectType.SLOWNESS,PotionEffect.INFINITE_DURATION,4),
-            new PotionEffect(PotionEffectType.DARKNESS,PotionEffect.INFINITE_DURATION,0),
-            new PotionEffect(PotionEffectType.GLOWING,PotionEffect.INFINITE_DURATION,0)
-    };
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
@@ -69,7 +54,7 @@ public class RunListener implements Listener {
         SleepyParty party = PartyManager.getParty(uuid);
         RunInstance run = RunManager.getRunInstance(uuid);
 
-        this.setDowned(p,run);
+        RunManager.setDowned(p,run);
         this.checkForWipeCondition(run);
 
         e.setCancelled(true);
@@ -102,25 +87,6 @@ public class RunListener implements Listener {
 
     // Manager methods.
 
-    private void setDowned(Player p, RunInstance run){ // Execute downed logic..
-        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
-
-        PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
-
-        UUID uuid = p.getUniqueId();
-        Level level = ((CraftWorld) p.getLocation().getWorld()).getHandle();
-
-        run.increaseDownedCount(uuid);
-
-        ReviveStand reviveStand = new ReviveStand(level,run,uuid);
-
-        level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
-
-        ChatManager.sendWarning(p,"You've been downed!",null);
-        p.setPose(Pose.SLEEPING);
-        PlayerManager.addPots(p, downedDebuff);
-    }
-
     private void showVictory(RunInstance run){
         SleepyParty party = run.getParty();
 
@@ -131,7 +97,7 @@ public class RunListener implements Listener {
 
             if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ RunManager.revivePlayer(memberUUID); }
 
-            // TODO: tp to lobby
+            // TODO: tp to lobby!
         }
 
         run.cleanupRun(true);
@@ -154,6 +120,7 @@ public class RunListener implements Listener {
                 Player member = Bukkit.getPlayer(memberUUID);
 
                 if(member == null || !member.isOnline()) continue;
+                // TODO: tp to lobby!
             }
 
             run.cleanupRun(false);

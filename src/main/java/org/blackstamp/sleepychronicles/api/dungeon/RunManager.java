@@ -9,6 +9,7 @@ import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.blackstamp.sleepychronicles.api.player.PlayerManager;
+import org.blackstamp.sleepychronicles.game.mobs.custom.misc.ReviveStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -16,6 +17,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
@@ -31,10 +35,16 @@ public class RunManager {
     public static RunInstance getBossInstance(UUID uuid){ return ACTIVE_BOSSES.get(uuid); }
     public static void clearBossInstance(UUID uuid){ ACTIVE_BOSSES.remove(uuid); }
 
-    private static final PotionEffectType[] downedEffectTypes = {
+    private static final PotionEffectType[] DOWNED_DEBUFF_TYPES = {
             PotionEffectType.SLOWNESS,
             PotionEffectType.DARKNESS,
             PotionEffectType.GLOWING
+    };
+
+    private static final PotionEffect[] DOWNED_DEBUFF = {
+            new PotionEffect(PotionEffectType.SLOWNESS,PotionEffect.INFINITE_DURATION,4),
+            new PotionEffect(PotionEffectType.DARKNESS,PotionEffect.INFINITE_DURATION,0),
+            new PotionEffect(PotionEffectType.GLOWING,PotionEffect.INFINITE_DURATION,0)
     };
 
     public static void createRun(SleepyParty party, DungeonType dungeon){
@@ -106,10 +116,29 @@ public class RunManager {
         if(p == null || !p.isOnline()) return;
 
         PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
-        PlayerManager.clearPots(p,downedEffectTypes);
+        PlayerManager.clearPots(p, DOWNED_DEBUFF_TYPES);
 
         p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
         p.setPose(Pose.STANDING);
         ChatManager.sendWarning(p,"You've been revived!",null);
+    }
+
+    public static void setDowned(Player p, RunInstance run){ // Execute downed logic..
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
+
+        PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
+
+        UUID uuid = p.getUniqueId();
+        Level level = ((CraftWorld) p.getLocation().getWorld()).getHandle();
+
+        run.increaseDownedCount(uuid);
+
+        ReviveStand reviveStand = new ReviveStand(level,run,uuid);
+
+        level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
+
+        ChatManager.sendWarning(p,"You've been downed!",null);
+        p.setPose(Pose.SLEEPING);
+        PlayerManager.addPots(p, DOWNED_DEBUFF);
     }
 }
