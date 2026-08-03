@@ -119,12 +119,9 @@ public class RunInstance {
     public void increaseDownedCount(UUID uuid){ this.downedCount.put(uuid, this.getDownedCount(uuid) + 1); }
     public int getDownedCount(UUID uuid){ return this.downedCount.getOrDefault(uuid,0); }
 
-    public void addReviveStand(UUID uuid, UUID stand){ // TODO: assign revive stand upon being downed!
-        this.reviveStands.put(uuid,stand);
-    }
-    public void removeReviveStand(UUID uuid){
-        this.reviveStands.remove(uuid);
-    }
+    public void addReviveStand(UUID uuid, UUID stand){ this.reviveStands.put(uuid,stand); }
+    public UUID getReviveStand(UUID uuid){ return this.reviveStands.get(uuid); }
+    public void removeReviveStand(UUID uuid){ this.reviveStands.remove(uuid); }
 
     public void clearReviveStands(){
         for(UUID uuid : reviveStands.values()){

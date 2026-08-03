@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -42,7 +43,7 @@ public class RunManager {
     };
 
     private static final PotionEffect[] DOWNED_DEBUFF = {
-            new PotionEffect(PotionEffectType.SLOWNESS,PotionEffect.INFINITE_DURATION,4),
+            new PotionEffect(PotionEffectType.SLOWNESS,PotionEffect.INFINITE_DURATION,6),
             new PotionEffect(PotionEffectType.DARKNESS,PotionEffect.INFINITE_DURATION,0),
             new PotionEffect(PotionEffectType.GLOWING,PotionEffect.INFINITE_DURATION,0)
     };
@@ -76,7 +77,7 @@ public class RunManager {
 
         // TEST ONLY!!
         generateTestFloor(center);
-        spawnBoss(leader, config.bossId(), center);
+        spawnBoss(leader, dungeon.getConfig().bossId(), center);
     }
 
     public static RunInstance getRunInstance(UUID uuid){ return ACTIVE_RUNS.get(uuid); }
@@ -115,32 +116,40 @@ public class RunManager {
     }
 
     public static void revivePlayer(Player p, RunInstance run){
-
         if(p == null || !p.isOnline()) return;
+        if(run == null) return;
         if(!PersistentData.has(p,SleepyKeys.IS_DOWNED.get())) return;
+
+        UUID playerUUID = p.getUniqueId();
+        UUID reviveStandUUID = run.getReviveStand(playerUUID);
 
         PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
         PlayerManager.clearPots(p, DOWNED_DEBUFF_TYPES);
 
-        // Insert here RunInstance check for revive stand remains.
+        if(reviveStandUUID != null){
+            run.removeReviveStand(reviveStandUUID);
+
+            Entity standEntity = Bukkit.getEntity(reviveStandUUID);
+
+            if(standEntity != null){ standEntity.remove(); }
+        }
 
         p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
         p.setPose(Pose.STANDING);
         ChatManager.sendWarning(p,"You've been revived!",null);
     }
 
-    public static void setDowned(Player p, RunInstance run){ // Execute downed logic..
+    public static void setDowned(Player p, RunInstance run){
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
-
-        PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
 
         UUID uuid = p.getUniqueId();
         Level level = ((CraftWorld) p.getLocation().getWorld()).getHandle();
 
+        PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
         run.increaseDownedCount(uuid);
 
         ReviveStand reviveStand = new ReviveStand(level,run,uuid);
-
+        reviveStand.setPos(p.getX(),p.getY(),p.getZ());
         level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
         ChatManager.sendWarning(p,"You've been downed!",null);

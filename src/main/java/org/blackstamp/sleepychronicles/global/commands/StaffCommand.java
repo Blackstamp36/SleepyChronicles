@@ -16,7 +16,7 @@ import org.blackstamp.sleepychronicles.api.inventory.menu.trinkets.TrinketBag;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem.TotemManager;
-import org.blackstamp.sleepychronicles.game.world.dimensions.WorldUtils;
+import org.blackstamp.sleepychronicles.game.world.dimensions.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -82,7 +82,7 @@ public class StaffCommand extends BaseCommand {
     }
 
     @Subcommand("teleport")
-    public void teleport(CommandSender sender, @NotNull WorldUtils world){
+    public void teleport(CommandSender sender, @NotNull WorldManager world){
         if(!(sender instanceof Player p)) return;
 
         p.teleport(world.getLocation());
@@ -188,6 +188,18 @@ public class StaffCommand extends BaseCommand {
             return;
         }
 
-        RunManager.revivePlayer(p);
+        RunManager.revivePlayer(p,run);
+    }
+
+    @Subcommand("reset")
+    public void reset(CommandSender sender){
+        if(!(sender instanceof Player p)) return;
+
+        p.clearActivePotionEffects();
+        PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
+        PersistentData.remove(p, SleepyKeys.TOTEMS.get());
+        PersistentData.remove(p, SleepyKeys.TRINKETS_INV.get());
+
+        ChatManager.sendStaffMessage(p,"Resetting all PDCs..");
     }
 }

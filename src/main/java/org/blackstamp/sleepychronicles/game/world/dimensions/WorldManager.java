@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import java.util.Objects;
 
 @Getter
-public enum WorldUtils {
+public enum WorldManager {
 
     OVERWORLD(Objects.requireNonNull(Bukkit.getWorld("world")).getSpawnLocation()),
     NETHER(Objects.requireNonNull(Bukkit.getWorld("world_nether")).getSpawnLocation()),
@@ -16,5 +16,5 @@ public enum WorldUtils {
 
     private final Location location;
 
-    WorldUtils(Location location) { this.location = location; }
+    WorldManager(Location location) { this.location = location; }
 }

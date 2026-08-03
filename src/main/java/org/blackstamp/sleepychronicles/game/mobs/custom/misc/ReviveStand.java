@@ -34,7 +34,7 @@ public class ReviveStand extends ArmorStand {
         this.downedUUID = downedUUID;
         this.requiredHits = this.run.getDownedCount(downedUUID) * 8;
 
-        this.run.addReviveStand(standUUID);
+        this.run.addReviveStand(downedUUID, standUUID);
 
         this.registerAttributes();
         this.checkHits(this);
@@ -58,8 +58,7 @@ public class ReviveStand extends ArmorStand {
         entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits,"#00000"));
 
         if(this.currentHits >= this.requiredHits){
-            RunManager.revivePlayer(this.downedUUID);
-            this.run.removeReviveStand(this.standUUID);
+            RunManager.revivePlayer(this.downedUUID, this.run);
             this.discard();
         }
     }
