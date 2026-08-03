@@ -112,8 +112,14 @@ public class RunManager {
 
     public static void revivePlayer(UUID uuid){
         Player p = Bukkit.getPlayer(uuid);
+        revivePlayer(p);
+    }
+
+    public static void revivePlayer(Player p){
+
 
         if(p == null || !p.isOnline()) return;
+        if(!PersistentData.has(p,SleepyKeys.IS_DOWNED.get())) return;
 
         PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
         PlayerManager.clearPots(p, DOWNED_DEBUFF_TYPES);

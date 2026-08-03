@@ -95,7 +95,7 @@ public class RunListener implements Listener {
 
             if(member == null || !member.isOnline()) continue;
 
-            if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ RunManager.revivePlayer(memberUUID); }
+            if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ RunManager.revivePlayer(member); }
 
             // TODO: tp to lobby!
         }

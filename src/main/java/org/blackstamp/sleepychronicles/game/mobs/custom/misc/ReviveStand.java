@@ -75,6 +75,7 @@ public class ReviveStand extends ArmorStand {
     private void registerAttributes(){
         this.setInvulnerable(true);
         this.setSilent(true);
+        this.setCustomNameVisible(true);
 
         // Revive Stand settings.
         this.setInvisible(true);

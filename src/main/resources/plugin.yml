@@ -15,3 +15,9 @@ commands:
   sc:
   staff:
 
+permissions:
+  admin_privilege:
+    description: ""
+    default: op
+
+

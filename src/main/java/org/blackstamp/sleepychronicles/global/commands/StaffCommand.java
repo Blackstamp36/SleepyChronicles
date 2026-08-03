@@ -9,6 +9,8 @@ import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
+import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
+import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.inventory.menu.ItemArchive;
 import org.blackstamp.sleepychronicles.api.inventory.menu.trinkets.TrinketBag;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
@@ -23,8 +25,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 // todo: add staff-only permission
 @CommandAlias("staff")
+@CommandPermission("admin_privilege")
 public class StaffCommand extends BaseCommand {
 
     @Subcommand("give")
@@ -116,12 +121,12 @@ public class StaffCommand extends BaseCommand {
         new TrinketBag(p, p.getName()).open();
     }
 
-    @Subcommand("reset")
-    public void reset(CommandSender sender){
+    @Subcommand("trinkets reset")
+    public void resetTrinkets(CommandSender sender){
         if(!(sender instanceof Player p)) return;
 
         PersistentData.remove(p, SleepyKeys.TRINKETS_INV.get());
-        ChatManager.sendStaffMessage(p, "Resetting PersistentData...");
+        ChatManager.sendStaffMessage(p, "Removing PersistentData...");
     }
 
     @Subcommand("set totems")
@@ -151,5 +156,37 @@ public class StaffCommand extends BaseCommand {
         String green = BasicPalette.GREEN.getColor();
 
         ChatManager.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
+    }
+
+    @Subcommand("set downed")
+    public void down(CommandSender sender){
+        if(!(sender instanceof Player p)) return;
+
+        UUID uuid = p.getUniqueId();
+
+        RunInstance run = RunManager.getRunInstance(uuid);
+
+        if(run == null){
+            ChatManager.sendStaffMessage(p,"You're not currently in a run!");
+            return;
+        }
+
+        RunManager.setDowned(p,run);
+    }
+
+    @Subcommand("revive")
+    public void revive(CommandSender sender){
+        if(!(sender instanceof Player p)) return;
+
+        UUID uuid = p.getUniqueId();
+
+        RunInstance run = RunManager.getRunInstance(uuid);
+
+        if(run == null){
+            ChatManager.sendStaffMessage(p,"You're not currently in a run!");
+            return;
+        }
+
+        RunManager.revivePlayer(p);
     }
 }
