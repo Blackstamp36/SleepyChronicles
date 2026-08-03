@@ -6,6 +6,7 @@ import net.kyori.adventure.sound.Sound;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
+import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
@@ -20,7 +21,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
@@ -59,7 +59,7 @@ public class RunListener implements Listener {
 
         RunInstance run = RunManager.getRunInstance(uuid);
 
-        RunManager.setDowned(p,run);
+        ReviveManager.setDowned(p,run);
         this.checkForWipeCondition(run);
     }
 
@@ -114,7 +114,7 @@ public class RunListener implements Listener {
 
             if(member == null || !member.isOnline()) continue;
 
-            if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ RunManager.revivePlayer(member,run); }
+            if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ ReviveManager.revivePlayer(member,run); }
 
             // TODO: tp to lobby!
         }
@@ -139,7 +139,7 @@ public class RunListener implements Listener {
                 Player member = Bukkit.getPlayer(memberUUID);
 
                 if(member == null || !member.isOnline()) continue;
-                if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ RunManager.revivePlayer(member,run); }
+                if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ ReviveManager.revivePlayer(member,run); }
 
                 member.teleport(WorldManager.OVERWORLD.getLocation());
                 ChatManager.sendMessage(member,false,"Suddenly, you seem to awake in the middle of confusion. Was it a dream..?");

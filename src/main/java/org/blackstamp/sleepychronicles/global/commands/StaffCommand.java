@@ -9,11 +9,13 @@ import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.data.days.DayManager;
+import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.inventory.menu.ItemArchive;
 import org.blackstamp.sleepychronicles.api.inventory.menu.trinkets.TrinketBag;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
+import org.blackstamp.sleepychronicles.api.mobs.DownedClone;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem.TotemManager;
 import org.blackstamp.sleepychronicles.game.world.dimensions.WorldManager;
@@ -172,11 +174,11 @@ public class StaffCommand extends BaseCommand {
             return;
         }
 
-        RunManager.setDowned(p,run);
+        ReviveManager.setDowned(p,run);
     }
 
     @Subcommand("revive")
-    public void revive(CommandSender sender){
+    public void revive(CommandSender sender){ // TODO: create a Map<UUID, DownedClone> and then delete the remains on the cleanupRun() method!
         if(!(sender instanceof Player p)) return;
 
         UUID uuid = p.getUniqueId();
@@ -188,7 +190,7 @@ public class StaffCommand extends BaseCommand {
             return;
         }
 
-        RunManager.revivePlayer(p,run);
+        ReviveManager.revivePlayer(p,run);
     }
 
     @Subcommand("reset")
@@ -201,5 +203,15 @@ public class StaffCommand extends BaseCommand {
         PersistentData.remove(p, SleepyKeys.TRINKETS_INV.get());
 
         ChatManager.sendStaffMessage(p,"Resetting all PDCs..");
+    }
+
+    @Subcommand("clone")
+    public void clone(CommandSender sender){
+        if(!(sender instanceof Player p)) return;
+
+        DownedClone clone = new DownedClone(p,p.getLocation());
+
+        clone.showTo(p);
+        ChatManager.sendStaffMessage(p,"Summoned Fake Downed!");
     }
 }
