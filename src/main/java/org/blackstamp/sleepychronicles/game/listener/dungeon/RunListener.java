@@ -67,10 +67,10 @@ public class RunListener implements Listener {
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
 
         SleepyParty party = PartyManager.getParty(uuid);
-        RunInstance run = RunManager.getRun(uuid);
+        RunInstance run = RunManager.getRunInstance(uuid);
 
         this.setDowned(p,run);
-        this.checkForWipeCondition(party,run);
+        this.checkForWipeCondition(run);
 
         e.setCancelled(true);
     }
@@ -84,9 +84,7 @@ public class RunListener implements Listener {
         if(run == null) return;
 
         // If we reach here, it means that the run is active and valid!
-        SleepyParty party = run.getParty();
-
-        this.showVictory(party);
+        this.showVictory(run);
     }
 
     @EventHandler
@@ -94,7 +92,7 @@ public class RunListener implements Listener {
         Player p = e.getPlayer();
         UUID uuid = p.getUniqueId();
 
-        RunInstance run = RunManager.getRun(uuid);
+        RunInstance run = RunManager.getRunInstance(uuid);
 
         if(run == null) return;
 
@@ -123,11 +121,24 @@ public class RunListener implements Listener {
         PlayerManager.addPots(p, downedDebuff);
     }
 
-    private void showVictory(SleepyParty party){ // Execute victory logic..
+    private void showVictory(RunInstance run){
+        SleepyParty party = run.getParty();
 
+        for(UUID memberUUID : party.getMembers()){
+            Player member = Bukkit.getPlayer(memberUUID);
+
+            if(member == null || !member.isOnline()) continue;
+
+            if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ RunManager.revivePlayer(memberUUID); }
+
+            // TODO: tp to lobby
+        }
+
+        run.cleanupRun(true);
     }
 
-    private void checkForWipeCondition(SleepyParty party, RunInstance run){
+    private void checkForWipeCondition(RunInstance run){
+        SleepyParty party = run.getParty();
         int downedPlayers = 0;
 
         for(UUID memberUUID : party.getMembers()){
@@ -138,16 +149,14 @@ public class RunListener implements Listener {
             }
         }
 
-        if(downedPlayers >= party.getMembers().size()){ // Do wiped logic.
-            for(UUID memberUUID : party.getMembers()){
+        if(downedPlayers >= party.getMembers().size()){
+            for(UUID memberUUID : party.getMembers()){ // Show wiped message.
                 Player member = Bukkit.getPlayer(memberUUID);
 
                 if(member == null || !member.isOnline()) continue;
-
-
             }
 
-            // Maybe to get the boss, I can register its UUID on the RunInstance? And then I get it from there?
+            run.cleanupRun(false);
         }
     }
 }

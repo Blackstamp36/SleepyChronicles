@@ -3,15 +3,20 @@ package org.blackstamp.sleepychronicles.api.dungeon;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
+import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
+import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
+import org.blackstamp.sleepychronicles.api.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Pose;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +30,12 @@ public class RunManager {
     public static void addBossInstance(UUID uuid, RunInstance run){ ACTIVE_BOSSES.put(uuid, run); }
     public static RunInstance getBossInstance(UUID uuid){ return ACTIVE_BOSSES.get(uuid); }
     public static void clearBossInstance(UUID uuid){ ACTIVE_BOSSES.remove(uuid); }
+
+    private static final PotionEffectType[] downedEffectTypes = {
+            PotionEffectType.SLOWNESS,
+            PotionEffectType.DARKNESS,
+            PotionEffectType.GLOWING
+    };
 
     public static void createRun(SleepyParty party, DungeonType dungeon){
         runCounter++;
@@ -59,7 +70,8 @@ public class RunManager {
         spawnBoss(leader, config.bossId(), center);
     }
 
-    public static RunInstance getRun(UUID uuid){ return ACTIVE_RUNS.get(uuid); }
+    public static RunInstance getRunInstance(UUID uuid){ return ACTIVE_RUNS.get(uuid); }
+    public static void removeRunInstance(UUID uuid){ ACTIVE_RUNS.remove(uuid); }
     public static boolean isInRun(UUID uuid){ return ACTIVE_RUNS.containsKey(uuid); }
 
     private static void generateTestFloor(Location center){
@@ -86,5 +98,18 @@ public class RunManager {
         level.addFreshEntity(entity);
 
         ChatManager.sendStaffMessage(p, "Summoning boss..");
+    }
+
+    public static void revivePlayer(UUID uuid){
+        Player p = Bukkit.getPlayer(uuid);
+
+        if(p == null || !p.isOnline()) return;
+
+        PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
+        PlayerManager.clearPots(p,downedEffectTypes);
+
+        p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
+        p.setPose(Pose.STANDING);
+        ChatManager.sendWarning(p,"You've been revived!",null);
     }
 }

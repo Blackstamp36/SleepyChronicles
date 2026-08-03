@@ -22,7 +22,9 @@ import java.util.*;
 public class RunInstance {
     @Getter public final SleepyParty party;
 
-    @Getter public BukkitTask timeTask = null;
+    public BukkitTask timeTask = null;
+
+    private UUID bossUUID = null;
 
     private final String bossID;
     private final Location center;
@@ -90,19 +92,32 @@ public class RunInstance {
             return;
         }
 
-        RunManager.registerBossInstance(boss.getUUID(),this);
+        UUID bossUUID = boss.getUUID();
+
+        RunManager.addBossInstance(bossUUID,this);
+        this.bossUUID = bossUUID;
 
         boss.setPos(location.x(),location.y(),location.z());
         level.addFreshEntity(boss);
     }
 
-    private void cleanupRun(boolean isVictory){
+    public void cleanupRun(boolean isVictory){
+        if(this.timeTask != null && !this.timeTask.isCancelled()){ this.timeTask.cancel(); }
 
+        this.clearReviveStands();
+
+        if(this.bossUUID != null && isVictory){
+            Entity boss = Bukkit.getEntity(this.bossUUID);
+
+            if(boss != null) boss.remove();
+        }
+
+        RunManager.clearBossInstance(this.bossUUID);
+        for(UUID member : this.party.getMembers()){ RunManager.removeRunInstance(member); }
     }
 
     public void increaseDownedCount(UUID uuid){ this.downedCount.put(uuid, this.getDownedCount(uuid) + 1); }
     public int getDownedCount(UUID uuid){ return this.downedCount.getOrDefault(uuid,0); }
-    public void clearDownedCount(){ this.downedCount.clear(); }
 
     public void addReviveStand(UUID uuid){ this.reviveStands.add(uuid); }
     public void removeReviveStand(UUID uuid){ this.reviveStands.remove(uuid); }
