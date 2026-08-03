@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
@@ -21,17 +22,15 @@ import java.util.UUID;
 
 public class DownedClone {
 
-    private final UUID originalUUID;
     private final GameProfile fakeProfile;
     private final ServerPlayer fakePlayer;
     private final BlockPos location;
 
-    public DownedClone(Player clonedPlayer, Location location){
+    public DownedClone(Player clonedPlayer, Location location){ // TODO: view how to modify the position of the clone!
         ServerLevel level = ((CraftWorld) location.getWorld()).getHandle();
         ServerPlayer nmsOriginal = ((CraftPlayer) clonedPlayer).getHandle();
         GameProfile originalProfile = nmsOriginal.getGameProfile();
 
-        this.originalUUID = clonedPlayer.getUniqueId();
         this.location = new BlockPos(location.getBlockX(),location.getBlockY(),location.getBlockZ());
         this.fakeProfile = new GameProfile(UUID.randomUUID(), clonedPlayer.getName());
         this.fakeProfile.getProperties().putAll(originalProfile.getProperties());
@@ -47,10 +46,26 @@ public class DownedClone {
     public void showTo(Player p){
         ServerPlayer nmsPlayer = ((org.bukkit.craftbukkit.entity.CraftPlayer) p).getHandle();
 
-        // Packets.
-        ClientboundPlayerInfoUpdatePacket infoUpdatePacket = ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(
-                Collections.singleton(this.fakePlayer)
+        ClientboundPlayerInfoUpdatePacket.Entry fakeEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
+                this.fakePlayer.getUUID(),
+                this.fakeProfile,
+                true,
+                0,
+                GameType.SURVIVAL,
+                null,
+                false,
+                0,
+                null
         );
+
+        ClientboundPlayerInfoUpdatePacket infoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(
+                java.util.EnumSet.of(
+                        ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER,
+                        ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED
+                ),
+                Collections.singletonList(fakeEntry)
+        );
+
         ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(
                 this.fakePlayer.getId(), this.fakePlayer.getUUID(),
                 this.fakePlayer.getX(), this.fakePlayer.getY(), this.fakePlayer.getZ(),

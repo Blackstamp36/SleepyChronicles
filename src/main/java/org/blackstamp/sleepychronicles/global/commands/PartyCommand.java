@@ -133,8 +133,8 @@ public class PartyCommand extends BaseCommand {
             return;
         }
 
-        PartyManager.removeParty(party);
         party.disbandParty();
+        PartyManager.removeParty(party);
         ChatManager.sendMessage(p, false,"Party disbanded!");
     }
 

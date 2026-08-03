@@ -178,7 +178,7 @@ public class StaffCommand extends BaseCommand {
     }
 
     @Subcommand("revive")
-    public void revive(CommandSender sender){ // TODO: create a Map<UUID, DownedClone> and then delete the remains on the cleanupRun() method!
+    public void revive(CommandSender sender){
         if(!(sender instanceof Player p)) return;
 
         UUID uuid = p.getUniqueId();
@@ -212,6 +212,6 @@ public class StaffCommand extends BaseCommand {
         DownedClone clone = new DownedClone(p,p.getLocation());
 
         clone.showTo(p);
-        ChatManager.sendStaffMessage(p,"Summoned Fake Downed!");
+        ChatManager.sendStaffMessage(p,"Summoned Fake Clone!");
     }
 }

@@ -3,25 +3,14 @@ package org.blackstamp.sleepychronicles.api.dungeon;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
-import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
-import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
-import org.blackstamp.sleepychronicles.api.player.PlayerManager;
-import org.blackstamp.sleepychronicles.game.mobs.custom.misc.ReviveStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Pose;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +59,7 @@ public class RunManager {
 
     public static RunInstance getRunInstance(UUID uuid){ return ACTIVE_RUNS.get(uuid); }
     public static void removeRunInstance(UUID uuid){ ACTIVE_RUNS.remove(uuid); }
-    public static boolean isInRun(UUID uuid){ return ACTIVE_RUNS.containsKey(uuid); }
+    public static boolean isNotInRun(UUID uuid){ return !ACTIVE_RUNS.containsKey(uuid); }
 
     private static void generateTestFloor(Location center){
         Location floor = center.clone().subtract(0, 1, 0);

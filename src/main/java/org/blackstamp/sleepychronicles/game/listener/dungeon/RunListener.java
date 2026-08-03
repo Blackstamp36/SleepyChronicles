@@ -32,7 +32,7 @@ public class RunListener implements Listener {
     public void onBlockBreak(BlockBreakEvent e){
         Player p = e.getPlayer();
 
-        if(!RunManager.isInRun(p.getUniqueId())) return;
+        if(RunManager.isNotInRun(p.getUniqueId())) return;
 
         p.playSound(Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 0.25F));
         e.setCancelled(true);
@@ -44,7 +44,7 @@ public class RunListener implements Listener {
 
         UUID uuid = p.getUniqueId();
 
-        if(!RunManager.isInRun(uuid)) return;
+        if(RunManager.isNotInRun(uuid)) return;
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())){
             e.setCancelled(true);
             return;
@@ -100,8 +100,12 @@ public class RunListener implements Listener {
 
         if(run == null) return;
 
-        // Check also if the entire party is empty.
-        // If it is, then remove all remains of the run so it doesn't consume memory.
+        SleepyParty party = run.getParty();
+
+        party.removeMember(uuid);
+        RunManager.removeRunInstance(uuid);
+
+        if(party.getMembers().isEmpty()){ run.cleanupRun(false); }
     }
 
     // Manager methods.

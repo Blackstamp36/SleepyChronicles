@@ -19,7 +19,6 @@ import java.util.UUID;
 
 public class ReviveStand extends ArmorStand {
 
-    private final UUID standUUID;
     private final UUID downedUUID;
     private final int requiredHits;
     private final RunInstance run;
@@ -30,11 +29,8 @@ public class ReviveStand extends ArmorStand {
         super(EntityType.ARMOR_STAND, level);
 
         this.run = run;
-        this.standUUID = this.getUUID();
         this.downedUUID = downedUUID;
         this.requiredHits = this.run.getDownedCount(downedUUID) * 8;
-
-        this.run.addReviveStand(downedUUID, standUUID);
 
         this.registerAttributes();
         this.checkHits(this);
@@ -46,7 +42,7 @@ public class ReviveStand extends ArmorStand {
 
         if(!(source.getEntity() instanceof Player attacker)) return false;
         if(PersistentData.has(attacker,SleepyKeys.IS_DOWNED.get())) return false;
-        if(!attacker.getUniqueId().equals(downedUUID)) return false;
+        if(attacker.getUniqueId().equals(downedUUID)) return false;
 
         this.currentHits++;
         this.checkHits(this);
@@ -72,7 +68,6 @@ public class ReviveStand extends ArmorStand {
     }
 
     private void registerAttributes(){
-        this.setInvulnerable(true);
         this.setSilent(true);
         this.setCustomNameVisible(true);
 

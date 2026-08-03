@@ -10,6 +10,7 @@ import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.api.mobs.clone.DownedClone;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
+import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -123,7 +124,12 @@ public class RunInstance {
         }
 
         RunManager.clearBossInstance(this.bossUUID);
-        for(UUID member : this.party.getMembers()){ RunManager.removeRunInstance(member); }
+
+        for(UUID memberUUID : this.party.getMembers()){
+            if(memberUUID == null) continue;
+
+            RunManager.removeRunInstance(memberUUID);
+        }
     }
 
     // Downed Counts.
@@ -137,7 +143,6 @@ public class RunInstance {
     public void addReviveStand(UUID uuid, UUID stand){ this.reviveStands.put(uuid,stand); }
     public UUID getReviveStand(UUID uuid){ return this.reviveStands.get(uuid); }
     public void removeReviveStand(UUID uuid){ this.reviveStands.remove(uuid); }
-
     public void clearReviveStands(){
         for(UUID uuid : reviveStands.values()){
 
@@ -153,6 +158,7 @@ public class RunInstance {
 
     // Downed Clones.
     public void addDownedClone(UUID uuid, DownedClone clone){ this.downedClones.put(uuid,clone); }
+    public DownedClone getDownedClone(UUID uuid){ return this.downedClones.get(uuid); }
     public void removeDownedClone(UUID uuid){ this.downedClones.remove(uuid); }
     public void clearDownedClones(){
         for(DownedClone clone : downedClones.values()){
