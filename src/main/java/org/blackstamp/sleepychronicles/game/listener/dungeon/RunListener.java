@@ -2,7 +2,6 @@ package org.blackstamp.sleepychronicles.game.listener.dungeon;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
@@ -13,14 +12,12 @@ import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.blackstamp.sleepychronicles.api.player.PlayerManager;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -67,7 +64,7 @@ public class RunListener implements Listener {
 
         SleepyParty party = PartyManager.getParty(uuid);
 
-        this.applyDowned(p);
+        this.setDowned(p);
         this.checkForWipeCondition(party);
 
         e.setCancelled(true);
@@ -100,45 +97,9 @@ public class RunListener implements Listener {
         // If it is, then remove all remains of the run so it doesn't consume memory.
     }
 
-    private void showVictory(SleepyParty party){ // Execute victory logic..
-
-    }
-
-    @EventHandler
-    public void onDamageToRevive(EntityDamageByEntityEvent e){
-        Entity damaged = e.getEntity();
-
-        if(!(e.getDamager() instanceof Player p)) return;
-        if(!PersistentData.has(damaged,SleepyKeys.IS_REVIVE_STAND.get())) return;
-
-        e.setCancelled(true);
-
-        if(PersistentData.has(p,SleepyKeys.IS_DOWNED.get())) return;
-
-        // We assume that, in effect, it has the required keys.
-        int currentHits = PersistentData.get(damaged,SleepyKeys.REVIVE_HITS_CURRENT.get(), PersistentDataType.INTEGER);
-        int hitsRequired = PersistentData.get(damaged,SleepyKeys.REVIVE_HITS_REQUIRED.get(), PersistentDataType.INTEGER);
-
-        int futureHits = currentHits + 1;
-
-        PersistentData.set(damaged,SleepyKeys.REVIVE_HITS_CURRENT.get(),PersistentDataType.INTEGER, futureHits);
-
-        if(futureHits >= hitsRequired){
-            String revivedUUID = PersistentData.get(damaged,SleepyKeys.DOWNED_UUID.get(), PersistentDataType.STRING);
-
-            Player revivedPlayer = Bukkit.getPlayer(revivedUUID);
-
-            if(revivedPlayer == null || !revivedPlayer.isOnline()) return;
-
-            revivePlayer(revivedPlayer);
-        }
-
-        damaged.customName(Component.text(futureHits + "/" + hitsRequired));
-    }
-
     // Manager methods.
 
-    private void applyDowned(Player p){ // Execute downed logic..
+    private void setDowned(Player p){ // Execute downed logic..
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
 
         PersistentData.set(p, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
@@ -152,16 +113,8 @@ public class RunListener implements Listener {
         PlayerManager.addPots(p, downedDebuff);
     }
 
-    private void revivePlayer(Player p){ // Execute revive logic..
-        if(!PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
+    private void showVictory(SleepyParty party){ // Execute victory logic..
 
-        PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
-        PlayerManager.clearPots(p,downedEffectTypes);
-
-        // All players have health, so we assume that the output won't be null.
-        p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
-
-        ChatManager.sendWarning(p,"You've been revived!",null);
     }
 
     private void checkForWipeCondition(SleepyParty party){
