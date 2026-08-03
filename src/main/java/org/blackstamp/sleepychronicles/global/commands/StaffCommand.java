@@ -15,7 +15,7 @@ import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.inventory.menu.ItemArchive;
 import org.blackstamp.sleepychronicles.api.inventory.menu.trinkets.TrinketBag;
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
-import org.blackstamp.sleepychronicles.api.mobs.DownedClone;
+import org.blackstamp.sleepychronicles.api.mobs.clone.DownedClone;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem.TotemManager;
 import org.blackstamp.sleepychronicles.game.world.dimensions.WorldManager;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-// todo: add staff-only permission
+// todo: TEST THE staff-only permission
 @CommandAlias("staff")
 @CommandPermission("admin_privilege")
 public class StaffCommand extends BaseCommand {

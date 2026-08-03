@@ -1,12 +1,14 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
+import org.blackstamp.sleepychronicles.api.mobs.clone.DownedClone;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
@@ -30,10 +32,12 @@ public class RunInstance {
     private final Location center;
     private final double radius;
     private final int timeLimitSeconds;
-    private RunState state = RunState.SCAVENGE;
+
+    @Getter @Setter private RunState state = RunState.SCAVENGE;
 
     private final Map<UUID,UUID> reviveStands = new HashMap<>();
     private final Map<UUID,Integer> downedCount = new HashMap<>();
+    private final Map<UUID,DownedClone> downedClones = new HashMap<>();
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 
@@ -52,11 +56,15 @@ public class RunInstance {
     // Distance task.
     private void checkDistance(){
         this.timeTask = new BukkitRunnable(){
-            int remainingTicks = timeLimitSeconds * 20; // Time left converted to ticks.
+            int remainingTicks = timeLimitSeconds; // Time left in.. seconds..
             final double radiusSquared = radius * radius;
 
             @Override
             public void run(){
+                if(state == RunState.VICTORY || state == RunState.DEFEAT){
+                    this.cancel();
+                    return;
+                }
                 if(remainingTicks > 0) remainingTicks--;
                 if(remainingTicks <= 0 && state == RunState.SCAVENGE){
                     spawnBossPortal(center);
@@ -104,7 +112,9 @@ public class RunInstance {
     public void cleanupRun(boolean isVictory){
         if(this.timeTask != null && !this.timeTask.isCancelled()){ this.timeTask.cancel(); }
 
+        this.clearDownedCounts();
         this.clearReviveStands();
+        this.clearDownedClones();
 
         if(this.bossUUID != null && isVictory){
             Entity boss = Bukkit.getEntity(this.bossUUID);
@@ -116,15 +126,23 @@ public class RunInstance {
         for(UUID member : this.party.getMembers()){ RunManager.removeRunInstance(member); }
     }
 
+    // Downed Counts.
     public void increaseDownedCount(UUID uuid){ this.downedCount.put(uuid, this.getDownedCount(uuid) + 1); }
     public int getDownedCount(UUID uuid){ return this.downedCount.getOrDefault(uuid,0); }
+    public void clearDownedCounts(){
+        this.downedClones.clear();
+    }
 
+    // Revive Stands.
     public void addReviveStand(UUID uuid, UUID stand){ this.reviveStands.put(uuid,stand); }
     public UUID getReviveStand(UUID uuid){ return this.reviveStands.get(uuid); }
     public void removeReviveStand(UUID uuid){ this.reviveStands.remove(uuid); }
 
     public void clearReviveStands(){
         for(UUID uuid : reviveStands.values()){
+
+            if(uuid == null) return;
+
             Entity stand = Bukkit.getEntity(uuid);
 
             if(stand != null) stand.remove();
@@ -132,4 +150,26 @@ public class RunInstance {
 
         this.reviveStands.clear();
     }
+
+    // Downed Clones.
+    public void addDownedClone(UUID uuid, DownedClone clone){ this.downedClones.put(uuid,clone); }
+    public void removeDownedClone(UUID uuid){ this.downedClones.remove(uuid); }
+    public void clearDownedClones(){
+        for(DownedClone clone : downedClones.values()){
+
+            if(clone == null) continue;
+
+            for(UUID memberUUID : party.getMembers()){
+                Player memberPlayer = Bukkit.getPlayer(memberUUID);
+
+                if(memberPlayer == null || !memberPlayer.isOnline()) continue;
+
+                clone.unseeFrom(memberPlayer);
+            }
+        }
+
+        this.downedClones.clear();
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package org.blackstamp.sleepychronicles.api.mobs;
+package org.blackstamp.sleepychronicles.api.mobs.clone;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
+import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -32,10 +33,8 @@ public class DownedClone {
 
         this.originalUUID = clonedPlayer.getUniqueId();
         this.location = new BlockPos(location.getBlockX(),location.getBlockY(),location.getBlockZ());
-
         this.fakeProfile = new GameProfile(UUID.randomUUID(), clonedPlayer.getName());
         this.fakeProfile.getProperties().putAll(originalProfile.getProperties());
-
         this.fakePlayer = new ServerPlayer(level.getServer(), level, this.fakeProfile, nmsOriginal.clientInformation());
 
         this.fakePlayer.setPos(location.x(),location.y(),location.z());
@@ -62,12 +61,21 @@ public class DownedClone {
                 this.fakePlayer.getYHeadRot()
         );
 
+        ClientboundSetEntityDataPacket dataPacket = new ClientboundSetEntityDataPacket(
+                this.fakePlayer.getId(),
+                this.fakePlayer.getEntityData().getNonDefaultValues()
+        );
+
         nmsPlayer.connection.send(infoUpdatePacket);
 
-        Bukkit.getScheduler().runTaskLater(SleepyChronicles.getInstance(), () ->
-                nmsPlayer.connection.send(addEntityPacket), 5);
+        Bukkit.getScheduler().runTaskLater(SleepyChronicles.getInstance(), () -> {
+            nmsPlayer.connection.send(addEntityPacket);
+            nmsPlayer.connection.send(dataPacket);
+        }, 5);
+
     }
-    public void hideFrom(Player p){ // WIP
+
+    public void unseeFrom(Player p){
         ServerPlayer nmsPlayer = ((org.bukkit.craftbukkit.entity.CraftPlayer) p).getHandle();
 
         ClientboundPlayerInfoRemovePacket infoRemovePacket = new ClientboundPlayerInfoRemovePacket(

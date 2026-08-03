@@ -10,8 +10,8 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
+import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
-import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.entity.Player;
 
@@ -58,7 +58,7 @@ public class ReviveStand extends ArmorStand {
         entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits,"#00000"));
 
         if(this.currentHits >= this.requiredHits){
-            RunManager.revivePlayer(this.downedUUID, this.run);
+            ReviveManager.revivePlayer(this.downedUUID, this.run);
             this.discard();
         }
     }
