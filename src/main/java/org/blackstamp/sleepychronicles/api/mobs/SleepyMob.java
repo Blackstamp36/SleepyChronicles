@@ -85,7 +85,6 @@ public class SleepyMob extends Mob {
 
     public String getPersistentData(NamespacedKey key){ return PersistentData.get(this.sleepyBukkitWrapper, key, PersistentDataType.STRING); }
 
-
     public void setAttribute(@NotNull Holder<Attribute> attribute, @NotNull Double value){
         this.getAttribute(attribute).setBaseValue(value);
     }

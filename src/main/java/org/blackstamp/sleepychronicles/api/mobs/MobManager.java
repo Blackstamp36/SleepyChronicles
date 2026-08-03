@@ -20,7 +20,7 @@ public class MobManager {
 
     static{
         for(SleepyMobs mob : SleepyMobs.values()){ MOB_REGISTRY.put(mob.getId(),SleepyMobs.getMob(mob.getId())); }
-        for(SleepyBosses boss : SleepyBosses.values()){ MOB_REGISTRY.put(boss.getId(),SleepyMobs.getMob(boss.getId())); }
+        for(SleepyBosses boss : SleepyBosses.values()){ MOB_REGISTRY.put(boss.getId(),SleepyBosses.getMob(boss.getId())); }
         for(SleepyNPCs npc : SleepyNPCs.values()){ MOB_REGISTRY.put(npc.getId(),SleepyNPCs.getMob(npc.getId())); }
     }
 
@@ -28,8 +28,6 @@ public class MobManager {
 
     public static @Nullable Mob instantiate(String id, Level level){
         Function<Level,? extends Mob> mob = MOB_REGISTRY.get(id);
-
-        if(mob == null) return null;
 
         Mob nmsMob = mob.apply(level);
 

@@ -52,8 +52,7 @@ public class RunManager {
 
         Location center = new Location(Bukkit.getWorld("world_aftermath"), 1000 * runCounter, 100, 0);
 
-        DungeonConfig config = dungeon.getConfig();
-        RunInstance run = new RunInstance(party,dungeon);
+        RunInstance run = new RunInstance(party,dungeon,center);
 
         Player leader = Bukkit.getPlayer(party.getLeader());
 
@@ -110,19 +109,20 @@ public class RunManager {
         ChatManager.sendStaffMessage(p, "Summoning boss..");
     }
 
-    public static void revivePlayer(UUID uuid){
+    public static void revivePlayer(UUID uuid, RunInstance run){
         Player p = Bukkit.getPlayer(uuid);
-        revivePlayer(p);
+        revivePlayer(p,run);
     }
 
-    public static void revivePlayer(Player p){
-
+    public static void revivePlayer(Player p, RunInstance run){
 
         if(p == null || !p.isOnline()) return;
         if(!PersistentData.has(p,SleepyKeys.IS_DOWNED.get())) return;
 
         PersistentData.remove(p, SleepyKeys.IS_DOWNED.get());
         PlayerManager.clearPots(p, DOWNED_DEBUFF_TYPES);
+
+        // Insert here RunInstance check for revive stand remains.
 
         p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.3);
         p.setPose(Pose.STANDING);

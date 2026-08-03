@@ -40,24 +40,26 @@ public class RunListener implements Listener {
 
         UUID uuid = p.getUniqueId();
 
-        if(!RunManager.isInRun(p.getUniqueId())) return;
+        if(!RunManager.isInRun(uuid)) return;
 
         boolean isLethal = (p.getHealth() - e.getFinalDamage()) <= 0;
 
         if(!isLethal) return;
 
-        p.setHealth(1.0D);
-
         // So we don't 'kill' a downed player AGAIN.
-        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())) return;
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())){
+            e.setCancelled(true);
+            return;
+        }
+
+        e.setCancelled(true);
+        p.setHealth(1.0D);
 
         SleepyParty party = PartyManager.getParty(uuid);
         RunInstance run = RunManager.getRunInstance(uuid);
 
         RunManager.setDowned(p,run);
         this.checkForWipeCondition(run);
-
-        e.setCancelled(true);
     }
 
     @EventHandler

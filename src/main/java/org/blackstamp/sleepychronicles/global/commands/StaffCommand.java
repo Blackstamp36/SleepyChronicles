@@ -64,8 +64,8 @@ public class StaffCommand extends BaseCommand {
     @CommandCompletion("@SleepyMobs")
     public void summon(CommandSender sender, @NotNull String mob, @Optional Integer amount){
         if(!(sender instanceof Player p)) return;
-        Location l = p.getLocation();
-        Level level = ((CraftWorld) l.getWorld()).getHandle();
+        Location location = p.getLocation();
+        Level level = ((CraftWorld) location.getWorld()).getHandle();
 
         if(amount == null || amount < 1) amount = 1;
 
@@ -73,7 +73,8 @@ public class StaffCommand extends BaseCommand {
             Mob entity = MobManager.instantiate(mob, level);
 
             if(entity == null) break;
-            entity.setPos(l.x(),l.y(),l.z());
+
+            entity.setPos(location.x(), location.y(), location.z());
             level.addFreshEntity(entity);
 
             ChatManager.sendStaffMessage(p, "Summoning " + amount + "x " + mob);
@@ -158,7 +159,7 @@ public class StaffCommand extends BaseCommand {
         ChatManager.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
     }
 
-    @Subcommand("set downed")
+    @Subcommand("knockdown")
     public void down(CommandSender sender){
         if(!(sender instanceof Player p)) return;
 

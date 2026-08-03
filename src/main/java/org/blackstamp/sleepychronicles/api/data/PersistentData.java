@@ -26,7 +26,7 @@ public class PersistentData {
         PersistentData.getDataContainer(holder).set(key, type, value);
     }
 
-    public static <T,Z> boolean equals(PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
+    public static <T,Z> boolean equals(PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value){
         if(!PersistentData.has(holder, key)) return false;
 
         return Objects.equals(get(holder, key, type), value);

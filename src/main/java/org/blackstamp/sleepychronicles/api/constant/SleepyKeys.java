@@ -16,7 +16,7 @@ public enum SleepyKeys {
     NamespacedKey key;
 
     public NamespacedKey get(){
-        if(this.key == null){ PersistentData.key(this.name().toLowerCase()); }
+        if(this.key == null){ this.key = PersistentData.key(this.name().toLowerCase()); }
 
         return this.key;
     }

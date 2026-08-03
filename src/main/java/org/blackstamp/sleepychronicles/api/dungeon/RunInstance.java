@@ -32,17 +32,17 @@ public class RunInstance {
     private final int timeLimitSeconds;
     private RunState state = RunState.SCAVENGE;
 
-    private final List<UUID> reviveStands = new ArrayList<>();
+    private final Map<UUID,UUID> reviveStands = new HashMap<>();
     private final Map<UUID,Integer> downedCount = new HashMap<>();
 
     enum RunState{ SCAVENGE, FIGHTING, BOSS_FIGHT, VICTORY, DEFEAT }
 
-    public RunInstance(SleepyParty party, DungeonType dungeon){
+    public RunInstance(SleepyParty party, DungeonType dungeon, Location center){
         this.party = party;
 
         DungeonConfig config = dungeon.getConfig();
         this.bossID = config.bossId();
-        this.center = config.center();
+        this.center = center;
         this.radius = config.radius();
         this.timeLimitSeconds = config.timeLimitSeconds();
 
@@ -119,15 +119,20 @@ public class RunInstance {
     public void increaseDownedCount(UUID uuid){ this.downedCount.put(uuid, this.getDownedCount(uuid) + 1); }
     public int getDownedCount(UUID uuid){ return this.downedCount.getOrDefault(uuid,0); }
 
-    public void addReviveStand(UUID uuid){ this.reviveStands.add(uuid); }
-    public void removeReviveStand(UUID uuid){ this.reviveStands.remove(uuid); }
+    public void addReviveStand(UUID uuid, UUID stand){ // TODO: assign revive stand upon being downed!
+        this.reviveStands.put(uuid,stand);
+    }
+    public void removeReviveStand(UUID uuid){
+        this.reviveStands.remove(uuid);
+    }
 
     public void clearReviveStands(){
-        for(UUID uuid : reviveStands){
+        for(UUID uuid : reviveStands.values()){
             Entity stand = Bukkit.getEntity(uuid);
 
             if(stand != null) stand.remove();
         }
+
         this.reviveStands.clear();
     }
 }
