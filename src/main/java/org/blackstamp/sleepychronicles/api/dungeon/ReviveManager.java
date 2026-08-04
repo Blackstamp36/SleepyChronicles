@@ -1,5 +1,6 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
@@ -29,14 +30,12 @@ public class ReviveManager {
     // Potion effects for applying/removing debuffs.
 
     private static final PotionEffect[] DOWNED_DEBUFF = {
-            new PotionEffect(PotionEffectType.JUMP_BOOST,PotionEffect.INFINITE_DURATION, MobEffectInstance.MAX_AMPLIFIER),
-            new PotionEffect(PotionEffectType.SLOWNESS,PotionEffect.INFINITE_DURATION,MobEffectInstance.MAX_AMPLIFIER),
-            new PotionEffect(PotionEffectType.DARKNESS,PotionEffect.INFINITE_DURATION,0),
+            new PotionEffect(PotionEffectType.INVISIBILITY,PotionEffect.INFINITE_DURATION,0,false,false),
+            new PotionEffect(PotionEffectType.DARKNESS,PotionEffect.INFINITE_DURATION,0,false,false)
     };
     private static final PotionEffectType[] DOWNED_DEBUFF_TYPES = {
-            PotionEffectType.JUMP_BOOST,
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.DARKNESS,
+            PotionEffectType.INVISIBILITY,
+            PotionEffectType.DARKNESS
     };
 
     public static void revivePlayer(UUID uuid, RunInstance run){
@@ -54,11 +53,11 @@ public class ReviveManager {
         String revivedName = revivedPlayer.getName();
         UUID revivedUUID = revivedPlayer.getUniqueId();
         UUID reviveStandUUID = run.getReviveStand(revivedUUID);
+        DownedClone clone = run.getDownedClone(revivedUUID);
 
         PersistentData.remove(revivedPlayer, SleepyKeys.IS_DOWNED.get());
         PlayerManager.clearPots(revivedPlayer, DOWNED_DEBUFF_TYPES);
-
-        DownedClone clone = run.getDownedClone(revivedUUID);
+        run.removeDownedClone(revivedUUID);
 
         for(UUID memberUUID : run.getParty().getMembers()){
             Player memberPlayer = Bukkit.getPlayer(memberUUID);
@@ -70,8 +69,6 @@ public class ReviveManager {
             memberPlayer.showPlayer(SleepyChronicles.getInstance(), revivedPlayer);
         }
 
-        run.removeDownedClone(revivedUUID);
-
         if(reviveStandUUID != null){
             run.removeReviveStand(reviveStandUUID);
 
@@ -82,11 +79,11 @@ public class ReviveManager {
 
         particleManager.particle(
                 location, Particle.HAPPY_VILLAGER,null,15,
-                0.25D,0.25D,0.25D,
+                0.5D,0.5D,0.5D,
                 1.0D
         );
         particleManager.particle(
-                location, Particle.TRIAL_SPAWNER_DETECTION_OMINOUS,null,25,
+                location, Particle.TRIAL_SPAWNER_DETECTION_OMINOUS,null,50,
                 0.25D,0.25D,0.25D,
                 1.0D
         );
@@ -110,10 +107,11 @@ public class ReviveManager {
 
         ReviveStand reviveStand = new ReviveStand(level,run, downedUUID);
         run.addReviveStand(downedUUID, reviveStand.getUUID());
-        reviveStand.setPos(downedPlayer.getX(), downedPlayer.getY(), downedPlayer.getZ());
+        reviveStand.setPos(location.getX(), location.getY(), location.getZ());
+        reviveStand.getBukkitEntity().addPassenger(downedPlayer);
         level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
-        DownedClone clone = new DownedClone(downedPlayer, downedPlayer.getLocation());
+        DownedClone clone = new DownedClone(downedPlayer, location);
         run.addDownedClone(downedUUID,clone);
 
         for(UUID memberUUID : run.getParty().getMembers()){
@@ -129,7 +127,7 @@ public class ReviveManager {
         particleManager.particle(
                 location, Particle.END_ROD,null,50,
                 0.25D,0.25D,0.25D,
-                0.36D
+                0.18D
         );
 
         ChatManager.sendWarning(downedPlayer,"You've been downed!", SleepyPalette.SLEEPY.getColor2());

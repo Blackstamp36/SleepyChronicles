@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -122,6 +123,18 @@ public class RunListener implements Listener {
 
             ChatManager.sendNotification(p,p.getName() + " fled early from the run.");
         }
+    }
+
+    @EventHandler
+    public void onDismount(EntityDismountEvent e){
+        if(!(e.getEntity() instanceof Player p)) return;
+
+        UUID uuid = p.getUniqueId();
+
+        if(RunManager.isNotInRun(uuid)) return;
+        if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())){ e.setCancelled(true); }
+
+        e.setCancelled(true);
     }
 
     // Manager methods.

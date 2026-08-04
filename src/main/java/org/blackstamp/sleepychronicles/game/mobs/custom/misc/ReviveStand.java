@@ -52,7 +52,7 @@ public class ReviveStand extends ArmorStand {
     }
 
     private void checkHits(LivingEntity entity){
-        entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits, SleepyPalette.SLEEPY.getColor2()));
+        entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits, "#b8b8ff"));
 
         if(this.currentHits >= this.requiredHits){
             ReviveManager.revivePlayer(this.downedUUID, this.run);
@@ -69,12 +69,12 @@ public class ReviveStand extends ArmorStand {
     }
 
     private void registerAttributes(){
+        this.setNoGravity(true);
         this.setSilent(true);
         this.setCustomNameVisible(true);
 
         // Revive Stand settings.
         this.setInvisible(true);
-        this.setSmall(true);
     }
 
     @Override

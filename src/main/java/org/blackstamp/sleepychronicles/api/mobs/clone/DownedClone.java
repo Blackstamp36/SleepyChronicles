@@ -10,7 +10,6 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
-import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -21,6 +20,9 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class DownedClone {
+    // TODO:
+    // 1. check how to move the downed clone more to the center (so it's more intuitive to where to attack)
+    // 2. teleport to the overworld if it's not in a run. exactly to the lobby (but if there's no schem, then don't do anything)
 
     private final GameProfile fakeProfile;
     private final ServerPlayer fakePlayer;
@@ -31,12 +33,7 @@ public class DownedClone {
         ServerPlayer nmsOriginal = ((CraftPlayer) clonedPlayer).getHandle();
         GameProfile originalProfile = nmsOriginal.getGameProfile();
 
-        double yawRadians = Math.toRadians(location.getYaw());
-
-        int targetX = location.getBlockX() - (int) Math.round(Math.sin(yawRadians));
-        int targetZ = location.getBlockZ() + (int) Math.round(Math.cos(yawRadians));
-
-        this.location = new BlockPos(targetX,location.getBlockY(),targetZ);
+        this.location = new BlockPos(location.getBlockX(),location.getBlockY(),location.getBlockZ());
         this.fakeProfile = new GameProfile(UUID.randomUUID(), "");
         this.fakeProfile.getProperties().putAll(originalProfile.getProperties());
         this.fakePlayer = new ServerPlayer(level.getServer(), level, this.fakeProfile, nmsOriginal.clientInformation());
@@ -46,6 +43,7 @@ public class DownedClone {
         this.fakePlayer.setXRot(location.getPitch());
         this.fakePlayer.setPose(Pose.SLEEPING);
         this.fakePlayer.setSleepingPos(this.location);
+        this.fakePlayer.setGlowingTag(true);
     }
 
     public void showTo(Player p){
