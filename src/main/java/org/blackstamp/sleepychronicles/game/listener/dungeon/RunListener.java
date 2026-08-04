@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
@@ -36,7 +37,7 @@ public class RunListener implements Listener {
 
         if(RunManager.isNotInRun(p.getUniqueId())) return;
 
-        p.playSound(Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 0.25F));
+        p.playSound(Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 0.15F, 0.25F));
         e.setCancelled(true);
     }
 
@@ -169,13 +170,14 @@ public class RunListener implements Listener {
 
         if(downedPlayers >= party.getMembers().size()){
             for(UUID memberUUID : party.getMembers()){ // Show wiped message.
-                Player member = Bukkit.getPlayer(memberUUID);
+                Player memberPlayer = Bukkit.getPlayer(memberUUID);
 
-                if(member == null || !member.isOnline()) continue;
-                if(PersistentData.has(member,SleepyKeys.IS_DOWNED.get())){ ReviveManager.revivePlayer(member,run); }
+                if(memberPlayer == null || !memberPlayer.isOnline()) continue;
+                if(PersistentData.has(memberPlayer,SleepyKeys.IS_DOWNED.get())){ ReviveManager.revivePlayer(memberPlayer,run); }
 
-                member.teleport(WorldManager.OVERWORLD.getLocation());
-                ChatManager.sendMessage(member,false,"Suddenly, you seem to awake in the middle of confusion. Was it a dream..?");
+                memberPlayer.teleport(WorldManager.OVERWORLD.getLocation());
+                ChatManager.sendWarning(memberPlayer, "Was it a dream..?", SleepyPalette.SLEEPY.getMiniColor1());
+                ChatManager.sendTitle(memberPlayer, "DEFEAT",SleepyPalette.SLEEPY.getMiniColor1());
             }
 
             run.cleanupRun(false);

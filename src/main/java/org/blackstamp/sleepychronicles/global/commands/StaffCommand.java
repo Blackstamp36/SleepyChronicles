@@ -88,7 +88,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         p.teleport(world.getLocation());
-        ChatManager.sendStaffMessage(p, "Teleporting to.. " + BasicPalette.YELLOW + world.name());
+        ChatManager.sendStaffMessage(p, "Teleporting to.. " + BasicPalette.YELLOW.getColor() + world.name());
     }
 
     @Subcommand("set day ")

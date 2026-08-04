@@ -1,7 +1,6 @@
 package org.blackstamp.sleepychronicles.api.color;
 
 import co.aikar.commands.annotation.Optional;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public enum SleepyPalette {
@@ -28,18 +27,21 @@ public enum SleepyPalette {
     private final String color2;
     private final String color3;
 
+    SleepyPalette(String color){ this(color, color, color); }
+    SleepyPalette(String color1, String color2){ this(color1, color2, color1); }
     SleepyPalette(String color1, String color2, String color3){
         this.color1 = color1;
         this.color2 = color2;
         this.color3 = color3;
-        }
+    }
 
-    SleepyPalette(String color){ this(color, color, color); }
-    SleepyPalette(String color1, String color2){ this(color1, color2, color1); }
+    public String getMiniColor1(){ return brackets(this.color1); }
+    public String getMiniColor2(){ return brackets(this.color2); }
+    public String getMiniColor3(){ return brackets(this.color3); }
 
-    public String getColor1(){ return brackets(this.color1); }
-    public String getColor2(){ return brackets(this.color2); }
-    public String getColor3(){ return brackets(this.color3); }
+    public String getHexColor1(){ return this.color1; }
+    public String getHexColor2(){ return this.color2; }
+    public String getHexColor3(){ return this.color3; }
 
     public @NotNull String shift(@Optional int index){
         switch(index){

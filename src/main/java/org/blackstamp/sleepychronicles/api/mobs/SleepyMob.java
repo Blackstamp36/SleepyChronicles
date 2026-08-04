@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
-import org.blackstamp.sleepychronicles.api.mobs.attacks.SleepyAttack;
 import org.blackstamp.sleepychronicles.api.mobs.config.BaseConfig;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.blackstamp.sleepychronicles.game.mobs.goals.sleepy_mobs.GenericSkillGoal;
@@ -50,7 +49,7 @@ public class SleepyMob extends Mob {
         this.mobName = config.name();
 
         if(config.color() != null) this.color = config.color();
-        else this.color = SleepyPalette.VANILLA.getColor1();
+        else this.color = SleepyPalette.VANILLA.getMiniColor1();
 
         if(config.attack() != null) this.goalSelector.addGoal(1, new GenericSkillGoal(this,config.attack()));
 

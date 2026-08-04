@@ -88,7 +88,7 @@ public class ReviveManager {
         );
 
         revivedPlayer.setHealth(revivedPlayer.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.36);
-        ChatManager.sendWarning(revivedPlayer,"You've been revived!",SleepyPalette.SLEEPY.getColor3());
+        ChatManager.sendWarning(revivedPlayer,"You've been revived!",SleepyPalette.SLEEPY.getMiniColor3());
     }
 
     public static void setDowned(Player downedPlayer, RunInstance run){
@@ -143,7 +143,7 @@ public class ReviveManager {
                 0.18D
         );
 
-        ChatManager.sendWarning(downedPlayer,"You've been downed!", SleepyPalette.SLEEPY.getColor2());
+        ChatManager.sendWarning(downedPlayer,"You've been downed!", SleepyPalette.SLEEPY.getMiniColor2());
         PlayerManager.addPots(downedPlayer, DOWNED_DEBUFF);
     }
 }

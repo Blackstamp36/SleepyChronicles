@@ -1,6 +1,5 @@
 package org.blackstamp.sleepychronicles.game.mobs.custom.misc;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 
@@ -15,8 +14,11 @@ import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
+import org.blackstamp.sleepychronicles.api.particle.ParticleManager;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
@@ -28,8 +30,8 @@ public class ReviveStand extends ArmorStand {
     private final UUID downedUUID;
     private final double maxHealthPool;
     private double currentReviveHealth;
-
-    private int currentHits = 0;
+    private final ParticleManager particle;
+    private Location location = null;
 
     public ReviveStand(Level level, RunInstance run, UUID downedUUID){
         super(EntityType.ARMOR_STAND, level);
@@ -41,6 +43,7 @@ public class ReviveStand extends ArmorStand {
         this.downedUUID = downedUUID;
         this.maxHealthPool = (downedMaxHealth * 0.75) * run.getDownedCount(downedUUID);
         this.currentReviveHealth = this.maxHealthPool;
+        this.particle = new ParticleManager(level.getWorld());
 
         this.registerAttributes();
         this.checkHealth(this);
@@ -49,6 +52,14 @@ public class ReviveStand extends ArmorStand {
     @Override
     public void tick(){
         super.tick();
+
+        if(tickCount % 15 == 0){
+            this.setYRot(this.getYRot() + 30.0F);
+
+            if(this.location == null){ this.location = new Location(this.level().getWorld(), this.getX(), this.getY(), this.getZ()); }
+
+            this.particle.particle(this.location, Particle.CHERRY_LEAVES, null, 25,1.0D,1.0D);
+        }
     }
 
     @Override
@@ -74,13 +85,6 @@ public class ReviveStand extends ArmorStand {
         }
     }
 
-    public void spawnParticle(ParticleBuilder builder, int amount){
-        builder.location(this.level().getWorld(), this.getX(), this.getY(), this.getZ())
-                .count(amount)
-                .offset(0.5F,0.25F,0.5F)
-                .spawn();
-    }
-
     private void registerAttributes(){
         this.setSilent(true);
 
@@ -88,6 +92,7 @@ public class ReviveStand extends ArmorStand {
         this.setInvisible(true);
         this.setNoGravity(true);
         this.setCustomNameVisible(true);
+
         this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.CHERRY_LEAVES));
     }
 

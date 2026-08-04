@@ -3,9 +3,12 @@ package org.blackstamp.sleepychronicles.api.chat;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
+import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,14 +24,38 @@ public class ChatManager {
     // Prefixes.
     @Getter
     public enum ChatPrefix{
-        SLEEPY(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.SLEEPY.getColor1() + "[SleepyChronicles] " + BasicPalette.DARK_GRAY.getColor() + "» "),
-        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.getColor1() + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor()),
-        NOTIFICATION(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.NOTIFICATION.getColor1() + "[!] " + BasicPalette.DARK_GRAY.getColor() + "» ");
+        SLEEPY(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.SLEEPY.getMiniColor1() + "[SleepyChronicles] " + BasicPalette.DARK_GRAY.getColor() + "» "),
+        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.getMiniColor1() + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor()),
+        NOTIFICATION(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.NOTIFICATION.getMiniColor1() + "[!] " + BasicPalette.DARK_GRAY.getColor() + "» ");
 
         final String prefix;
 
         ChatPrefix(String prefix){ this.prefix = prefix; }
     }
+
+    public static void sendTitle(Player p, String value, String color){
+        Component title = TextFormatter.toKyoriComponent(value, color);
+
+        Title titleMessage = Title.title(
+                title,
+                Component.empty()
+        );
+
+        p.showTitle(titleMessage);
+    }
+
+    public static void sendSubtitle(Player p, String value, String color){
+        Component subtitle = TextFormatter.toKyoriComponent(value, color);
+
+        Title titleMessage = Title.title(
+                Component.empty(),
+                subtitle
+        );
+
+        p.showTitle(titleMessage);
+    }
+
+    // Sleepy related.
 
     public static void sendMessage(Player p, boolean isError, String value){
         Sound sound = COMMAND_SOUND;

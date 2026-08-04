@@ -32,7 +32,7 @@ public class TotemListener implements Listener {
                 ? damageEvent.getCause() : EntityDamageEvent.DamageCause.CUSTOM;
 
         final String message = BasicPalette.RED.getColor() + p.getName() + " popped a " + type + "!\n" +
-                SleepyPalette.TOTEM.getColor1() + "«N°" + number + "»" + BasicPalette.GRAY.getColor() + " Cause of usage: " + DamageUtils.getCauseString(p, cause) + ".";
+                SleepyPalette.TOTEM.getMiniColor1() + "«N°" + number + "»" + BasicPalette.GRAY.getColor() + " Cause of usage: " + DamageUtils.getCauseString(p, cause) + ".";
 
         TotemManager.set(p, number + 1);
         ChatManager.sendBroadcast(message);

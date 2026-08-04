@@ -10,7 +10,6 @@ import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.api.mobs.clone.DownedClone;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
-import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -83,7 +82,7 @@ public class RunInstance {
 
                     if(l.distanceSquared(center) > radiusSquared){
                         p.damage(4);
-                        ChatManager.sendWarning(p,"You don't feel right doing this..",SleepyPalette.MISCELLANEOUS.getColor1());
+                        ChatManager.sendWarning(p,"You don't feel right doing this..",SleepyPalette.MISCELLANEOUS.getMiniColor1());
                     }
                 }
             }
