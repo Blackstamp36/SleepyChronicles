@@ -1,7 +1,5 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
@@ -63,6 +61,7 @@ public class ReviveManager {
             Player memberPlayer = Bukkit.getPlayer(memberUUID);
 
             if(memberPlayer == null || !memberPlayer.isOnline()) continue;
+            if(clone == null) return;
 
             ChatManager.sendNotification(memberPlayer,revivedName + " has been revived!");
             clone.unseeFrom(memberPlayer);
@@ -105,13 +104,27 @@ public class ReviveManager {
         PersistentData.set(downedPlayer, SleepyKeys.IS_DOWNED.get(), PersistentDataType.BYTE,(byte) 1);
         run.increaseDownedCount(downedUUID);
 
-        ReviveStand reviveStand = new ReviveStand(level,run, downedUUID);
-        run.addReviveStand(downedUUID, reviveStand.getUUID());
-        reviveStand.setPos(location.getX(), location.getY(), location.getZ());
-        reviveStand.getBukkitEntity().addPassenger(downedPlayer);
-        level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        ReviveStand reviveStand = new ReviveStand(level,run,downedUUID);
+        double yawRadians = Math.toRadians(location.getYaw());
+        double xDir = -Math.sin(yawRadians);
+        double zDir = Math.cos(yawRadians);
+        double offset = 1.0D;
 
-        DownedClone clone = new DownedClone(downedPlayer, location);
+        double xCentered = location.getBlockX() + 0.5;
+        double zCentered = location.getBlockZ() + 0.5;
+
+        double xStand = xCentered - (xDir * offset);
+        double zStand = zCentered - (zDir * offset);
+
+        Location standLoc = new Location(location.getWorld(),xStand,location.getY(),zStand);
+
+        level.addFreshEntity(reviveStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        reviveStand.setPos(xStand, location.getY(), zStand);
+        reviveStand.getBukkitEntity().addPassenger(downedPlayer);
+        run.addReviveStand(downedUUID, reviveStand.getUUID());
+
+        DownedClone clone = new DownedClone(downedPlayer, standLoc);
+
         run.addDownedClone(downedUUID,clone);
 
         for(UUID memberUUID : run.getParty().getMembers()){
