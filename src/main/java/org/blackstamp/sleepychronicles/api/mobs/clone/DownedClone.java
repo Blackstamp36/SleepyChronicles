@@ -23,9 +23,9 @@ public class DownedClone {
     // TODO:
     // 1. check how to move the downed clone more to the center (so it's more intuitive to where to attack)
     // 2. teleport to the overworld if it's not in a run. exactly to the lobby (but if there's no schem, then don't do anything)
-    // 3. add the /p leave command.. if not.... we'll be all doomed
     // 5. add listeners to prevent the 'downed' player from breaking things!
-    // 6. add the .getHexColor() and TEST IT WITH THE TITLES/SUBTITLES!
+    // 6. replace all methods for the .get() in SleepyPalette!
+    // 7. add listener to reset PDCs!
 
     private final GameProfile fakeProfile;
     private final ServerPlayer fakePlayer;

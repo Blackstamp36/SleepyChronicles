@@ -35,24 +35,23 @@ public enum SleepyPalette {
         this.color3 = color3;
     }
 
-    public String getMiniColor1(){ return brackets(this.color1); }
-    public String getMiniColor2(){ return brackets(this.color2); }
-    public String getMiniColor3(){ return brackets(this.color3); }
+    public String getMiniColor1(){ return setDiamonds(this.color1); }
+    public String getMiniColor2(){ return setDiamonds(this.color2); }
+    public String getMiniColor3(){ return setDiamonds(this.color3); }
 
-    public String getHexColor1(){ return this.color1; }
-    public String getHexColor2(){ return this.color2; }
-    public String getHexColor3(){ return this.color3; }
+    public @NotNull String color(@Optional int index, boolean brackets){
+        String colorToGet;
 
-    public @NotNull String shift(@Optional int index){
         switch(index){
-            case 1 -> { return "<" + color2 + ">"; }
-            case 2 -> { return "<" + color3 + ">"; }
-            }
-
-        return "<" + color1 + ">";
+            case 1 -> colorToGet = this.color2;
+            case 2 -> colorToGet = this.color3;
+            default -> colorToGet = this.color1;
         }
 
-    private static String brackets(String color){ return "<" + color + ">"; }
+        if(brackets) colorToGet = setDiamonds(colorToGet);
+
+        return colorToGet;
+        }
+
+    private static String setDiamonds(String color){ return "<" + color + ">"; }
     }
-
-

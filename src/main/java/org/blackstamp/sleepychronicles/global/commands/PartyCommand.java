@@ -2,6 +2,7 @@ package org.blackstamp.sleepychronicles.global.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Subcommand;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
 import org.blackstamp.sleepychronicles.api.color.BasicPalette;
@@ -34,6 +35,7 @@ public class PartyCommand extends BaseCommand {
     }
 
     @Subcommand("invite")
+    @CommandCompletion("@PlayersOnline")
     public void invite(CommandSender sender, String target){
         if(!(sender instanceof Player p)) return;
 
@@ -68,14 +70,15 @@ public class PartyCommand extends BaseCommand {
         if(!targetPlayer.isOnline()) return;
 
         String leaderName = p.getName();
-        ChatManager.sendNotification(p, "You received an invitation to join "+leaderName+"'s party! (/p accept "+leaderName+")");
+        ChatManager.sendNotification(targetPlayer, "You received an invitation to join "+leaderName+"'s party! (/p accept "+leaderName+")");
     }
 
     @Subcommand("accept")
+    @CommandCompletion("@PlayersOnline")
     public void accept(CommandSender sender, String leader){
         if(!(sender instanceof Player p)) return;
 
-        UUID uuid = p.getUniqueId();
+        UUID receiverUUID = p.getUniqueId();
 
         OfflinePlayer leaderPlayer = Bukkit.getPlayer(leader);
 
@@ -86,14 +89,15 @@ public class PartyCommand extends BaseCommand {
 
         UUID leaderUUID = leaderPlayer.getUniqueId();
 
-        if(PartyManager.hasParty(uuid)){
+        if(PartyManager.hasParty(receiverUUID)){
             ChatManager.sendMessage(p, true,"You're already in a party.");
             return;
         }
 
-        PartyInvite invite = PartyManager.getPendingInvite(uuid,leaderUUID);
+        String receiverName = p.getName();
+        PartyInvite invite = PartyManager.getPendingInvite(receiverUUID,leaderUUID);
 
-        if(invite == null || !PartyManager.hasPendingInvite(uuid, leaderUUID)){
+        if(invite == null || !PartyManager.hasPendingInvite(receiverUUID, leaderUUID)){
             ChatManager.sendMessage(p, true,"The invitation doesn't exist.");
             return;
         }
@@ -106,16 +110,24 @@ public class PartyCommand extends BaseCommand {
         }
 
         if(System.currentTimeMillis() > invite.expirationTime()){
-            PartyManager.removePendingInvite(uuid, leaderUUID);
+            PartyManager.removePendingInvite(receiverUUID, leaderUUID);
             ChatManager.sendMessage(p, true,"The invitation expired.");
             return;
         }
 
+        for(UUID memberUUID : party.getMembers()){
+            Player memberPlayer = Bukkit.getPlayer(memberUUID);
+
+            if(memberPlayer == null || !memberPlayer.isOnline()) continue;
+
+            ChatManager.sendMessage(memberPlayer, false,receiverName + " joined the party!");
+        }
+
         String leaderName = leaderPlayer.getName();
 
-        PartyManager.removePendingInvite(uuid, leaderUUID);
-        PartyManager.addToParty(uuid,party);
-        party.addMember(uuid);
+        PartyManager.removePendingInvite(receiverUUID, leaderUUID);
+        PartyManager.addToParty(receiverUUID,party);
+        party.addMember(receiverUUID);
 
         ChatManager.sendMessage(p, false,"Joined the party of "+leaderName+"!");
     }
@@ -143,6 +155,7 @@ public class PartyCommand extends BaseCommand {
     }
 
     @Subcommand("kick")
+    @CommandCompletion("@PlayersOnline")
     public void kick(CommandSender sender, String targetName){
         if(!(sender instanceof Player leader)) return;
 
@@ -226,7 +239,7 @@ public class PartyCommand extends BaseCommand {
 
             if(memberPlayer == null || memberUUID == leaderUUID) continue;
 
-            builder.append(memberPlayer.getName()).append(", ");
+            builder.append(memberPlayer.getName()).append(" ");
             }
 
         if(builder.isEmpty()) builder.append("(No members yet).");
@@ -238,5 +251,32 @@ public class PartyCommand extends BaseCommand {
                         BasicPalette.DARK_GRAY.getColor() + "—");
 
         ChatManager.sendMessage(p, false,finalMessage);
+        }
+
+    @Subcommand("leave")
+    @CommandCompletion("@PlayersOnline")
+    public void leave(CommandSender sender){
+        if(!(sender instanceof Player leftPlayer)) return;
+        UUID uuid = leftPlayer.getUniqueId();
+
+        if(!PartyManager.hasParty(uuid)){
+            ChatManager.sendMessage(leftPlayer, true,"You don't have a party. (/p create)");
+            return;
+        }
+
+        String leftName = leftPlayer.getName();
+        SleepyParty party = PartyManager.getParty(uuid);
+
+        party.removeMember(uuid);
+        PartyManager.removeParty(party);
+        ChatManager.sendMessage(leftPlayer, false,"You left the party!");
+
+        for(UUID memberUUID : party.getMembers()){
+            Player memberPlayer = Bukkit.getPlayer(memberUUID);
+
+            if(memberPlayer == null || !memberPlayer.isOnline()) continue;
+
+            ChatManager.sendMessage(memberPlayer, false,leftName + " left the party!");
+            }
         }
     }

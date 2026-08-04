@@ -48,6 +48,7 @@ public class RunListener implements Listener {
         UUID uuid = p.getUniqueId();
 
         if(RunManager.isNotInRun(uuid)) return;
+        if(e.getCause() == EntityDamageEvent.DamageCause.VOID) return;
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())){
             e.setCancelled(true);
             return;
@@ -134,8 +135,6 @@ public class RunListener implements Listener {
 
         if(RunManager.isNotInRun(uuid)) return;
         if(PersistentData.has(p, SleepyKeys.IS_DOWNED.get())){ e.setCancelled(true); }
-
-        e.setCancelled(true);
     }
 
     // Manager methods.

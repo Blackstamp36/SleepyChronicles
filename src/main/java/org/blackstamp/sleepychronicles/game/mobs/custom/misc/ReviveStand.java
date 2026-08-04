@@ -1,6 +1,9 @@
 package org.blackstamp.sleepychronicles.game.mobs.custom.misc;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 
 import net.minecraft.world.entity.EntityType;
@@ -41,7 +44,7 @@ public class ReviveStand extends ArmorStand {
 
         this.run = run;
         this.downedUUID = downedUUID;
-        this.maxHealthPool = (downedMaxHealth * 0.75) * run.getDownedCount(downedUUID);
+        this.maxHealthPool = (downedMaxHealth * 1.36) * run.getDownedCount(downedUUID);
         this.currentReviveHealth = this.maxHealthPool;
         this.particle = new ParticleManager(level.getWorld());
 
@@ -63,21 +66,35 @@ public class ReviveStand extends ArmorStand {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float value){
-        super.hurtServer(level,source,value);
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount){
+        super.hurtServer(level,source,amount);
 
-        if(!(source.getEntity() instanceof Player attacker)) return false;
-        if(PersistentData.has(attacker,SleepyKeys.IS_DOWNED.get())) return false;
-        if(attacker.getUniqueId().equals(downedUUID)) return false;
+        if(!(source.getDirectEntity() instanceof ServerPlayer attacker)) return false;
 
-        this.currentReviveHealth -= value;
+        UUID attackerUUID = attacker.getUUID();
+        Player attackerBukkit = Bukkit.getPlayer(attackerUUID);
+
+        if(PersistentData.has(attackerBukkit,SleepyKeys.IS_DOWNED.get())) return false;
+        if(attackerUUID.equals(downedUUID)) return false;
+
+        level.playSound(
+                null, this.blockPosition(),
+                SoundEvents.HONEY_BLOCK_BREAK, SoundSource.HOSTILE,
+                0.5F,0.85F
+        );
+        level.playSound(
+                null, this.blockPosition(),
+                SoundEvents.CONDUIT_DEACTIVATE, SoundSource.HOSTILE,
+                0.35F,0.75F
+        );
+        this.currentReviveHealth -= amount;
         this.checkHealth(this);
 
         return false;
     }
 
     private void checkHealth(LivingEntity entity){
-        entity.setCustomName(TextFormatter.toComponent(this.currentReviveHealth + "/" + this.maxHealthPool, "#b8b8ff"));
+        entity.setCustomName(TextFormatter.toComponent(String.format("%.1f",this.currentReviveHealth) + "/" + String.format("%.1f",this.maxHealthPool), "#b8b8ff"));
 
         if(this.currentReviveHealth <= 0){
             ReviveManager.revivePlayer(this.downedUUID, this.run);
@@ -87,8 +104,6 @@ public class ReviveStand extends ArmorStand {
 
     private void registerAttributes(){
         this.setSilent(true);
-
-        // Revive Stand settings.
         this.setInvisible(true);
         this.setNoGravity(true);
         this.setCustomNameVisible(true);
@@ -99,5 +114,5 @@ public class ReviveStand extends ArmorStand {
     @Override
     public boolean isPushable(){ return false; }
     @Override
-    public boolean isPickable(){ return false; }
+    public boolean isPickable(){ return true; }
 }

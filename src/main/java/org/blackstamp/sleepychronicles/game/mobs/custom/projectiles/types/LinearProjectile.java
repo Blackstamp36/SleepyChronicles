@@ -109,7 +109,6 @@ public class LinearProjectile extends ArmorStand {
 
     @Override
     public boolean isPushable(){ return false; }
-
     @Override
     public boolean isPickable(){ return false; }
 }
