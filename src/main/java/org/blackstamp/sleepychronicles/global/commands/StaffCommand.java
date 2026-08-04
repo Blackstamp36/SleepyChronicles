@@ -161,7 +161,7 @@ public class StaffCommand extends BaseCommand {
         ChatManager.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
     }
 
-    @Subcommand("knockdown")
+    @Subcommand("down")
     public void down(CommandSender sender){
         if(!(sender instanceof Player p)) return;
 

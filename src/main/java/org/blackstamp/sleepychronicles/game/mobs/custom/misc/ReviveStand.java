@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
@@ -51,7 +52,7 @@ public class ReviveStand extends ArmorStand {
     }
 
     private void checkHits(LivingEntity entity){
-        entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits,"#00000"));
+        entity.setCustomName(TextFormatter.toComponent(this.currentHits + "/" + this.requiredHits, SleepyPalette.SLEEPY.getColor2()));
 
         if(this.currentHits >= this.requiredHits){
             ReviveManager.revivePlayer(this.downedUUID, this.run);
