@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
+import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.party.PartyInvite;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
@@ -29,7 +30,6 @@ public class PartyCommand extends BaseCommand {
         }
 
         PartyManager.addToParty(uuid,party);
-
         ChatManager.sendMessage(p, false,"Party created successfully! (/p invite)");
     }
 
@@ -63,8 +63,12 @@ public class PartyCommand extends BaseCommand {
         long expiration = System.currentTimeMillis() + (duration * 1000L); // 60s upon expiration.
 
         PartyManager.addPendingInvite(targetUUID, leaderUUID,new PartyInvite(party,expiration));
+        ChatManager.sendMessage(p, false,"Invitation sent! (" + duration + "s)");
 
-        ChatManager.sendMessage(p, true,"Invitation sent! (" + duration + "s)");
+        if(!targetPlayer.isOnline()) return;
+
+        String leaderName = p.getName();
+        ChatManager.sendNotification(p, "You received an invitation to join "+leaderName+"'s party! (/p accept "+leaderName+")");
     }
 
     @Subcommand("accept")
@@ -139,7 +143,7 @@ public class PartyCommand extends BaseCommand {
     }
 
     @Subcommand("kick")
-    public void kick(CommandSender sender, String target){
+    public void kick(CommandSender sender, String targetName){
         if(!(sender instanceof Player leader)) return;
 
         UUID leaderUUID = leader.getUniqueId();
@@ -157,12 +161,12 @@ public class PartyCommand extends BaseCommand {
             return;
         }
 
-        for(UUID member : party.getMembers()){
-            OfflinePlayer offlineMember = Bukkit.getOfflinePlayer(member);
+        for(UUID memberUUID : party.getMembers()){
+            OfflinePlayer offlineMember = Bukkit.getOfflinePlayer(memberUUID);
             String offlineName = offlineMember.getName();
 
-            if(offlineName != null && offlineName.equalsIgnoreCase(target)){ // UUID found!
-                targetUUID = member;
+            if(offlineName != null && offlineName.equalsIgnoreCase(targetName)){ // UUID found!
+                targetUUID = memberUUID;
                 break;
             }
         }
@@ -173,7 +177,7 @@ public class PartyCommand extends BaseCommand {
         }
 
         if(targetUUID.equals(leaderUUID)){
-            ChatManager.sendMessage(leader, true,"You cannot.. kick yourself from your party.. try (/p disband)");
+            ChatManager.sendMessage(leader, true,"You cannot kick yourself from your own party. Try (/p disband)");
             return;
         }
 
@@ -184,18 +188,55 @@ public class PartyCommand extends BaseCommand {
         Player targetPlayer = Bukkit.getPlayer(targetUUID);
 
         // We reutilize the 'target' var that we had previously declared.
-        target = Bukkit.getOfflinePlayer(targetUUID).getName();
+        targetName = Bukkit.getOfflinePlayer(targetUUID).getName();
 
         for(UUID uuid : party.getMembers()){
             Player onlineMember = Bukkit.getPlayer(uuid);
 
             if(onlineMember == null) continue;
 
-            ChatManager.sendMessage(onlineMember, false,target + "has been kicked from the party!");
-            }
+            ChatManager.sendNotification(onlineMember, targetName+"has been kicked from the party!");
+        }
 
         if(targetPlayer != null && targetPlayer.isOnline()){
-            ChatManager.sendMessage(targetPlayer, true,"You were kicked from your party!");
+            ChatManager.sendMessage(targetPlayer, true,"You were kicked from your party! :(");
             }
+        }
+
+    @Subcommand("info|list")
+    public void info(CommandSender sender){
+        if(!(sender instanceof Player p)) return;
+        UUID uuid = p.getUniqueId();
+
+        if(!PartyManager.hasParty(uuid)){
+            ChatManager.sendMessage(p, true,"You're not currently in a party to see its info!");
+            return;
+        }
+
+        SleepyParty party = PartyManager.getParty(uuid);
+        StringBuilder builder = new StringBuilder();
+        UUID leaderUUID = party.getLeader();
+
+        OfflinePlayer leaderPlayer = Bukkit.getPlayer(leaderUUID);
+
+        if(leaderPlayer == null) return;
+
+        for(UUID memberUUID : party.getMembers()){
+            OfflinePlayer memberPlayer = Bukkit.getPlayer(memberUUID);
+
+            if(memberPlayer == null || memberUUID == leaderUUID) continue;
+
+            builder.append(memberPlayer.getName()).append(", ");
+            }
+
+        if(builder.isEmpty()) builder.append("(No members yet).");
+
+        String finalMessage =
+                (BasicPalette.DARK_GRAY.getColor() + "\n—\n" +
+                        BasicPalette.YELLOW.getColor() + "Leader: " + BasicPalette.GRAY.getColor() + leaderPlayer.getName() + "\n" +
+                        "Members: " + builder + "\n" +
+                        BasicPalette.DARK_GRAY.getColor() + "—");
+
+        ChatManager.sendMessage(p, false,finalMessage);
         }
     }

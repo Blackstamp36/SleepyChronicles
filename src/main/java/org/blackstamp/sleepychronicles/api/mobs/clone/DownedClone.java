@@ -26,13 +26,18 @@ public class DownedClone {
     private final ServerPlayer fakePlayer;
     private final BlockPos location;
 
-    public DownedClone(Player clonedPlayer, Location location){ // TODO: view how to modify the position of the clone!
+    public DownedClone(Player clonedPlayer, Location location){
         ServerLevel level = ((CraftWorld) location.getWorld()).getHandle();
         ServerPlayer nmsOriginal = ((CraftPlayer) clonedPlayer).getHandle();
         GameProfile originalProfile = nmsOriginal.getGameProfile();
 
-        this.location = new BlockPos(location.getBlockX(),location.getBlockY(),location.getBlockZ());
-        this.fakeProfile = new GameProfile(UUID.randomUUID(), clonedPlayer.getName());
+        double yawRadians = Math.toRadians(location.getYaw());
+
+        int targetX = location.getBlockX() - (int) Math.round(Math.sin(yawRadians));
+        int targetZ = location.getBlockZ() + (int) Math.round(Math.cos(yawRadians));
+
+        this.location = new BlockPos(targetX,location.getBlockY(),targetZ);
+        this.fakeProfile = new GameProfile(UUID.randomUUID(), "");
         this.fakeProfile.getProperties().putAll(originalProfile.getProperties());
         this.fakePlayer = new ServerPlayer(level.getServer(), level, this.fakeProfile, nmsOriginal.clientInformation());
 
@@ -87,7 +92,6 @@ public class DownedClone {
             nmsPlayer.connection.send(addEntityPacket);
             nmsPlayer.connection.send(dataPacket);
         }, 5);
-
     }
 
     public void unseeFrom(Player p){

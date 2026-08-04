@@ -11,14 +11,19 @@ import org.bukkit.entity.Player;
 
 public class ChatManager {
 
+    // Sounds.
+
+    private static final Sound NOTIFICATION_SOUND = Sound.sound(Key.key("entity.item.break"), Sound.Source.MASTER, 1.0F, 1.36F);
     private static final Sound BROADCAST_SOUND = Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 1.25F);
     private static final Sound COMMAND_SOUND = Sound.sound(Key.key("block.note_block.bell"), Sound.Source.MASTER, 1.0F, 0.85F);
     private static final Sound ERROR_SOUND = Sound.sound(Key.key("entity.enderman.teleport"), Sound.Source.MASTER, 1.0F, 0.5F);
 
+    // Prefixes.
     @Getter
     public enum ChatPrefix{
         SLEEPY(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.SLEEPY.getColor1() + "[SleepyChronicles] " + BasicPalette.DARK_GRAY.getColor() + "» "),
-        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.getColor1() + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor());
+        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.getColor1() + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor()),
+        NOTIFICATION(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.NOTIFICATION.getColor1() + "[!] " + BasicPalette.DARK_GRAY.getColor() + "» ");
 
         final String prefix;
 
@@ -36,6 +41,13 @@ public class ChatManager {
 
         p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + color + value));
         p.playSound(sound);
+    }
+
+    public static void sendNotification(Player p, String value){
+        String color = BasicPalette.GRAY.getColor();
+
+        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + color + value));
+        p.playSound(NOTIFICATION_SOUND);
     }
 
     public static void sendWarning(Player p, String value, String color){

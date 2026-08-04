@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Registrable
@@ -101,11 +102,26 @@ public class RunListener implements Listener {
         if(run == null) return;
 
         SleepyParty party = run.getParty();
+        Set<UUID> members = party.getMembers();
 
+        p.teleport(WorldManager.OVERWORLD.getLocation());
+
+        ChatManager.sendMessage(p,true,"You disconnected in the midst of a run! You got redirected to the lobby.");
         party.removeMember(uuid);
         RunManager.removeRunInstance(uuid);
 
-        if(party.getMembers().isEmpty()){ run.cleanupRun(false); }
+        if(members.isEmpty()){
+            run.cleanupRun(false);
+            return;
+        }
+
+        for(UUID memberUUID : party.getMembers()){
+            Player memberPlayer = Bukkit.getPlayer(memberUUID);
+
+            if(memberPlayer == null || !memberPlayer.isOnline()) return;
+
+            ChatManager.sendNotification(p,p.getName() + " fled early from the run.");
+        }
     }
 
     // Manager methods.
