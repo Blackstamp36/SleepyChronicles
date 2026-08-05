@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
 import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
@@ -14,80 +15,66 @@ import org.bukkit.entity.Player;
 
 public class ChatManager {
 
-    // Sounds.
-
-    private static final Sound NOTIFICATION_SOUND = Sound.sound(Key.key("entity.item.break"), Sound.Source.MASTER, 1.0F, 1.36F);
-    private static final Sound BROADCAST_SOUND = Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 1.0F, 1.25F);
-    private static final Sound COMMAND_SOUND = Sound.sound(Key.key("block.note_block.bell"), Sound.Source.MASTER, 1.0F, 0.85F);
-    private static final Sound ERROR_SOUND = Sound.sound(Key.key("entity.enderman.teleport"), Sound.Source.MASTER, 1.0F, 0.5F);
+    // Color tags.
+    private static final String DARK_GRAY_TAG = BasicPalette.DARK_GRAY.tag(true);
+    private static final String RED_TAG = BasicPalette.RED.tag(true);
+    private static final String GRAY_TAG = BasicPalette.GRAY.tag(true);
+    private static final String GOLD_TAG = BasicPalette.GOLD.tag(true);
+    private static final String GREEN_TAG = BasicPalette.GREEN.tag(true);
 
     // Prefixes.
     @Getter
-    public enum ChatPrefix{
-        SLEEPY(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.SLEEPY.color(false) + "[SleepyChronicles] " + BasicPalette.DARK_GRAY.getColor() + "» "),
-        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.color(false) + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor()),
-        NOTIFICATION(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.NOTIFICATION.color(false) + "[!] " + BasicPalette.DARK_GRAY.getColor() + "» ");
+    private enum ChatPrefix{
+        SLEEPY(DARK_GRAY_TAG + "| " + SleepyPalette.SLEEPY.tag(true) + "[SleepyChronicles] " + DARK_GRAY_TAG + "» "),
+        STAFF(DARK_GRAY_TAG + "| " + SleepyPalette.STAFF.tag(true) + "[Staff] " + GOLD_TAG + "» " + GREEN_TAG),
+        NOTIFICATION(DARK_GRAY_TAG + "| " + SleepyPalette.NOTIFICATION.tag(true) + "[!] " + DARK_GRAY_TAG + "» ");
 
-        final String prefix;
+        private final String prefix;
 
         ChatPrefix(String prefix){ this.prefix = prefix; }
     }
 
-    public static void sendTitle(Player p, String value, String color){
-        Component title = TextFormatter.toKyoriComponent(value, color);
+    // Title elements.
+    public static void sendTitle(Player p, String value, TextColor color){ // CHANGE THIS!! DON'T FORGET
 
-        Title titleMessage = Title.title(
-                title,
-                Component.empty()
-        );
-
-        p.showTitle(titleMessage);
+        // p.showTitle(Title.title(title, Component.empty()));
     }
 
     public static void sendSubtitle(Player p, String value, String color){
         Component subtitle = TextFormatter.toKyoriComponent(value, color);
 
-        Title titleMessage = Title.title(
-                Component.empty(),
-                subtitle
-        );
-
-        p.showTitle(titleMessage);
+        p.showTitle(Title.title(Component.empty(), subtitle));
     }
 
-    // Sleepy related.
-
+    // Message elements.
     public static void sendMessage(Player p, boolean isError, String value){
-        Sound sound = COMMAND_SOUND;
-        String color = BasicPalette.GRAY.getColor();
+        String color = isError ? RED_TAG : DARK_GRAY_TAG;
+        String message = ChatPrefix.SLEEPY.getPrefix() + color + value;
 
-        if(isError){
-            color = BasicPalette.RED.getColor();
-            sound = ERROR_SOUND;
-        }
-
-        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + color + value));
-        p.playSound(sound);
+        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(message));
     }
 
     public static void sendNotification(Player p, String value){
-        String color = BasicPalette.GRAY.getColor();
+        String message = ChatPrefix.SLEEPY.getPrefix() + GRAY_TAG + value;
 
-        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + color + value));
-        p.playSound(NOTIFICATION_SOUND);
+        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(message));
     }
 
     public static void sendWarning(Player p, String value, String color){
-        p.sendActionBar(ConstantFields.MINI_MESSAGE.deserialize(color + value));
+        String message = color + value;
+
+        p.sendActionBar(ConstantFields.MINI_MESSAGE.deserialize(message));
     }
 
     public static void sendBroadcast(String value){
-        Bukkit.broadcast(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.SLEEPY.getPrefix() + value));
-        for(Player p : Bukkit.getOnlinePlayers())
-            p.playSound(BROADCAST_SOUND);
+        String message = ChatPrefix.SLEEPY.getPrefix() + value;
+
+        Bukkit.broadcast(ConstantFields.MINI_MESSAGE.deserialize(message));
     }
 
     public static void sendStaffMessage(Player p, String value){
-        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(ChatPrefix.STAFF.getPrefix() + value));
+        String message = ChatPrefix.STAFF.getPrefix() + value;
+
+        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(message));
     }
 }

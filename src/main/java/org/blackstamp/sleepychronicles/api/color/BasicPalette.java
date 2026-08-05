@@ -1,29 +1,33 @@
 package org.blackstamp.sleepychronicles.api.color;
 
 public enum BasicPalette {
-    BLACK("black"),
-    DARK_RED("dark_red"),
-    DARK_BLUE("dark_blue"),
-    DARK_GREEN("dark_green"),
-    DARK_GRAY("dark_gray"),
-    DARK_PURPLE("dark_purple"),
+    BLACK,
+    DARK_RED,
+    DARK_BLUE,
+    DARK_GREEN,
+    DARK_GRAY,
+    DARK_PURPLE,
 
-    GOLD("gold"),
-    CYAN("cyan"),
-    RED("red"),
-    BLUE("blue"),
-    GREEN("green"),
-    GRAY("gray"),
-    MAGENTA("magenta"),
-    YELLOW("yellow"),
-    AQUA("aqua"),
-    WHITE("white");
+    GOLD,
+    CYAN,
+    RED,
+    BLUE,
+    GREEN,
+    GRAY,
+    MAGENTA,
+    YELLOW,
+    AQUA,
+    WHITE;
 
     private final String color;
 
-    BasicPalette(String color){
-        this.color = color;
-    }
+    BasicPalette(){ this.color = this.name().toLowerCase(); }
 
-    public String color(){ return "<" + this.color + ">"; }
+    public String tag(boolean diamonds){
+        String colorToGet = this.color;
+
+        if(diamonds) colorToGet = "<" + colorToGet + ">";
+
+        return colorToGet;
+    }
 }

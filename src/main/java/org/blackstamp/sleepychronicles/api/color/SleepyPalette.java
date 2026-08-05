@@ -34,15 +34,15 @@ public enum SleepyPalette {
         this.color3 = color3;
     }
 
-    public @NotNull String color(boolean diamonds){
+    public @NotNull String tag(boolean diamonds){
         String colorToGet = this.color1;
 
-        if(diamonds) colorToGet = setDiamonds(colorToGet);
+        if(diamonds) colorToGet = "<" + colorToGet + ">";
 
         return colorToGet;
     }
 
-    public @NotNull String color(int index, boolean diamonds){
+    public @NotNull String tag(int index, boolean diamonds){
         String colorToGet;
 
         switch(index){
@@ -51,10 +51,8 @@ public enum SleepyPalette {
             default -> colorToGet = this.color1;
         }
 
-        if(diamonds) colorToGet = setDiamonds(colorToGet);
+        if(diamonds) colorToGet = "<" + colorToGet + ">";
 
         return colorToGet;
         }
-
-    private static String setDiamonds(String color){ return "<" + color + ">"; }
     }

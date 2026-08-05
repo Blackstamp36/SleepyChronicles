@@ -25,6 +25,7 @@ public class DownedClone {
     // 5. add listeners to prevent the 'downed' player from breaking things!
     // 6. replace all methods for the .get() in SleepyPalette!
     // 7. add listener to reset PDCs!
+    // 8. modify 'ChatManager' so it accepts Components.
 
     private final GameProfile fakeProfile;
     private final ServerPlayer fakePlayer;

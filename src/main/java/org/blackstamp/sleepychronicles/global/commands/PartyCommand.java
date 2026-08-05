@@ -19,6 +19,9 @@ import java.util.UUID;
 @CommandAlias("p|party")
 public class PartyCommand extends BaseCommand {
 
+    // Constants.
+    private static final String PARTY_DENY_MESSAGE = "You don't have a party. (/p create)";
+
     @Subcommand("create")
     public void create(CommandSender sender){
         if(!(sender instanceof Player p)) return;
@@ -42,7 +45,7 @@ public class PartyCommand extends BaseCommand {
         UUID leaderUUID = p.getUniqueId();
 
         if(!PartyManager.hasParty(leaderUUID)){
-            ChatManager.sendMessage(p, true,"You need to create a party first!");
+            ChatManager.sendMessage(p, true, PARTY_DENY_MESSAGE);
             return;
         }
 
@@ -138,7 +141,7 @@ public class PartyCommand extends BaseCommand {
         UUID uuid = p.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, true,"You don't have a party. (/p create)");
+            ChatManager.sendMessage(p, true, PARTY_DENY_MESSAGE);
             return;
         }
 
@@ -163,7 +166,7 @@ public class PartyCommand extends BaseCommand {
         UUID targetUUID = null;
 
         if(!PartyManager.hasParty(leaderUUID)){
-            ChatManager.sendMessage(leader, true,"You don't have a party. (/p create)");
+            ChatManager.sendMessage(leader, true, PARTY_DENY_MESSAGE);
             return;
         }
 
@@ -244,11 +247,15 @@ public class PartyCommand extends BaseCommand {
 
         if(builder.isEmpty()) builder.append("(No members yet).");
 
+        String darkGrayTag = BasicPalette.DARK_GRAY.tag(true);
+        String grayTag = BasicPalette.DARK_GRAY.tag(true);
+        String yellowTag = BasicPalette.YELLOW.tag(true);
+
         String finalMessage =
-                (BasicPalette.DARK_GRAY.getColor() + "\n—\n" +
-                        BasicPalette.YELLOW.getColor() + "Leader: " + BasicPalette.GRAY.getColor() + leaderPlayer.getName() + "\n" +
+                darkGrayTag + "\n—\n" +
+                        yellowTag + "Leader: " + grayTag + leaderPlayer.getName() + "\n" +
                         "Members: " + builder + "\n" +
-                        BasicPalette.DARK_GRAY.getColor() + "—");
+                        darkGrayTag + "—";
 
         ChatManager.sendMessage(p, false,finalMessage);
         }
@@ -260,7 +267,7 @@ public class PartyCommand extends BaseCommand {
         UUID uuid = leftPlayer.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(leftPlayer, true,"You don't have a party. (/p create)");
+            ChatManager.sendMessage(leftPlayer, true, PARTY_DENY_MESSAGE);
             return;
         }
 

@@ -31,8 +31,8 @@ public enum SleepyItems{
     ),
     MEMENTO_MORI(() -> new SleepyItem(Material.SADDLE, SleepyPalette.TRINKET)
             .setDisplay("Memento-mori")
-            .setLore("Winner takes it all!", BasicPalette.GRAY.getColor())
-            .setIcon(SleepyIcons.TRINKET_ICON, BasicPalette.GREEN.getColor())
+            .setLore("Winner takes it all!", BasicPalette.GRAY.tag(true))
+            .setIcon(SleepyIcons.TRINKET_ICON, BasicPalette.GREEN.tag(true))
             .setFamily(ItemFamily.TRINKETS)
             .setGlint(true),
             null,

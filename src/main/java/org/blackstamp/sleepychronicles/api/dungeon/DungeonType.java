@@ -43,7 +43,7 @@ public enum DungeonType {
     public ItemStack build(){
         return config.icon().get()
                 .setID(this.getID())
-                .addLore("Max: " + config.maxPlayers(), BasicPalette.GOLD.getColor(),false)
+                .addLore("Max: " + config.maxPlayers(), BasicPalette.GOLD.tag(true),false)
                 .build();
     }
     public String getID(){ return this.name().toLowerCase(); }

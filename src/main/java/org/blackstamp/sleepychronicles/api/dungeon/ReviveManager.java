@@ -25,6 +25,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.UUID;
 
 public class ReviveManager {
+    private ReviveManager(){}
+
     // Potion effects for applying/removing debuffs.
 
     private static final PotionEffect[] DOWNED_DEBUFF = {
@@ -88,7 +90,7 @@ public class ReviveManager {
         );
 
         revivedPlayer.setHealth(revivedPlayer.getAttribute(Attribute.MAX_HEALTH).getBaseValue() * 0.36);
-        ChatManager.sendWarning(revivedPlayer,"You've been revived!",SleepyPalette.SLEEPY.color(2,true));
+        ChatManager.sendWarning(revivedPlayer,"You've been revived!",SleepyPalette.SLEEPY.tag(2,true));
     }
 
     public static void setDowned(Player downedPlayer, RunInstance run){
@@ -143,7 +145,7 @@ public class ReviveManager {
                 0.18D
         );
 
-        ChatManager.sendWarning(downedPlayer,"You've been downed!", SleepyPalette.SLEEPY.color(1,true));
+        ChatManager.sendWarning(downedPlayer,"You've been downed!", SleepyPalette.SLEEPY.tag(1,true));
         PlayerManager.addPots(downedPlayer, DOWNED_DEBUFF);
     }
 }

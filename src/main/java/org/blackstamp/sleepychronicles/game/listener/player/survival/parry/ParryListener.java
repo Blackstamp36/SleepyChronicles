@@ -28,15 +28,17 @@ import java.util.UUID;
 @Registrable
 public class ParryListener implements Listener {
 
+    // Color tags.
+    private static final String RED_TAG = BasicPalette.RED.tag(true);
+    private static final String GREEN_TAG = BasicPalette.GREEN.tag(true);
+
+    // Parry related.
     private static final Set<UUID> PARRY_LIST = new HashSet<>();
-
     private static final float PARTICLE_OFFSET = 0.85F;
-
     private static final int PARRY_PERFECT = 2;
     private static final int PARRY_MISS = 5;
-
     private static final long PARRY_WINDOW = 10L;
-    private static final int PARRY_INVINCIBILITY = 10;
+    private static final int PARRY_INVINCIBILITY_TICKS = 10;
 
     @EventHandler
     public void parryInit(PlayerInteractEvent e){
@@ -79,9 +81,9 @@ public class ParryListener implements Listener {
         particleManager.sphere(l, Particle.END_ROD, 2,25,1.0, null);
 
         e.setCancelled(true);
-        p.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, PARRY_INVINCIBILITY,0,false,false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, PARRY_INVINCIBILITY_TICKS,0,false,false));
         p.playSound(Sound.sound(Key.key("block.anvil.land"), Sound.Source.MASTER, 0.5F, 1.75F));
-        ChatManager.sendWarning(p, "✔", BasicPalette.GREEN.getColor());
+        ChatManager.sendWarning(p, "✔", GREEN_TAG);
         PARRY_LIST.remove(uuid);
 
         if(!p.isOnline()) return;
@@ -96,7 +98,7 @@ public class ParryListener implements Listener {
         if(!PARRY_LIST.contains(uuid)) return;
         if(!p.isOnline()) return;
 
-        ChatManager.sendWarning(p, "❌", BasicPalette.RED.getColor());
+        ChatManager.sendWarning(p, "❌", RED_TAG);
         p.playSound(Sound.sound(Key.key("entity.zombie.break_wooden_door"), Sound.Source.MASTER, 0.5F, 0.75F));
 
         PARRY_LIST.remove(uuid);

@@ -34,6 +34,10 @@ import java.util.UUID;
 @CommandPermission("admin_privilege")
 public class StaffCommand extends BaseCommand {
 
+    // Colors.
+
+    private static final String YELLOW_TAG = BasicPalette.YELLOW.tag(true);
+
     @Subcommand("give")
     public void give(CommandSender sender, @Optional SleepyItems item, @Optional Integer amount){
         if(!(sender instanceof Player p)) return;
@@ -66,7 +70,11 @@ public class StaffCommand extends BaseCommand {
     @CommandCompletion("@SleepyMobs")
     public void summon(CommandSender sender, @NotNull String mob, @Optional Integer amount){
         if(!(sender instanceof Player p)) return;
+
         Location location = p.getLocation();
+
+        if(location == null) return;
+
         Level level = ((CraftWorld) location.getWorld()).getHandle();
 
         if(amount == null || amount < 1) amount = 1;
@@ -88,7 +96,7 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         p.teleport(world.getLocation());
-        ChatManager.sendStaffMessage(p, "Teleporting to.. " + BasicPalette.YELLOW.getColor() + world.name());
+        ChatManager.sendStaffMessage(p, "Teleporting to.. " + YELLOW_TAG + world.name());
     }
 
     @Subcommand("set day ")
@@ -143,7 +151,7 @@ public class StaffCommand extends BaseCommand {
 
         TotemManager.set(p, value);
 
-        ChatManager.sendStaffMessage(staff, "The totems of " + BasicPalette.YELLOW.getColor() + p.getName() + BasicPalette.GREEN.getColor() + " were set to " + value);
+        ChatManager.sendStaffMessage(staff, "The totems of " + p.getName() + " were set to " + value);
     }
 
     @Subcommand("get totems")
@@ -155,10 +163,8 @@ public class StaffCommand extends BaseCommand {
         if(p == null) return;
 
         Integer totems = TotemManager.get(p);
-        String yellow = BasicPalette.YELLOW.getColor();
-        String green = BasicPalette.GREEN.getColor();
 
-        ChatManager.sendStaffMessage(staff, yellow + p.getName() + green + " has used " + yellow + totems + green + " totems.");
+        ChatManager.sendStaffMessage(staff, p.getName() + " has used " + totems + " totems.");
     }
 
     @Subcommand("down")

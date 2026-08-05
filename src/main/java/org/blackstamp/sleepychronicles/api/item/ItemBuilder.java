@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ItemBuilder implements Cloneable {
+public class ItemBuilder {
 
     private final ItemStack item;
     private final ItemMeta meta;
@@ -139,7 +139,7 @@ public class ItemBuilder implements Cloneable {
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
     public ItemBuilder addLore(String value, String color, boolean newLine){
-        if(color == null) color = SleepyPalette.VANILLA.getMiniColor1();
+        if(color == null) color = SleepyPalette.VANILLA.tag(true);
 
         final ArrayList<Component> lore = new ArrayList<>();
 
@@ -164,7 +164,7 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemBuilder setLore(String value, String color){
-        if(color == null) color = SleepyPalette.VANILLA.getMiniColor1();
+        if(color == null) color = SleepyPalette.VANILLA.tag(true);
 
         final List<Component> lore = splitLoreLines(value, color);
 
@@ -183,7 +183,7 @@ public class ItemBuilder implements Cloneable {
 
             // If the amount of chars we currently have is higher than the expected, we add it directly to the lore.
             if(builder.length() + word.length() > max && !builder.isEmpty()){
-                String prefix = lore.isEmpty() ? (BasicPalette.DARK_GRAY.getColor() + "|" + color) : color;
+                String prefix = lore.isEmpty() ? (BasicPalette.DARK_GRAY.tag(true) + "|" + color) : color;
 
                 lore.add(ConstantFields.MINI_MESSAGE.deserialize(prefix + builder).decoration(TextDecoration.ITALIC,false));
                 builder.setLength(0); // We set our current characters to zero for the next line.
@@ -209,13 +209,4 @@ public class ItemBuilder implements Cloneable {
     }
 
     public net.minecraft.world.item.ItemStack getAsNMS() { return CraftItemStack.asNMSCopy(item); }
-
-    @Override
-    public ItemBuilder clone() {
-        try {
-            return (ItemBuilder) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

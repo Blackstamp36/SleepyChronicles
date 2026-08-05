@@ -16,6 +16,10 @@ import org.bukkit.inventory.EquipmentSlot;
 @Registrable
 public class TotemListener implements Listener {
 
+    // Color tags.
+    private static final String GRAY_TAG = BasicPalette.GRAY.tag(true);
+    private static final String RED_TAG = BasicPalette.RED.tag(true);
+
     @EventHandler
     public void totem(EntityResurrectEvent e){
         if(!(e.getEntity() instanceof Player p)) return;
@@ -31,8 +35,8 @@ public class TotemListener implements Listener {
         EntityDamageEvent.DamageCause cause = (damageEvent != null)
                 ? damageEvent.getCause() : EntityDamageEvent.DamageCause.CUSTOM;
 
-        final String message = BasicPalette.RED.getColor() + p.getName() + " popped a " + type + "!\n" +
-                SleepyPalette.TOTEM.getMiniColor1() + "«N°" + number + "»" + BasicPalette.GRAY.getColor() + " Cause of usage: " + DamageUtils.getCauseString(p, cause) + ".";
+        final String message = RED_TAG + p.getName() + " popped a " + type + "!\n" +
+                SleepyPalette.TOTEM.tag(true) + "«N°" + number + "»" + GRAY_TAG + " Cause of usage: " + DamageUtils.getCauseString(p, cause) + ".";
 
         TotemManager.set(p, number + 1);
         ChatManager.sendBroadcast(message);

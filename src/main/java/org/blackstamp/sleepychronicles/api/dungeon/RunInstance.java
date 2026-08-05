@@ -82,7 +82,7 @@ public class RunInstance {
 
                     if(l.distanceSquared(center) > radiusSquared){
                         p.damage(4);
-                        ChatManager.sendWarning(p,"You don't feel right doing this..",SleepyPalette.MISCELLANEOUS.getMiniColor1());
+                        ChatManager.sendWarning(p,"You don't feel right doing this..",SleepyPalette.MISCELLANEOUS.tag(true));
                     }
                 }
             }
