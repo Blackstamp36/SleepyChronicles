@@ -1,6 +1,5 @@
 package org.blackstamp.sleepychronicles.api.color;
 
-import co.aikar.commands.annotation.Optional;
 import org.jetbrains.annotations.NotNull;
 
 public enum SleepyPalette {
@@ -35,11 +34,15 @@ public enum SleepyPalette {
         this.color3 = color3;
     }
 
-    public String getMiniColor1(){ return setDiamonds(this.color1); }
-    public String getMiniColor2(){ return setDiamonds(this.color2); }
-    public String getMiniColor3(){ return setDiamonds(this.color3); }
+    public @NotNull String color(boolean diamonds){
+        String colorToGet = this.color1;
 
-    public @NotNull String color(@Optional int index, boolean brackets){
+        if(diamonds) colorToGet = setDiamonds(colorToGet);
+
+        return colorToGet;
+    }
+
+    public @NotNull String color(int index, boolean diamonds){
         String colorToGet;
 
         switch(index){
@@ -48,7 +51,7 @@ public enum SleepyPalette {
             default -> colorToGet = this.color1;
         }
 
-        if(brackets) colorToGet = setDiamonds(colorToGet);
+        if(diamonds) colorToGet = setDiamonds(colorToGet);
 
         return colorToGet;
         }

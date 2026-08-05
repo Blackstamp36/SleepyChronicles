@@ -123,7 +123,7 @@ public class RunListener implements Listener {
 
             if(memberPlayer == null || !memberPlayer.isOnline()) return;
 
-            ChatManager.sendNotification(p,p.getName() + " fled early from the run.");
+            ChatManager.sendNotification(p,p.getName() + " fled early.");
         }
     }
 

@@ -24,9 +24,9 @@ public class ChatManager {
     // Prefixes.
     @Getter
     public enum ChatPrefix{
-        SLEEPY(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.SLEEPY.getMiniColor1() + "[SleepyChronicles] " + BasicPalette.DARK_GRAY.getColor() + "» "),
-        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.getMiniColor1() + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor()),
-        NOTIFICATION(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.NOTIFICATION.getMiniColor1() + "[!] " + BasicPalette.DARK_GRAY.getColor() + "» ");
+        SLEEPY(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.SLEEPY.color(false) + "[SleepyChronicles] " + BasicPalette.DARK_GRAY.getColor() + "» "),
+        STAFF(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.STAFF.color(false) + "[Staff] " + BasicPalette.GOLD.getColor() + "» " + BasicPalette.GREEN.getColor()),
+        NOTIFICATION(BasicPalette.DARK_GRAY.getColor() + "| " + SleepyPalette.NOTIFICATION.color(false) + "[!] " + BasicPalette.DARK_GRAY.getColor() + "» ");
 
         final String prefix;
 

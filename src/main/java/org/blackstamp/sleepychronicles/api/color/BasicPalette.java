@@ -25,5 +25,5 @@ public enum BasicPalette {
         this.color = color;
     }
 
-    public String getColor(){ return "<" + color + ">"; }
+    public String color(){ return "<" + this.color + ">"; }
 }

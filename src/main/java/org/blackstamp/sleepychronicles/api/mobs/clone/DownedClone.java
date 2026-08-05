@@ -21,7 +21,6 @@ import java.util.UUID;
 
 public class DownedClone {
     // TODO:
-    // 1. check how to move the downed clone more to the center (so it's more intuitive to where to attack)
     // 2. teleport to the overworld if it's not in a run. exactly to the lobby (but if there's no schem, then don't do anything)
     // 5. add listeners to prevent the 'downed' player from breaking things!
     // 6. replace all methods for the .get() in SleepyPalette!
@@ -29,14 +28,12 @@ public class DownedClone {
 
     private final GameProfile fakeProfile;
     private final ServerPlayer fakePlayer;
-    private final BlockPos location;
 
     public DownedClone(Player clonedPlayer, Location location){
         ServerLevel level = ((CraftWorld) location.getWorld()).getHandle();
         ServerPlayer nmsOriginal = ((CraftPlayer) clonedPlayer).getHandle();
         GameProfile originalProfile = nmsOriginal.getGameProfile();
 
-        this.location = new BlockPos(location.getBlockX(),location.getBlockY(),location.getBlockZ());
         this.fakeProfile = new GameProfile(UUID.randomUUID(), "");
         this.fakeProfile.getProperties().putAll(originalProfile.getProperties());
         this.fakePlayer = new ServerPlayer(level.getServer(), level, this.fakeProfile, nmsOriginal.clientInformation());
@@ -45,7 +42,7 @@ public class DownedClone {
         this.fakePlayer.setYRot(location.getYaw());
         this.fakePlayer.setXRot(location.getPitch());
         this.fakePlayer.setPose(Pose.SLEEPING);
-        this.fakePlayer.setSleepingPos(this.location);
+        this.fakePlayer.setSleepingPos(new BlockPos(location.getBlockX(),location.getBlockY(),location.getBlockZ()));
         this.fakePlayer.setGlowingTag(true);
     }
 
