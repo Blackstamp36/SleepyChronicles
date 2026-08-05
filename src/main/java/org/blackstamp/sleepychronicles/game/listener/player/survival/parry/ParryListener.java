@@ -4,7 +4,6 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.cooldown.CooldownManager;
 import org.blackstamp.sleepychronicles.api.particle.ParticleManager;

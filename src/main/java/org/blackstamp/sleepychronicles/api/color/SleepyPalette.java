@@ -1,58 +1,52 @@
 package org.blackstamp.sleepychronicles.api.color;
 
+import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 public enum SleepyPalette {
+    // Primary, or vanilla-like colors.
     VANILLA("#ebebeb"),
     TRINKET("#d62411"),
     MISCELLANEOUS("#659a7e"),
+    TOTEM("#ced45b"),
 
+    // Custom.
     NULL("#db1fdb"),
     BOB("#ada19f"),
     KITSUNE("#e4ced1"),
     SEED_GHOST("#a16e45"),
     PALE("#cfc4c3"),
 
+    // Armor related.
     SOLAR("#cc9933"),
     VORTEX("#4dcbcb"),
     STARDUST("#64c7e8"),
 
     SLEEPY("#9381ff","#b8b8ff","#f8f7ff"),
-    TOTEM("#ced45b"),
+
+    // Player messengers.
     STAFF("#c9cba3","#ffe1a8","#e26d5c"),
-    NOTIFICATION("#83c9f4");
+    ERROR("#dc143c"),
+    BROADCAST("#83c9f4");
 
-    private final String color1;
-    private final String color2;
-    private final String color3;
+    private final TextColor primary;
+    private final TextColor secondary;
+    private final TextColor tertiary;
 
-    SleepyPalette(String color){ this(color, color, color); }
-    SleepyPalette(String color1, String color2){ this(color1, color2, color1); }
-    SleepyPalette(String color1, String color2, String color3){
-        this.color1 = color1;
-        this.color2 = color2;
-        this.color3 = color3;
+    SleepyPalette(String primary){ this(primary, primary, primary); }
+    SleepyPalette(String primary, String secondary){ this(primary, secondary, primary); }
+    SleepyPalette(String primary, String secondary, String tertiary){
+        this.primary = TextColor.fromCSSHexString(primary);
+        this.secondary = TextColor.fromCSSHexString(secondary);
+        this.tertiary = TextColor.fromCSSHexString(tertiary);
     }
 
-    public @NotNull String tag(boolean diamonds){
-        String colorToGet = this.color1;
-
-        if(diamonds) colorToGet = "<" + colorToGet + ">";
-
-        return colorToGet;
-    }
-
-    public @NotNull String tag(int index, boolean diamonds){
-        String colorToGet;
-
-        switch(index){
-            case 1 -> colorToGet = this.color2;
-            case 2 -> colorToGet = this.color3;
-            default -> colorToGet = this.color1;
-        }
-
-        if(diamonds) colorToGet = "<" + colorToGet + ">";
-
-        return colorToGet;
+    public @NotNull TextColor getColor(){ return this.primary; }
+    public @NotNull TextColor getColor(int type){
+        return switch(type){
+            case 1 -> this.secondary;
+            case 2 -> this.tertiary;
+            default -> this.primary;
+            };
         }
     }

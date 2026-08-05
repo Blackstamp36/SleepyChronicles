@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Subcommand;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
+import org.blackstamp.sleepychronicles.api.chat.ChatPrefix;
 import org.blackstamp.sleepychronicles.api.party.PartyInvite;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @CommandAlias("p|party")
 public class PartyCommand extends BaseCommand {
 
-    // Constants.
+    // Message constants.
     private static final String PARTY_DENY_MESSAGE = "You don't have a party. (/p create)";
 
     @Subcommand("create")
@@ -29,12 +29,12 @@ public class PartyCommand extends BaseCommand {
         SleepyParty party = new SleepyParty(uuid);
 
         if(PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, true,"You're already in a party!");
+            ChatManager.sendMessage(p, "You're already in a party!", ChatPrefix.ERROR);
             return;
         }
 
         PartyManager.addToParty(uuid,party);
-        ChatManager.sendMessage(p, false,"Party created successfully! (/p invite)");
+        ChatManager.sendMessage(p, "Party created successfully! (/p invite)");
     }
 
     @Subcommand("invite")
@@ -45,21 +45,21 @@ public class PartyCommand extends BaseCommand {
         UUID leaderUUID = p.getUniqueId();
 
         if(!PartyManager.hasParty(leaderUUID)){
-            ChatManager.sendMessage(p, true, PARTY_DENY_MESSAGE);
+            ChatManager.sendMessage(p, PARTY_DENY_MESSAGE, ChatPrefix.ERROR);
             return;
         }
 
         Player targetPlayer = Bukkit.getPlayer(target);
 
         if(targetPlayer == null){
-            ChatManager.sendMessage(p, true,"The player is not online!");
+            ChatManager.sendMessage(p, "The player is not online!", ChatPrefix.ERROR);
             return;
         }
 
         UUID targetUUID = targetPlayer.getUniqueId();
 
         if(PartyManager.hasParty(targetUUID)){
-            ChatManager.sendMessage(p, true,"The player's already in a party!");
+            ChatManager.sendMessage(p, "The player's already in a party!", ChatPrefix.ERROR);
             return;
         }
 
@@ -68,12 +68,15 @@ public class PartyCommand extends BaseCommand {
         long expiration = System.currentTimeMillis() + (duration * 1000L); // 60s upon expiration.
 
         PartyManager.addPendingInvite(targetUUID, leaderUUID,new PartyInvite(party,expiration));
-        ChatManager.sendMessage(p, false,"Invitation sent! (" + duration + "s)");
+        ChatManager.sendMessage(p, "Invitation sent! (" + duration + "s)");
 
         if(!targetPlayer.isOnline()) return;
 
         String leaderName = p.getName();
-        ChatManager.sendNotification(targetPlayer, "You received an invitation to join "+leaderName+"'s party! (/p accept "+leaderName+")");
+        ChatManager.sendMessage(
+                targetPlayer,
+                "You received an invitation to join " + leaderName + "'s party! (/p accept " + leaderName + ")"
+        );
     }
 
     @Subcommand("accept")
@@ -86,14 +89,14 @@ public class PartyCommand extends BaseCommand {
         OfflinePlayer leaderPlayer = Bukkit.getPlayer(leader);
 
         if(leaderPlayer == null){
-            ChatManager.sendMessage(p, true,"The party that you tried to join doesn't exist.");
+            ChatManager.sendMessage(p, "The party that you tried to join doesn't exist.", ChatPrefix.ERROR);
             return;
         }
 
         UUID leaderUUID = leaderPlayer.getUniqueId();
 
         if(PartyManager.hasParty(receiverUUID)){
-            ChatManager.sendMessage(p, true,"You're already in a party.");
+            ChatManager.sendMessage(p, "You're already in a party.", ChatPrefix.ERROR);
             return;
         }
 
@@ -101,20 +104,20 @@ public class PartyCommand extends BaseCommand {
         PartyInvite invite = PartyManager.getPendingInvite(receiverUUID,leaderUUID);
 
         if(invite == null || !PartyManager.hasPendingInvite(receiverUUID, leaderUUID)){
-            ChatManager.sendMessage(p, true,"The invitation doesn't exist.");
+            ChatManager.sendMessage(p, "The invitation doesn't exist.", ChatPrefix.ERROR);
             return;
         }
 
         SleepyParty party = invite.targetParty();
 
         if(party.getMembers().size() >= 10){ // I think I'm gonna erase this. But just for you to see.
-            ChatManager.sendMessage(p, true,"The party is full!"); // Because I don't want to depend on the command
+            ChatManager.sendMessage(p, "The party is full!", ChatPrefix.ERROR); // Because I don't want to depend on the command
             return; // for the size of a party. I want that it depends of the dungeon that is being played.
         }
 
         if(System.currentTimeMillis() > invite.expirationTime()){
             PartyManager.removePendingInvite(receiverUUID, leaderUUID);
-            ChatManager.sendMessage(p, true,"The invitation expired.");
+            ChatManager.sendMessage(p, "The invitation expired.", ChatPrefix.ERROR);
             return;
         }
 
@@ -123,7 +126,7 @@ public class PartyCommand extends BaseCommand {
 
             if(memberPlayer == null || !memberPlayer.isOnline()) continue;
 
-            ChatManager.sendMessage(memberPlayer, false,receiverName + " joined the party!");
+            ChatManager.sendMessage(memberPlayer, receiverName + " joined the party!", ChatPrefix.ERROR);
         }
 
         String leaderName = leaderPlayer.getName();
@@ -132,7 +135,7 @@ public class PartyCommand extends BaseCommand {
         PartyManager.addToParty(receiverUUID,party);
         party.addMember(receiverUUID);
 
-        ChatManager.sendMessage(p, false,"Joined the party of "+leaderName+"!");
+        ChatManager.sendMessage(p, "Joined the party of " + leaderName + "!");
     }
 
     @Subcommand("disband")
@@ -141,20 +144,20 @@ public class PartyCommand extends BaseCommand {
         UUID uuid = p.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, true, PARTY_DENY_MESSAGE);
+            ChatManager.sendMessage(p, PARTY_DENY_MESSAGE, ChatPrefix.ERROR);
             return;
         }
 
         SleepyParty party = PartyManager.getParty(uuid);
 
         if(!PartyManager.isLeader(uuid,party)){
-            ChatManager.sendMessage(p, true,"Only the leader may disband the party!");
+            ChatManager.sendMessage(p, "Only the leader may disband the party!", ChatPrefix.ERROR);
             return;
         }
 
         party.disbandParty();
         PartyManager.removeParty(party);
-        ChatManager.sendMessage(p, false,"Party disbanded!");
+        ChatManager.sendMessage(p, "Party disbanded!");
     }
 
     @Subcommand("kick")
@@ -166,14 +169,14 @@ public class PartyCommand extends BaseCommand {
         UUID targetUUID = null;
 
         if(!PartyManager.hasParty(leaderUUID)){
-            ChatManager.sendMessage(leader, true, PARTY_DENY_MESSAGE);
+            ChatManager.sendMessage(leader, PARTY_DENY_MESSAGE, ChatPrefix.ERROR);
             return;
         }
 
         SleepyParty party = PartyManager.getParty(leaderUUID);
 
         if(!PartyManager.isLeader(leaderUUID,party)){
-            ChatManager.sendMessage(leader, true,"Only the leader may kick off members!");
+            ChatManager.sendMessage(leader, "Only the leader may kick off members!", ChatPrefix.ERROR);
             return;
         }
 
@@ -188,12 +191,12 @@ public class PartyCommand extends BaseCommand {
         }
 
         if(targetUUID == null){
-            ChatManager.sendMessage(leader, true,"The player wasn't found in the party.");
+            ChatManager.sendMessage(leader, "The player wasn't found in the party.", ChatPrefix.ERROR);
             return;
         }
 
         if(targetUUID.equals(leaderUUID)){
-            ChatManager.sendMessage(leader, true,"You cannot kick yourself from your own party. Try (/p disband)");
+            ChatManager.sendMessage(leader, "You cannot kick yourself from your own party. Try (/p disband)", ChatPrefix.ERROR);
             return;
         }
 
@@ -211,11 +214,11 @@ public class PartyCommand extends BaseCommand {
 
             if(onlineMember == null) continue;
 
-            ChatManager.sendNotification(onlineMember, targetName+"has been kicked from the party!");
+            ChatManager.sendMessage(onlineMember, targetName + "has been kicked from the party!");
         }
 
         if(targetPlayer != null && targetPlayer.isOnline()){
-            ChatManager.sendMessage(targetPlayer, true,"You were kicked from your party! :(");
+            ChatManager.sendMessage(targetPlayer,"You were kicked from your party! :(");
             }
         }
 
@@ -225,7 +228,7 @@ public class PartyCommand extends BaseCommand {
         UUID uuid = p.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, true,"You're not currently in a party to see its info!");
+            ChatManager.sendMessage(p, "You're not currently in a party to see its info!", ChatPrefix.ERROR);
             return;
         }
 
@@ -247,6 +250,7 @@ public class PartyCommand extends BaseCommand {
 
         if(builder.isEmpty()) builder.append("(No members yet).");
 
+        // SUBJECT TO CHANGE
         String darkGrayTag = BasicPalette.DARK_GRAY.tag(true);
         String grayTag = BasicPalette.DARK_GRAY.tag(true);
         String yellowTag = BasicPalette.YELLOW.tag(true);
@@ -257,7 +261,7 @@ public class PartyCommand extends BaseCommand {
                         "Members: " + builder + "\n" +
                         darkGrayTag + "—";
 
-        ChatManager.sendMessage(p, false,finalMessage);
+        ChatManager.sendMessage(p, finalMessage);
         }
 
     @Subcommand("leave")
@@ -267,7 +271,7 @@ public class PartyCommand extends BaseCommand {
         UUID uuid = leftPlayer.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(leftPlayer, true, PARTY_DENY_MESSAGE);
+            ChatManager.sendMessage(leftPlayer, PARTY_DENY_MESSAGE, ChatPrefix.ERROR);
             return;
         }
 
@@ -276,14 +280,14 @@ public class PartyCommand extends BaseCommand {
 
         party.removeMember(uuid);
         PartyManager.removeParty(party);
-        ChatManager.sendMessage(leftPlayer, false,"You left the party!");
+        ChatManager.sendMessage(leftPlayer, "You left the party!");
 
         for(UUID memberUUID : party.getMembers()){
             Player memberPlayer = Bukkit.getPlayer(memberUUID);
 
             if(memberPlayer == null || !memberPlayer.isOnline()) continue;
 
-            ChatManager.sendMessage(memberPlayer, false,leftName + " left the party!");
+            ChatManager.sendMessage(memberPlayer, leftName + " left the party!");
             }
         }
     }

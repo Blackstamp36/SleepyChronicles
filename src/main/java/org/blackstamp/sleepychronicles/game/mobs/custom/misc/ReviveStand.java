@@ -13,6 +13,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
@@ -35,6 +36,8 @@ public class ReviveStand extends ArmorStand {
     private double currentReviveHealth;
     private final ParticleManager particle;
     private Location location = null;
+
+    private static final String HEALTH_COLOR = SleepyPalette.SLEEPY.getColor();
 
     public ReviveStand(Level level, RunInstance run, UUID downedUUID){
         super(EntityType.ARMOR_STAND, level);
@@ -94,7 +97,11 @@ public class ReviveStand extends ArmorStand {
     }
 
     private void checkHealth(LivingEntity entity){
-        entity.setCustomName(TextFormatter.toComponent(String.format("%.1f",this.currentReviveHealth) + "/" + String.format("%.1f",this.maxHealthPool), "#b8b8ff"));
+        String healthText = String.format("%.1f",this.currentReviveHealth) + "/" + String.format("%.1f",this.maxHealthPool);
+
+        entity.setCustomName(
+                TextFormatter.toComponent(healthText, HEALTH_COLOR)
+        );
 
         if(this.currentReviveHealth <= 0){
             ReviveManager.revivePlayer(this.downedUUID, this.run);

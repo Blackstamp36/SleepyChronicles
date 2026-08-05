@@ -13,6 +13,7 @@ public class TextFormatter {
                 .result()
                 .orElse(net.minecraft.network.chat.TextColor.fromRgb(0xFFFFFF));
 
+
         return Component.literal(value)
                 .withColor(textColor.getValue());
     }

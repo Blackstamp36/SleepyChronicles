@@ -2,7 +2,6 @@ package org.blackstamp.sleepychronicles.api.item;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
@@ -139,7 +138,7 @@ public class ItemBuilder {
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
     public ItemBuilder addLore(String value, String color, boolean newLine){
-        if(color == null) color = SleepyPalette.VANILLA.tag(true);
+        if(color == null) color = SleepyPalette.VANILLA.getColor(true);
 
         final ArrayList<Component> lore = new ArrayList<>();
 
@@ -164,7 +163,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setLore(String value, String color){
-        if(color == null) color = SleepyPalette.VANILLA.tag(true);
+        if(color == null) color = SleepyPalette.VANILLA.getColor(true);
 
         final List<Component> lore = splitLoreLines(value, color);
 

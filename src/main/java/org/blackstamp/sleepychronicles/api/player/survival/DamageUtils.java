@@ -1,7 +1,6 @@
 package org.blackstamp.sleepychronicles.api.player.survival;
 
 import net.kyori.adventure.text.Component;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

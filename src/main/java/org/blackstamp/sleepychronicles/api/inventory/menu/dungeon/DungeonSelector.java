@@ -1,6 +1,7 @@
 package org.blackstamp.sleepychronicles.api.inventory.menu.dungeon;
 
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
+import org.blackstamp.sleepychronicles.api.chat.ChatPrefix;
 import org.blackstamp.sleepychronicles.api.dungeon.DungeonType;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
@@ -60,14 +61,14 @@ public class DungeonSelector extends MenuTemplate {
         UUID uuid = p.getUniqueId();
 
         if(!PartyManager.hasParty(uuid)){
-            ChatManager.sendMessage(p, true,"You aren't in a party! (/p create)");
+            ChatManager.sendMessage(p, "You aren't in a party! (/p create)", ChatPrefix.ERROR);
             return;
         }
 
         SleepyParty party = PartyManager.getParty(uuid);
 
         if(!PartyManager.isLeader(uuid,party)){
-            ChatManager.sendMessage(p, true,"Only the leader may begin the dungeon.");
+            ChatManager.sendMessage(p, "Only the leader may begin the dungeon.", ChatPrefix.ERROR);
             return;
         }
 

@@ -17,7 +17,7 @@ public class SleepyItem extends ItemBuilder {
     }
 
     public SleepyItem(Material material, @NotNull SleepyPalette palette){
-        this(material, palette.tag(true), palette.tag(1,true), palette.tag(2,true));
+        this(material, palette.getColor(true), palette.getColor(1,true), palette.getColor(2,true));
     }
 
     public SleepyItem(Material material, @Optional String... colors){

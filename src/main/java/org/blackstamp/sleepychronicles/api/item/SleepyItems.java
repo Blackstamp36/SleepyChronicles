@@ -1,6 +1,5 @@
 package org.blackstamp.sleepychronicles.api.item;
 
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketAbility;

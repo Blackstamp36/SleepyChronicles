@@ -11,9 +11,10 @@ import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
-import org.blackstamp.sleepychronicles.game.world.dimensions.WorldManager;
+import org.blackstamp.sleepychronicles.api.world.LocationList;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,13 +32,16 @@ import java.util.UUID;
 @Registrable
 public class RunListener implements Listener {
 
+    // Constants.
+    private static final Location THRESHOLD_SPAWN = LocationList.THRESHOLD_SPAWN.get();
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         Player p = e.getPlayer();
 
         if(RunManager.isNotInRun(p.getUniqueId())) return;
 
-        p.playSound(Sound.sound(Key.key("block.note_block.pling"), Sound.Source.MASTER, 0.15F, 0.25F));
+        p.playSound(Sound.sound(Key.key("block.nether_sprout.break"), Sound.Source.MASTER, 0.15F, 0.25F));
         e.setCancelled(true);
     }
 
@@ -107,9 +111,9 @@ public class RunListener implements Listener {
         SleepyParty party = run.getParty();
         Set<UUID> members = party.getMembers();
 
-        p.teleport(WorldManager.OVERWORLD.getLocation());
+        p.teleport(THRESHOLD_SPAWN);
 
-        ChatManager.sendMessage(p,true,"You disconnected in the midst of a run! You got redirected to the lobby.");
+        ChatManager.sendMessage(p,"You disconnected in the midst of a run! You got redirected to the lobby.");
         party.removeMember(uuid);
         RunManager.removeRunInstance(uuid);
 
@@ -123,7 +127,7 @@ public class RunListener implements Listener {
 
             if(memberPlayer == null || !memberPlayer.isOnline()) return;
 
-            ChatManager.sendNotification(p,p.getName() + " fled early.");
+            ChatManager.sendMessage(p,p.getName() + " fled early.");
         }
     }
 
@@ -174,9 +178,9 @@ public class RunListener implements Listener {
                 if(memberPlayer == null || !memberPlayer.isOnline()) continue;
                 if(PersistentData.has(memberPlayer,SleepyKeys.IS_DOWNED.get())){ ReviveManager.revivePlayer(memberPlayer,run); }
 
-                memberPlayer.teleport(WorldManager.OVERWORLD.getLocation());
-                ChatManager.sendWarning(memberPlayer, "Was it a dream..?", SleepyPalette.SLEEPY.tag(2,true));
-                ChatManager.sendTitle(memberPlayer, "DEFEAT", SleepyPalette.SLEEPY.tag(1,false));
+                memberPlayer.teleport(THRESHOLD_SPAWN);
+                ChatManager.sendActionBar(memberPlayer, "Was it a dream..?", SleepyPalette.SLEEPY.getColor(2));
+                ChatManager.sendTitle(memberPlayer, "DEFEAT", SleepyPalette.SLEEPY.getColor(1));
             }
 
             run.cleanupRun(false);

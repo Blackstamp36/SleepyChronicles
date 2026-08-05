@@ -23,7 +23,6 @@ public class DownedClone {
     // TODO:
     // 2. teleport to the overworld if it's not in a run. exactly to the lobby (but if there's no schem, then don't do anything)
     // 5. add listeners to prevent the 'downed' player from breaking things!
-    // 6. replace all methods for the .get() in SleepyPalette!
     // 7. add listener to reset PDCs!
     // 8. modify 'ChatManager' so it accepts Components.
 

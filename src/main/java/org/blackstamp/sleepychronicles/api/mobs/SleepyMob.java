@@ -49,7 +49,7 @@ public class SleepyMob extends Mob {
         this.mobName = config.name();
 
         if(config.color() != null) this.color = config.color();
-        else this.color = SleepyPalette.VANILLA.tag(true);
+        else this.color = SleepyPalette.VANILLA.getColor(true);
 
         if(config.attack() != null) this.goalSelector.addGoal(1, new GenericSkillGoal(this,config.attack()));
 

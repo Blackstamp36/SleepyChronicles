@@ -1,80 +1,49 @@
 package org.blackstamp.sleepychronicles.api.chat;
 
-import lombok.Getter;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
-import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
-import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
-import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ChatManager {
+    private ChatManager(){}
 
-    // Color tags.
-    private static final String DARK_GRAY_TAG = BasicPalette.DARK_GRAY.tag(true);
-    private static final String RED_TAG = BasicPalette.RED.tag(true);
-    private static final String GRAY_TAG = BasicPalette.GRAY.tag(true);
-    private static final String GOLD_TAG = BasicPalette.GOLD.tag(true);
-    private static final String GREEN_TAG = BasicPalette.GREEN.tag(true);
+    // Message elements.
+    public static void sendMessage(Player p, String value){ sendMessage(p,value,ChatPrefix.SLEEPY); }
+    public static void sendMessage(Player p, String value, ChatPrefix chatPrefix){
+        Component message = Component.text()
+                .append(chatPrefix.getPrefix())
+                .append(Component.text(value)).color(chatPrefix.getMessageColor())
+                .build();
 
-    // Prefixes.
-    @Getter
-    private enum ChatPrefix{
-        SLEEPY(DARK_GRAY_TAG + "| " + SleepyPalette.SLEEPY.tag(true) + "[SleepyChronicles] " + DARK_GRAY_TAG + "» "),
-        STAFF(DARK_GRAY_TAG + "| " + SleepyPalette.STAFF.tag(true) + "[Staff] " + GOLD_TAG + "» " + GREEN_TAG),
-        NOTIFICATION(DARK_GRAY_TAG + "| " + SleepyPalette.NOTIFICATION.tag(true) + "[!] " + DARK_GRAY_TAG + "» ");
-
-        private final String prefix;
-
-        ChatPrefix(String prefix){ this.prefix = prefix; }
+        p.sendMessage(message);
     }
 
-    // Title elements.
-    public static void sendTitle(Player p, String value, TextColor color){ // CHANGE THIS!! DON'T FORGET
+    // Title-related elements.
+    public static void sendTitle(Player p, String value, TextColor color){
+        Component title = Component.text(value).color(color);
 
-        // p.showTitle(Title.title(title, Component.empty()));
+        p.showTitle(Title.title(title, Component.empty()));
     }
 
-    public static void sendSubtitle(Player p, String value, String color){
-        Component subtitle = TextFormatter.toKyoriComponent(value, color);
+    public static void sendSubtitle(Player p, String value, TextColor color){
+        Component subtitle = Component.text(value).color(color);
 
         p.showTitle(Title.title(Component.empty(), subtitle));
     }
 
-    // Message elements.
-    public static void sendMessage(Player p, boolean isError, String value){
-        String color = isError ? RED_TAG : DARK_GRAY_TAG;
-        String message = ChatPrefix.SLEEPY.getPrefix() + color + value;
-
-        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(message));
+    public static void sendActionBar(Player p, String value, TextColor color){
+        p.sendActionBar(Component.text(value).color(color));
     }
 
-    public static void sendNotification(Player p, String value){
-        String message = ChatPrefix.SLEEPY.getPrefix() + GRAY_TAG + value;
-
-        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(message));
-    }
-
-    public static void sendWarning(Player p, String value, String color){
-        String message = color + value;
-
-        p.sendActionBar(ConstantFields.MINI_MESSAGE.deserialize(message));
-    }
-
+    // Broadcast.
     public static void sendBroadcast(String value){
-        String message = ChatPrefix.SLEEPY.getPrefix() + value;
+        Component message = Component.text()
+                .append(ChatPrefix.BROADCAST.getPrefix())
+                .append(Component.text(value)).color(ChatPrefix.BROADCAST.getMessageColor())
+                .build();
 
-        Bukkit.broadcast(ConstantFields.MINI_MESSAGE.deserialize(message));
-    }
-
-    public static void sendStaffMessage(Player p, String value){
-        String message = ChatPrefix.STAFF.getPrefix() + value;
-
-        p.sendMessage(ConstantFields.MINI_MESSAGE.deserialize(message));
+        Bukkit.broadcast(message);
     }
 }

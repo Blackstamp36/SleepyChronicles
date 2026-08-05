@@ -1,7 +1,6 @@
 package org.blackstamp.sleepychronicles.game.listener.player.survival.death;
 
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.player.survival.DamageUtils;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;

@@ -16,7 +16,7 @@ public interface SleepyEntity {
 
     default void applyData(Mob mob){
         BaseConfig config = this.getConfig();
-        String color = SleepyPalette.VANILLA.tag(true);
+        String color = SleepyPalette.VANILLA.getColor(true);
 
         if(config.color() != null) color = config.color();
         if(config.attack() != null) mob.goalSelector.addGoal(1, new GenericSkillGoal(mob,config.attack()));

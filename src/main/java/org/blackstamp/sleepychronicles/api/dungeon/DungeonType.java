@@ -1,7 +1,6 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
 import lombok.Getter;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
 import org.blackstamp.sleepychronicles.api.item.SleepyItem;
 import org.blackstamp.sleepychronicles.api.mobs.boss.SleepyBosses;

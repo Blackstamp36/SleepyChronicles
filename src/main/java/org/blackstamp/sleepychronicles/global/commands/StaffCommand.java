@@ -5,10 +5,9 @@ import co.aikar.commands.annotation.*;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.blackstamp.sleepychronicles.api.chat.ChatManager;
-import org.blackstamp.sleepychronicles.api.color.BasicPalette;
+import org.blackstamp.sleepychronicles.api.chat.ChatPrefix;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
-import org.blackstamp.sleepychronicles.api.data.days.DayManager;
 import org.blackstamp.sleepychronicles.api.dungeon.ReviveManager;
 import org.blackstamp.sleepychronicles.api.dungeon.RunInstance;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
@@ -18,7 +17,7 @@ import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.blackstamp.sleepychronicles.api.mobs.clone.DownedClone;
 import org.blackstamp.sleepychronicles.api.mobs.MobManager;
 import org.blackstamp.sleepychronicles.game.listener.player.survival.death.totem.TotemManager;
-import org.blackstamp.sleepychronicles.game.world.dimensions.WorldManager;
+import org.blackstamp.sleepychronicles.api.world.WorldType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -42,7 +41,7 @@ public class StaffCommand extends BaseCommand {
     public void give(CommandSender sender, @Optional SleepyItems item, @Optional Integer amount){
         if(!(sender instanceof Player p)) return;
         if(item == null){
-            ChatManager.sendMessage(p, false,"Opening items menu!");
+            ChatManager.sendMessage(p, "Opening items menu!", ChatPrefix.STAFF);
             new ItemArchive(p).open();
             return;
         }
@@ -52,7 +51,7 @@ public class StaffCommand extends BaseCommand {
         ItemStack stack = item.build().clone();
         stack.setAmount(amount);
         p.getInventory().addItem(stack);
-        ChatManager.sendStaffMessage(p, "Receiving " + amount + "x " + item.name());
+        ChatManager.sendMessage(p, "Receiving " + amount + "x " + item.name(), ChatPrefix.STAFF);
     }
 
     @Subcommand("broadcast")
@@ -72,9 +71,6 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         Location location = p.getLocation();
-
-        if(location == null) return;
-
         Level level = ((CraftWorld) location.getWorld()).getHandle();
 
         if(amount == null || amount < 1) amount = 1;
@@ -87,42 +83,16 @@ public class StaffCommand extends BaseCommand {
             entity.setPos(location.x(), location.y(), location.z());
             level.addFreshEntity(entity);
 
-            ChatManager.sendStaffMessage(p, "Summoning " + amount + "x " + mob);
+            ChatManager.sendMessage(p, "Summoning " + amount + "x " + mob, ChatPrefix.STAFF);
         }
     }
 
     @Subcommand("teleport")
-    public void teleport(CommandSender sender, @NotNull WorldManager world){
+    public void teleport(CommandSender sender, @NotNull WorldType world){
         if(!(sender instanceof Player p)) return;
 
-        p.teleport(world.getLocation());
-        ChatManager.sendStaffMessage(p, "Teleporting to.. " + YELLOW_TAG + world.name());
-    }
-
-    @Subcommand("set day ")
-    @CommandCompletion("<value>")
-    public void setDay(CommandSender sender, @NotNull Integer day){
-        if(!(sender instanceof Player p)) return;
-
-        DayManager.getInstance().setDay(day);
-
-        ChatManager.sendStaffMessage(p, "Day set to.. " + BasicPalette.YELLOW + day);
-    }
-
-    @Subcommand("get day")
-    public void getDay(CommandSender sender){
-        if(!(sender instanceof Player p)) return;
-        final int day = DayManager.getInstance().getDay();
-
-        ChatManager.sendStaffMessage(p, "The current day is " + BasicPalette.YELLOW + day);
-    }
-
-    @Subcommand("get time")
-    public void getTimeLeft(CommandSender sender){
-        if(!(sender instanceof Player p)) return;
-        final String timeLeft = DayManager.getInstance().convertToTime(DayManager.getInstance().getTimestamp());
-
-        ChatManager.sendStaffMessage(p, "Time until next day: " + BasicPalette.YELLOW + timeLeft);
+        p.teleport(world.get().getSpawnLocation());
+        ChatManager.sendMessage(p, "Teleporting to.. " + YELLOW_TAG + world.name(), ChatPrefix.STAFF);
     }
 
     @Subcommand("get trinkets")
@@ -130,14 +100,6 @@ public class StaffCommand extends BaseCommand {
         if(!(sender instanceof Player p)) return;
 
         new TrinketBag(p, p.getName()).open();
-    }
-
-    @Subcommand("trinkets reset")
-    public void resetTrinkets(CommandSender sender){
-        if(!(sender instanceof Player p)) return;
-
-        PersistentData.remove(p, SleepyKeys.TRINKETS_INV.get());
-        ChatManager.sendStaffMessage(p, "Removing PersistentData...");
     }
 
     @Subcommand("set totems")
@@ -151,7 +113,7 @@ public class StaffCommand extends BaseCommand {
 
         TotemManager.set(p, value);
 
-        ChatManager.sendStaffMessage(staff, "The totems of " + p.getName() + " were set to " + value);
+        ChatManager.sendMessage(staff, "The totems of " + p.getName() + " were set to " + value, ChatPrefix.STAFF);
     }
 
     @Subcommand("get totems")
@@ -164,7 +126,7 @@ public class StaffCommand extends BaseCommand {
 
         Integer totems = TotemManager.get(p);
 
-        ChatManager.sendStaffMessage(staff, p.getName() + " has used " + totems + " totems.");
+        ChatManager.sendMessage(staff, p.getName() + " has used " + totems + " totems.", ChatPrefix.STAFF);
     }
 
     @Subcommand("down")
@@ -176,7 +138,7 @@ public class StaffCommand extends BaseCommand {
         RunInstance run = RunManager.getRunInstance(uuid);
 
         if(run == null){
-            ChatManager.sendStaffMessage(p,"You're not currently in a run!");
+            ChatManager.sendMessage(p,"You're not currently in a run!", ChatPrefix.STAFF);
             return;
         }
 
@@ -192,7 +154,7 @@ public class StaffCommand extends BaseCommand {
         RunInstance run = RunManager.getRunInstance(uuid);
 
         if(run == null){
-            ChatManager.sendStaffMessage(p,"You're not currently in a run!");
+            ChatManager.sendMessage(p,"You're not currently in a run!", ChatPrefix.STAFF);
             return;
         }
 
@@ -208,7 +170,7 @@ public class StaffCommand extends BaseCommand {
         PersistentData.remove(p, SleepyKeys.TOTEMS.get());
         PersistentData.remove(p, SleepyKeys.TRINKETS_INV.get());
 
-        ChatManager.sendStaffMessage(p,"Resetting all PDCs..");
+        ChatManager.sendMessage(p,"Resetting all PDCs..");
     }
 
     @Subcommand("clone")
@@ -218,6 +180,6 @@ public class StaffCommand extends BaseCommand {
         DownedClone clone = new DownedClone(p,p.getLocation());
 
         clone.showTo(p);
-        ChatManager.sendStaffMessage(p,"Summoned Fake Clone!");
+        ChatManager.sendMessage(p,"Summoned fake clone!", ChatPrefix.STAFF);
     }
 }
