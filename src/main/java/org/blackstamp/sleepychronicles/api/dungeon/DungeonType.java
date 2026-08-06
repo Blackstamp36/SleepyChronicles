@@ -1,6 +1,8 @@
 package org.blackstamp.sleepychronicles.api.dungeon;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
 import org.blackstamp.sleepychronicles.api.item.SleepyItem;
 import org.blackstamp.sleepychronicles.api.mobs.boss.SleepyBosses;
@@ -20,7 +22,7 @@ public enum DungeonType {
             .radius(50.0D)
             .timeLimitSeconds(1800)
             .icon(() -> new SleepyItem(Material.GRASS_BLOCK, ItemFamily.TRINKETS)
-                    .setDisplay("Test",)
+                    .setDisplay("Test", SleepyPalette.VANILLA)
                     .setLore("Hello! I'm a test!", null)
                     .setIcon(SleepyIcons.PERSONS_ICON, null)
             )
@@ -42,7 +44,7 @@ public enum DungeonType {
     public ItemStack build(){
         return config.icon().get()
                 .setID(this.getID())
-                .addLore("Max: " + config.maxPlayers(), BasicPalette.GOLD.tag(true),false)
+                .addLore("Max: " + config.maxPlayers(), NamedTextColor.GOLD,false)
                 .build();
     }
     public String getID(){ return this.name().toLowerCase(); }

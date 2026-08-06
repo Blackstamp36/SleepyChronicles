@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
-import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
@@ -29,10 +28,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemBuilder {
-
+public class ItemBuilder<T extends ItemBuilder<T>> {
     private final ItemStack item;
     private final ItemMeta meta;
+
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
+    }
 
     public ItemBuilder(ItemStack item) throws IllegalArgumentException {
         if(item == null) throw new IllegalArgumentException("Item cannot be null!");
@@ -48,71 +51,81 @@ public class ItemBuilder {
         this.meta = item.getItemMeta();
     }
 
-    public ItemBuilder setDisplay(String display, SleepyPalette palette) {
+    public T setDisplay(String display, SleepyPalette palette) {
         return this.setDisplay(display,palette,0);
     }
 
-    public ItemBuilder setDisplay(String display, SleepyPalette palette, int colorType) {
+    public T setDisplay(String display, SleepyPalette palette, int colorType) {
         Component displayComponent = Component.text(display)
                 .color(TextColor.fromCSSHexString(palette.getHex(colorType)))
                 .decoration(TextDecoration.ITALIC,false);
 
         meta.displayName(displayComponent);
-        return this;
+        return this.self();
     }
 
-    public ItemBuilder setID(String value){
+    public T setID(String value) {
         this.setPersistentData(SleepyKeys.ITEM_ID.get(), value);
-        return this.setCustomModelData(value);
+
+        return this.self();
     }
 
-    public String getID(){ return getPersistentData(SleepyKeys.ITEM_ID.get()); }
+    public String getID() {
+        return getPersistentData(SleepyKeys.ITEM_ID.get());
+    }
 
-    public boolean hasID(){ return PersistentData.has(meta, SleepyKeys.ITEM_ID.get()); }
+    public boolean hasID() {
+        return PersistentData.has(meta, SleepyKeys.ITEM_ID.get());
+    }
 
-    public ItemBuilder setAmount(int value){
+    public void setAmount(int value) {
         item.setAmount(value);
-        return this;
     }
 
-    public ItemBuilder addEnchant(Enchantment enchantment, int level){
+    public T addEnchant(Enchantment enchantment, int level) {
         meta.addEnchant(enchantment, level, true);
-        return this;
+
+        return this.self();
     }
 
-    public ItemBuilder removeEnchant(Enchantment enchantment){
+    public T removeEnchant(Enchantment enchantment) {
         meta.removeEnchant(enchantment);
-        return this;
+
+        return this.self();
     }
 
-    public ItemBuilder setUnbreakable(boolean value){
+    public T setUnbreakable(boolean value) {
         meta.setUnbreakable(value);
         meta.setDamageResistant(DamageTypeTags.IS_EXPLOSION);
         meta.setDamageResistant(DamageTypeTags.IS_FIRE);
-        return this;
+
+        return this.self();
     }
 
-    public ItemBuilder setGlint(boolean value){
+    public T setGlint(boolean value) {
         meta.setEnchantmentGlintOverride(value);
-        return this;
+
+        return this.self();
     }
 
-    public ItemBuilder setFlags(ItemFlag... flags){
+    public T setFlags(ItemFlag... flags) {
         meta.addItemFlags(flags);
-        return this;
+
+        return this.self();
     }
 
-    public ItemBuilder setOwner(UUID ownerUUID){
-        if(!(meta instanceof SkullMeta skull)) return this;
+    public T setOwner(UUID ownerUUID) {
+        if(!(meta instanceof SkullMeta skull)) return this.self();
 
         OfflinePlayer ownerPlayer = Bukkit.getOfflinePlayer(ownerUUID);
 
         skull.setOwningPlayer(ownerPlayer);
         this.setPersistentData(SleepyKeys.ITEM_OWNER.get(), ownerPlayer.getName());
-        return this;
+
+        return this.self();
     }
 
-    public String getOwner(){
+    public String getOwner() {
         return this.getPersistentData(SleepyKeys.ITEM_OWNER.get());
     }
 
@@ -125,29 +138,40 @@ public class ItemBuilder {
         return this;
     }
 
-    public void setPersistentData(NamespacedKey key, String value){
+    public void setPersistentData(NamespacedKey key, String value) {
         PersistentData.set(meta, key, PersistentDataType.STRING, value);
     }
 
-    public String getPersistentData(NamespacedKey key){ return PersistentData.get(meta, key, PersistentDataType.STRING); }
-
-    public ItemBuilder setFamily(ItemFamily family){
-        setPersistentData(SleepyKeys.ITEM_FAMILY.get(), family.getName());
-        return this;
+    public String getPersistentData(NamespacedKey key) {
+        return PersistentData.get(meta, key, PersistentDataType.STRING);
     }
 
-    public String getFamily(){ return getPersistentData(SleepyKeys.ITEM_FAMILY.get()); }
+    public T setFamily(ItemFamily family) {
+        setPersistentData(SleepyKeys.ITEM_FAMILY.get(), family.getName());
 
-    public boolean hasFamily(){ return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY.get()); }
+        return this.self();
+    }
+
+    public String getFamily() {
+        return getPersistentData(SleepyKeys.ITEM_FAMILY.get());
+    }
+
+    public boolean hasFamily() {
+        return PersistentData.has(meta, SleepyKeys.ITEM_FAMILY.get());
+    }
 
     /**
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
-    public ItemBuilder addLore(String value, TextColor textColor, boolean newLine) {
+    public T addLore(String value, TextColor textColor, boolean newLine) {
         final ArrayList<Component> lore = new ArrayList<>();
 
-        if(meta.lore() != null){ lore.addAll(meta.lore()); }
-        if(lore.isEmpty() || newLine){ lore.add(Component.empty()); }
+        if(meta.lore() != null) {
+            lore.addAll(meta.lore());
+        }
+        if(lore.isEmpty() || newLine) {
+            lore.add(Component.empty());
+        }
 
         Component newText = Component.empty()
                 .append(Component.text(value).color(textColor).decoration(TextDecoration.ITALIC,false));
@@ -162,15 +186,16 @@ public class ItemBuilder {
         lastText = lastText.append(newText);
         lore.set(lastIndex,lastText);
         meta.lore(lore);
-        return this;
+
+        return this.self();
     }
 
-    public ItemBuilder setLore(String value, TextColor textColor) {
+    public T setLore(String value, TextColor textColor) {
         final List<Component> lore = splitLoreLines(value, textColor);
 
         meta.lore(lore);
 
-        return this;
+        return this.self();
     }
 
     // This is commented because I forget easily T-T.
@@ -180,7 +205,7 @@ public class ItemBuilder {
         final int max = 28; // Max characters per line.
 
         // We check for each word of our 'value' String. in a for-each loop.
-        for(String word : value.split("\\s+")){ // Split upon 1 or more blank spaces.
+        for(String word : value.split("\\s+")) { // Split upon 1 or more blank spaces.
 
             // If the amount of chars we currently have is higher than the expected, we add it directly to the lore.
             if(builder.length() + word.length() > max && !builder.isEmpty()) {
@@ -208,7 +233,7 @@ public class ItemBuilder {
         }
 
         // Add any word that was left on the builder.
-        if(!builder.isEmpty()){
+        if(!builder.isEmpty()) {
             lore.add(Component.empty()
                     .append(Component.text(builder.toString()).color(textColor))
             );
@@ -217,10 +242,13 @@ public class ItemBuilder {
         return lore; // We return the list (lore) properly.
     }
 
-    public ItemStack build(){
+    public ItemStack build() {
         item.setItemMeta(meta);
+
         return item;
     }
 
-    public net.minecraft.world.item.ItemStack getAsNMS() { return CraftItemStack.asNMSCopy(item); }
+    public net.minecraft.world.item.ItemStack getAsNMS() {
+        return CraftItemStack.asNMSCopy(item);
+    }
 }

@@ -47,22 +47,36 @@ public enum SleepyItems{
     private static final Map<String, TrinketAbility> TRINKET_ABILITY_MAP = new HashMap<>();
 
     static {
-        for(SleepyItems item : values()){
-            if(item.ability != null) ABILITY_MAP.put(item.getID(),item.ability);
-            if(item.trinketAbility != null) TRINKET_ABILITY_MAP.put(item.getID(),item.trinketAbility);
+        for(SleepyItems item : values()) {
+            if(item.ability != null) {
+                ABILITY_MAP.put(item.getID(), item.ability);
+            }
+            if(item.trinketAbility != null) {
+                TRINKET_ABILITY_MAP.put(item.getID(),item.trinketAbility);
+            }
         }
     }
 
-    SleepyItems(Supplier<SleepyItem> template, @Nullable ItemAbility ability, @Nullable TrinketAbility trinketAbility){
+    SleepyItems(Supplier<SleepyItem> template, @Nullable ItemAbility itemAbility, @Nullable TrinketAbility trinketAbility) {
         this.template = template;
-        this.ability = ability;
+        this.ability = itemAbility;
         this.trinketAbility = trinketAbility;
     }
 
-    public static @NotNull List<SleepyItems> getList(){ return new ArrayList<>(List.of(SleepyItems.values())); }
-    public String getID(){ return this.name().toLowerCase(); }
-    public ItemStack build(){ return template.get().setID(this.getID()).build(); }
+    public static @NotNull List<SleepyItems> getList() {
+        return new ArrayList<>(List.of(SleepyItems.values()));
+    }
+    public String getID() {
+        return this.name().toLowerCase();
+    }
+    public ItemStack build(){
+        return template.get().setID(this.getID()).build();
+    }
 
-    public static ItemAbility getAbility(String id){ return ABILITY_MAP.get(id); }
-    public static TrinketAbility getTrinketAbility(String id){ return TRINKET_ABILITY_MAP.get(id); }
+    public static ItemAbility getAbility(String id) {
+        return ABILITY_MAP.get(id);
+    }
+    public static TrinketAbility getTrinketAbility(String id) {
+        return TRINKET_ABILITY_MAP.get(id);
+    }
 }
