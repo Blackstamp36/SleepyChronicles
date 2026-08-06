@@ -91,7 +91,7 @@ public class StaffCommand extends BaseCommand {
     public void teleport(CommandSender sender, @NotNull WorldType world){
         if(!(sender instanceof Player p)) return;
 
-        p.teleport(world.get().getSpawnLocation());
+        p.teleport(world.getWorld().getSpawnLocation());
         ChatManager.sendMessage(p, "Teleporting to.. " + YELLOW_TAG + world.name(), ChatPrefix.STAFF);
     }
 

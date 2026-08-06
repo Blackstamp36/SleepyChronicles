@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public enum SleepyNPCs {
-
     VEIL_GUARDIAN(level -> {
         Villager npc = new Villager(EntityType.VILLAGER, level); // "#ebc934"
         npc.setCustomName(TextFormatter.toComponent("Veil Guardian", SleepyPalette.VANILLA));
@@ -26,10 +25,11 @@ public enum SleepyNPCs {
     }, new GatekeeperInteraction()
     );
 
+    @Getter private final String id;
     @Getter private final Function<Level,Mob> mob;
     @Getter private final MobInteraction interaction;
 
-    private static final Map<String,SleepyNPCs> REGISTRY = new HashMap<>();
+    private static final Map<String, SleepyNPCs> REGISTRY = new HashMap<>();
 
     static {
         for(SleepyNPCs type : values()){
@@ -38,11 +38,12 @@ public enum SleepyNPCs {
     }
 
     SleepyNPCs(Function<Level, Mob> mob, MobInteraction interaction){
+        this.id = this.name().toLowerCase();
         this.mob = mob;
         this.interaction = interaction;
     }
 
-    public static Function<Level,Mob> getMob(String id){
+    public static Function<Level,Mob> getNPC(String id){
         SleepyNPCs npc = REGISTRY.get(id);
 
         return npc != null ? npc.getMob() : null;

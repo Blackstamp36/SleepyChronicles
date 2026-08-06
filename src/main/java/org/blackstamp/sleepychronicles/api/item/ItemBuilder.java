@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
@@ -33,29 +34,30 @@ public class ItemBuilder {
     private final ItemStack item;
     private final ItemMeta meta;
 
-    public ItemBuilder(ItemStack item) throws IllegalArgumentException{
+    public ItemBuilder(ItemStack item) throws IllegalArgumentException {
         if(item == null) throw new IllegalArgumentException("Item cannot be null!");
 
         this.item = item;
         this.meta = item.getItemMeta();
     }
 
-    public ItemBuilder(Material material) throws IllegalArgumentException{
+    public ItemBuilder(Material material) throws IllegalArgumentException {
         if(material == null) throw new IllegalArgumentException("Material cannot be null!");
 
         this.item = ItemStack.of(material);
         this.meta = item.getItemMeta();
     }
 
-    public ItemBuilder setDisplay(String display){ // Convert to component without deserializing!
-        meta.displayName(ConstantFields.MINI_MESSAGE
-                .deserialize(display)
-                .decoration(TextDecoration.ITALIC,false));
-        return this;
+    public ItemBuilder setDisplay(String display, SleepyPalette palette) {
+        return this.setDisplay(display,palette,0);
     }
 
-    public ItemBuilder setDisplay(Component display){
-        meta.displayName(display.decoration(TextDecoration.ITALIC,false));
+    public ItemBuilder setDisplay(String display, SleepyPalette palette, int colorType) {
+        Component displayComponent = Component.text(display)
+                .color(TextColor.fromCSSHexString(palette.getHex(colorType)))
+                .decoration(TextDecoration.ITALIC,false);
+
+        meta.displayName(displayComponent);
         return this;
     }
 
@@ -141,7 +143,7 @@ public class ItemBuilder {
     /**
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
-    public ItemBuilder addLore(String value, TextColor textColor, boolean newLine){
+    public ItemBuilder addLore(String value, TextColor textColor, boolean newLine) {
         final ArrayList<Component> lore = new ArrayList<>();
 
         if(meta.lore() != null){ lore.addAll(meta.lore()); }
@@ -153,7 +155,9 @@ public class ItemBuilder {
         int lastIndex = lore.size() - 1;
         Component lastText = lore.get(lastIndex);
 
-        if(!newLine){ lastText = lastText.append(Component.text(" ")); }
+        if(!newLine) {
+            lastText = lastText.append(Component.text(" "));
+        }
 
         lastText = lastText.append(newText);
         lore.set(lastIndex,lastText);
@@ -161,7 +165,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setLore(String value, TextColor textColor){
+    public ItemBuilder setLore(String value, TextColor textColor) {
         final List<Component> lore = splitLoreLines(value, textColor);
 
         meta.lore(lore);
@@ -170,7 +174,7 @@ public class ItemBuilder {
     }
 
     // This is commented because I forget easily T-T.
-    private @NotNull List<Component> splitLoreLines(String value, TextColor textColor){
+    private @NotNull List<Component> splitLoreLines(String value, TextColor textColor) {
         final ArrayList<Component> lore = new ArrayList<>(); // We declare our 'lore' list.
         final StringBuilder builder = new StringBuilder();
         final int max = 28; // Max characters per line.
@@ -179,7 +183,7 @@ public class ItemBuilder {
         for(String word : value.split("\\s+")){ // Split upon 1 or more blank spaces.
 
             // If the amount of chars we currently have is higher than the expected, we add it directly to the lore.
-            if(builder.length() + word.length() > max && !builder.isEmpty()){
+            if(builder.length() + word.length() > max && !builder.isEmpty()) {
                 Component prefix = lore.isEmpty()
                         ?
                         Component.empty()
@@ -196,7 +200,9 @@ public class ItemBuilder {
             }
 
             // If there's any word already in the line, we append with a 'space' it so it doesn't look 'raw'.
-            if(!builder.isEmpty()){ builder.append(" "); }
+            if(!builder.isEmpty()) {
+                builder.append(" ");
+            }
 
             builder.append(word);
         }

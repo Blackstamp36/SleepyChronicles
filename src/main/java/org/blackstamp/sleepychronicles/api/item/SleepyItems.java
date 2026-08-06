@@ -1,5 +1,6 @@
 package org.blackstamp.sleepychronicles.api.item;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketAbility;
@@ -16,22 +17,22 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public enum SleepyItems{
-    NULL_POWDER(() -> new SleepyItem(Material.GUNPOWDER, SleepyPalette.NULL)
-            .setDisplay("Null-powder")
+    NULL_POWDER(() -> new SleepyItem(Material.GUNPOWDER)
+            .setDisplay("Null-powder", SleepyPalette.NULL)
             .setGlint(true),
             null,
             null
     ),
-    BOB_FLESH(() -> new SleepyItem(Material.ROTTEN_FLESH, SleepyPalette.BOB)
-            .setDisplay("Bob's Flesh")
+    BOB_FLESH(() -> new SleepyItem(Material.ROTTEN_FLESH)
+            .setDisplay("Bob's Flesh", SleepyPalette.BOB)
             .setGlint(true),
             null,
             null
     ),
-    MEMENTO_MORI(() -> new SleepyItem(Material.SADDLE, SleepyPalette.TRINKET)
-            .setDisplay("Memento-mori")
-            .setLore("Winner takes it all!", BasicPalette.GRAY.tag(true))
-            .setIcon(SleepyIcons.TRINKET_ICON, BasicPalette.GREEN.tag(true))
+    MEMENTO_MORI(() -> new SleepyItem(Material.SADDLE)
+            .setDisplay("Memento-mori", SleepyPalette.TRINKET)
+            .setLore("Winner takes it all!", NamedTextColor.GRAY)
+            .setIcon(SleepyIcons.TRINKET_ICON, NamedTextColor.GREEN)
             .setFamily(ItemFamily.TRINKETS)
             .setGlint(true),
             null,
@@ -58,7 +59,7 @@ public enum SleepyItems{
         this.trinketAbility = trinketAbility;
     }
 
-    public static @NotNull ArrayList<SleepyItems> getList(){ return new ArrayList<>(List.of(SleepyItems.values())); }
+    public static @NotNull List<SleepyItems> getList(){ return new ArrayList<>(List.of(SleepyItems.values())); }
     public String getID(){ return this.name().toLowerCase(); }
     public ItemStack build(){ return template.get().setID(this.getID()).build(); }
 

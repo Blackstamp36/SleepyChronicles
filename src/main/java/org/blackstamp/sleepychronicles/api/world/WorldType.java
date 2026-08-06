@@ -1,18 +1,27 @@
 package org.blackstamp.sleepychronicles.api.world;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 public enum WorldType {
 
-    OVERWORLD(Bukkit.getWorld("world")),
-    NETHER(Bukkit.getWorld("world_nether")),
-    END(Bukkit.getWorld("world_the_end")),
-    AFTERMATH(Bukkit.getWorld("world_aftermath"));
+    OVERWORLD("world"),
+    NETHER("world_nether"),
+    END("world_the_end"),
+    AFTERMATH("world_aftermath");
 
-    private final World world;
+    @Getter private final String worldName;
 
-    WorldType(World world){ this.world = world; }
+    private World world;
 
-    public World get(){ return this.world; }
+    WorldType(String worldName) {
+        this.worldName = worldName;
+    }
+
+    public World getWorld() {
+        if(this.world == null) this.world = Bukkit.getWorld(worldName);
+
+        return world;
+    }
 }

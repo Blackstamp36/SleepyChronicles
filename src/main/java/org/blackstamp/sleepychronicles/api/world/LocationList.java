@@ -1,12 +1,14 @@
 package org.blackstamp.sleepychronicles.api.world;
 
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+@Getter
 public enum LocationList {
 
     THRESHOLD_SPAWN(
-            WorldType.OVERWORLD.get(),
+            WorldType.OVERWORLD.getWorld(),
             0,100,0
     );
 
@@ -14,5 +16,4 @@ public enum LocationList {
 
     LocationList(World world, double x, double y, double z){ this.location = new Location(world,x,y,z); }
 
-    public Location get(){ return this.location; }
 }

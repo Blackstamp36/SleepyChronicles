@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerManager {
+    private PlayerManager(){}
 
     public static List<String> getOnlinePlayers(){
         List<String> online = new ArrayList<>();

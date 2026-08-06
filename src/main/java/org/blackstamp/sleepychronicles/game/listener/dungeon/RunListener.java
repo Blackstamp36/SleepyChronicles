@@ -33,7 +33,7 @@ import java.util.UUID;
 public class RunListener implements Listener {
 
     // Constants.
-    private static final Location THRESHOLD_SPAWN = LocationList.THRESHOLD_SPAWN.get();
+    private static final Location THRESHOLD_SPAWN = LocationList.THRESHOLD_SPAWN.getLocation();
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){

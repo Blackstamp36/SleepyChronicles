@@ -50,12 +50,12 @@ public enum SleepyBosses {
             ));
 
     @Getter private final String id;
-    private final Function<Level,Mob> mob;
+    @Getter private final Function<Level,Mob> mob;
     private static final Map<String, Function<Level,Mob>> REGISTRY = new HashMap<>();
 
     static {
         for(SleepyBosses type : values()){
-            REGISTRY.put(type.name().toLowerCase(), type.mob);
+            REGISTRY.put(type.id, type.mob);
         }
     }
 
@@ -64,5 +64,7 @@ public enum SleepyBosses {
         this.mob = mob;
     }
 
-    public static Function<Level,Mob> getMob(String id){ return REGISTRY.get(id.toLowerCase()); }
+    public static Function<Level,Mob> getBoss(String id){
+        return REGISTRY.get(id.toLowerCase());
+    }
 }

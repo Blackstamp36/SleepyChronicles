@@ -1,26 +1,28 @@
 package org.blackstamp.sleepychronicles.api.item;
 
+import net.kyori.adventure.text.format.TextColor;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 public class SleepyItem extends ItemBuilder {
-    SleepyPalette palette;
 
     public SleepyItem(Material material, @NotNull ItemFamily family){
-        this(material, family.getPalette());
+        this(material);
         super.setFamily(family);
     }
 
-    public SleepyItem(Material material, @NotNull SleepyPalette palette){
+    public SleepyItem(Material material){
         super(material);
-
-        this.palette = palette;
     }
 
-    public SleepyItem setDisplay(String display, int colorType){
-        super.setDisplay(display);
+    public SleepyItem setDisplay(String display, SleepyPalette palette){
+        return this.setDisplay(display,palette,0);
+    }
+
+    public SleepyItem setDisplay(String display, SleepyPalette palette, int colorType){
+        super.setDisplay(display,palette,colorType);
         return this;
     }
 
@@ -29,31 +31,33 @@ public class SleepyItem extends ItemBuilder {
         return this;
     }
 
-    public SleepyItem addLore(String value, String textColor, boolean newLine){
+    public SleepyItem addLore(String value, TextColor textColor, boolean newLine){
         super.addLore(value, textColor, newLine);
         return this;
     }
 
-    public SleepyItem setLore(String value, String color){
-        super.setLore(value, color);
+    public SleepyItem setLore(String value, TextColor textColor){
+        super.setLore(value, textColor);
         return this;
     }
 
-    public SleepyItem setIcon(char value, String color){
-        addLore("[" + value + "]", color, true);
-        return this;
+    public SleepyItem setIcon(char value, TextColor textColor){
+        return this.addLore("[" + value + "]", textColor, true);
     }
 
+    @Override
     public SleepyItem setID(String value){
         super.setID(value);
         return this;
     }
 
+    @Override
     public SleepyItem setFamily(ItemFamily family){
         super.setFamily(family);
         return this;
     }
 
+    @Override
     public SleepyItem setGlint(boolean value){
         super.setGlint(value);
         return this;

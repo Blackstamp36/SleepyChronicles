@@ -1,5 +1,6 @@
 package org.blackstamp.sleepychronicles.api.mobs;
 
+import lombok.Getter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -32,14 +33,16 @@ public enum SleepyMobs {
                     ))
                     .build()));
 
+    @Getter private final String id;
     private final Function<Level,Mob> mob;
     private static final Map<String, Function<Level,Mob>> REGISTRY = new HashMap<>();
 
-    static {
+    static{
         for(SleepyMobs type : values()){ REGISTRY.put(type.name().toLowerCase(), type.mob); }
     }
 
     SleepyMobs(Function<Level,Mob> mob){
+        this.id = this.name().toLowerCase();
         this.mob = mob;
     }
 

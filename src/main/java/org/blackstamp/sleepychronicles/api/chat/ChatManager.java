@@ -32,13 +32,17 @@ public class ChatManager {
     }
 
     // Title-related elements.
-    public static void sendTitle(Player p, String value, SleepyPalette palette){ sendTitle(p,value,palette,0); }
-    public static void sendTitle(Player p, String value, SleepyPalette palette, int type){
+    public static void sendTitle(Player p, String value, SleepyPalette palette){
+        sendTitle(p,value,palette,0);
+    }
+    public static void sendTitle(Player p, String value, SleepyPalette palette, int type) {
         p.showTitle(Title.title(TextFormatter.toKyoriComponent(value,palette,type), Component.empty()));
     }
 
-    public static void sendSubtitle(Player p, String value, SleepyPalette palette){ sendSubtitle(p,value,palette,0); }
-    public static void sendSubtitle(Player p, String value, SleepyPalette palette, int type){
+    public static void sendSubtitle(Player p, String value, SleepyPalette palette) {
+        sendSubtitle(p,value,palette,0);
+    }
+    public static void sendSubtitle(Player p, String value, SleepyPalette palette, int type) {
         p.showTitle(Title.title(Component.empty(), TextFormatter.toKyoriComponent(value,palette,type)));
     }
 

@@ -20,7 +20,7 @@ public enum DungeonType {
             .radius(50.0D)
             .timeLimitSeconds(1800)
             .icon(() -> new SleepyItem(Material.GRASS_BLOCK, ItemFamily.TRINKETS)
-                    .setDisplay("Test")
+                    .setDisplay("Test",)
                     .setLore("Hello! I'm a test!", null)
                     .setIcon(SleepyIcons.PERSONS_ICON, null)
             )
