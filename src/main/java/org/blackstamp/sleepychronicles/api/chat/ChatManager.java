@@ -1,8 +1,9 @@
 package org.blackstamp.sleepychronicles.api.chat;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
+import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -20,24 +21,7 @@ public class ChatManager {
         p.sendMessage(message);
     }
 
-    // Title-related elements.
-    public static void sendTitle(Player p, String value, TextColor color){
-        Component title = Component.text(value).color(color);
-
-        p.showTitle(Title.title(title, Component.empty()));
-    }
-
-    public static void sendSubtitle(Player p, String value, TextColor color){
-        Component subtitle = Component.text(value).color(color);
-
-        p.showTitle(Title.title(Component.empty(), subtitle));
-    }
-
-    public static void sendActionBar(Player p, String value, TextColor color){
-        p.sendActionBar(Component.text(value).color(color));
-    }
-
-    // Broadcast.
+    // Broadcast method.
     public static void sendBroadcast(String value){
         Component message = Component.text()
                 .append(ChatPrefix.BROADCAST.getPrefix())
@@ -45,5 +29,21 @@ public class ChatManager {
                 .build();
 
         Bukkit.broadcast(message);
+    }
+
+    // Title-related elements.
+    public static void sendTitle(Player p, String value, SleepyPalette palette){ sendTitle(p,value,palette,0); }
+    public static void sendTitle(Player p, String value, SleepyPalette palette, int type){
+        p.showTitle(Title.title(TextFormatter.toKyoriComponent(value,palette,type), Component.empty()));
+    }
+
+    public static void sendSubtitle(Player p, String value, SleepyPalette palette){ sendSubtitle(p,value,palette,0); }
+    public static void sendSubtitle(Player p, String value, SleepyPalette palette, int type){
+        p.showTitle(Title.title(Component.empty(), TextFormatter.toKyoriComponent(value,palette,type)));
+    }
+
+    public static void sendActionBar(Player p, String value, SleepyPalette palette){ sendActionBar(p,value,palette,0); }
+    public static void sendActionBar(Player p, String value, SleepyPalette palette, int type){
+        p.sendActionBar(TextFormatter.toKyoriComponent(value,palette,type));
     }
 }

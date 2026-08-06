@@ -9,26 +9,22 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.mobs.config.BossConfig;
-import org.blackstamp.sleepychronicles.api.mobs.config.MobConfig;
 import org.blackstamp.sleepychronicles.api.mobs.movement.MovementType;
+import org.blackstamp.sleepychronicles.api.text.SleepyText;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.blackstamp.sleepychronicles.game.mobs.custom.bosses.attacks.DarknessEmperorAttacks;
-import org.blackstamp.sleepychronicles.game.mobs.custom.vanilla.VanillaZombie;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
 public enum SleepyBosses {
-    DARKNESS_EMPEROR("darkness_emperor", level ->
+    DARKNESS_EMPEROR(level ->
             new BossMob(EntityType.GHAST,level,BossConfig.builder()
-                    .name("Senior of Darkness").color("#5e17a1")
+                    .displayName(new SleepyText("Senior of Darkness", SleepyPalette.DARKNESS,0))
                     .hurtSound(SoundEvents.ALLAY_HURT).deathSound(SoundEvents.WARDEN_DEATH)
                     .drops(null)
                     .movementType(MovementType.FLIGHT)
@@ -46,7 +42,7 @@ public enum SleepyBosses {
                     .themeSound(SoundEvent.createVariableRangeEvent(ResourceLocation.parse("theme_key")))
                     .themeTicks(0)
                     .bar(
-                            new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness","#9d78bc"),
+                            new ServerBossEvent(TextFormatter.toComponent("Alward, Senior of Darkness", SleepyPalette.DARKNESS,1),
                                     BossEvent.BossBarColor.PURPLE,
                                     BossEvent.BossBarOverlay.NOTCHED_6
                             ))
@@ -58,11 +54,13 @@ public enum SleepyBosses {
     private static final Map<String, Function<Level,Mob>> REGISTRY = new HashMap<>();
 
     static {
-        for(SleepyBosses type : values()){ REGISTRY.put(type.id, type.mob); }
+        for(SleepyBosses type : values()){
+            REGISTRY.put(type.name().toLowerCase(), type.mob);
+        }
     }
 
-    SleepyBosses(String id, Function<Level,Mob> mob){
-        this.id = id;
+    SleepyBosses(Function<Level,Mob> mob){
+        this.id = this.name().toLowerCase();
         this.mob = mob;
     }
 

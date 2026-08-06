@@ -179,8 +179,8 @@ public class RunListener implements Listener {
                 if(PersistentData.has(memberPlayer,SleepyKeys.IS_DOWNED.get())){ ReviveManager.revivePlayer(memberPlayer,run); }
 
                 memberPlayer.teleport(THRESHOLD_SPAWN);
-                ChatManager.sendActionBar(memberPlayer, "Was it a dream..?", SleepyPalette.SLEEPY.getColor(2));
-                ChatManager.sendTitle(memberPlayer, "DEFEAT", SleepyPalette.SLEEPY.getColor(1));
+                ChatManager.sendActionBar(memberPlayer, "Was it a dream..?", SleepyPalette.SLEEPY.getHex(2));
+                ChatManager.sendTitle(memberPlayer, "DEFEAT", SleepyPalette.SLEEPY.getHex(1));
             }
 
             run.cleanupRun(false);

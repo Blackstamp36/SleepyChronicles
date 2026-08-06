@@ -30,14 +30,13 @@ import java.util.UUID;
 
 public class ReviveStand extends ArmorStand {
 
+    // Revive Stand vars.
     private final RunInstance run;
     private final UUID downedUUID;
     private final double maxHealthPool;
     private double currentReviveHealth;
     private final ParticleManager particle;
     private Location location = null;
-
-    private static final String HEALTH_COLOR = SleepyPalette.SLEEPY.getColor();
 
     public ReviveStand(Level level, RunInstance run, UUID downedUUID){
         super(EntityType.ARMOR_STAND, level);
@@ -70,8 +69,6 @@ public class ReviveStand extends ArmorStand {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount){
-        super.hurtServer(level,source,amount);
-
         if(!(source.getDirectEntity() instanceof ServerPlayer attacker)) return false;
 
         UUID attackerUUID = attacker.getUUID();
@@ -100,7 +97,7 @@ public class ReviveStand extends ArmorStand {
         String healthText = String.format("%.1f",this.currentReviveHealth) + "/" + String.format("%.1f",this.maxHealthPool);
 
         entity.setCustomName(
-                TextFormatter.toComponent(healthText, HEALTH_COLOR)
+                TextFormatter.toComponent(healthText, SleepyPalette.SLEEPY)
         );
 
         if(this.currentReviveHealth <= 0){

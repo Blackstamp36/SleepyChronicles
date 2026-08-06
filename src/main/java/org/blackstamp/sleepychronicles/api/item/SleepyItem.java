@@ -1,15 +1,12 @@
 package org.blackstamp.sleepychronicles.api.item;
 
-import co.aikar.commands.annotation.Optional;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 public class SleepyItem extends ItemBuilder {
-    String color1;
-    String color2;
-    String color3;
+    SleepyPalette palette;
 
     public SleepyItem(Material material, @NotNull ItemFamily family){
         this(material, family.getPalette());
@@ -17,18 +14,13 @@ public class SleepyItem extends ItemBuilder {
     }
 
     public SleepyItem(Material material, @NotNull SleepyPalette palette){
-        this(material, palette.getColor(true), palette.getColor(1,true), palette.getColor(2,true));
-    }
-
-    public SleepyItem(Material material, @Optional String... colors){
         super(material);
-        if(colors[0] != null) color1 = colors[0];
-        if(colors[1] != null) color2 = colors[1];
-        if(colors[2] != null) color3 = colors[2];
+
+        this.palette = palette;
     }
 
-    public SleepyItem setDisplay(String display){
-        super.setDisplay(color1 + display);
+    public SleepyItem setDisplay(String display, int colorType){
+        super.setDisplay(display);
         return this;
     }
 
@@ -37,8 +29,8 @@ public class SleepyItem extends ItemBuilder {
         return this;
     }
 
-    public SleepyItem addLore(String value, String color, boolean newLine){
-        super.addLore(value, color, newLine);
+    public SleepyItem addLore(String value, String textColor, boolean newLine){
+        super.addLore(value, textColor, newLine);
         return this;
     }
 

@@ -8,27 +8,31 @@ import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 
 // Chat prefixes.
 public enum ChatPrefix{
+
     SLEEPY(Component.text()
             .append(Component.text("| ").color(NamedTextColor.DARK_GRAY))
-            .append(Component.text("[SleepyChronicles]").color(SleepyPalette.SLEEPY.getColor()))
+            .append(Component.text("[SleepyChronicles]").color(TextColor.fromCSSHexString(SleepyPalette.SLEEPY.getHex())))
             .append(Component.text("» ").color(NamedTextColor.DARK_GRAY))
-            .build()
-            ,NamedTextColor.GRAY),
+            .build(),
+                    NamedTextColor.GRAY),
+
     STAFF(Component.text()
             .append(Component.text("| ").color(NamedTextColor.DARK_GRAY))
-            .append(Component.text("[Staff]").color(SleepyPalette.STAFF.getColor()))
+            .append(Component.text("[Staff]").color(TextColor.fromCSSHexString(SleepyPalette.STAFF.getHex())))
             .append(Component.text("» ")).color(NamedTextColor.GOLD)
-            .build()
-            ,NamedTextColor.GRAY),
+            .build(),
+                    NamedTextColor.GRAY),
+
     ERROR(Component.text()
             .append(Component.text("| ").color(NamedTextColor.DARK_GRAY))
-            .append(Component.text("[Error]").color(SleepyPalette.ERROR.getColor()))
+            .append(Component.text("[Error]").color(TextColor.fromCSSHexString(SleepyPalette.ERROR.getHex())))
             .append(Component.text("» ")).color(NamedTextColor.RED)
-            .build()
-            ,NamedTextColor.GRAY),
+            .build(),
+                    NamedTextColor.GRAY),
+
     BROADCAST(Component.text()
             .append(Component.text("| ").color(NamedTextColor.DARK_GRAY))
-            .append(Component.text("[!]").color(SleepyPalette.BROADCAST.getColor()))
+            .append(Component.text("[!]").color(TextColor.fromCSSHexString(SleepyPalette.BROADCAST.getHex())))
             .append(Component.text("» ")).color(NamedTextColor.DARK_GRAY)
             .build()
             ,NamedTextColor.GRAY);

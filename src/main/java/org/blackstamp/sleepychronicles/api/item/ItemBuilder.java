@@ -1,8 +1,9 @@
 package org.blackstamp.sleepychronicles.api.item;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
 import org.blackstamp.sleepychronicles.api.constant.SleepyKeys;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ItemBuilder {
 
@@ -45,7 +47,7 @@ public class ItemBuilder {
         this.meta = item.getItemMeta();
     }
 
-    public ItemBuilder setDisplay(String display){
+    public ItemBuilder setDisplay(String display){ // Convert to component without deserializing!
         meta.displayName(ConstantFields.MINI_MESSAGE
                 .deserialize(display)
                 .decoration(TextDecoration.ITALIC,false));
@@ -98,17 +100,19 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setOwner(String nickname){
+    public ItemBuilder setOwner(UUID ownerUUID){
         if(!(meta instanceof SkullMeta skull)) return this;
 
-        OfflinePlayer p = Bukkit.getOfflinePlayer(nickname);
+        OfflinePlayer ownerPlayer = Bukkit.getOfflinePlayer(ownerUUID);
 
-        skull.setOwningPlayer(p);
-        setPersistentData(SleepyKeys.ITEM_OWNER.get(), nickname);
+        skull.setOwningPlayer(ownerPlayer);
+        this.setPersistentData(SleepyKeys.ITEM_OWNER.get(), ownerPlayer.getName());
         return this;
     }
 
-    public String getOwner(){ return getPersistentData(SleepyKeys.ITEM_OWNER.get()); }
+    public String getOwner(){
+        return this.getPersistentData(SleepyKeys.ITEM_OWNER.get());
+    }
 
     public ItemBuilder setCustomModelData(String... value){
         ArrayList<String> valueArray = new ArrayList<>(Arrays.asList(value));
@@ -137,17 +141,14 @@ public class ItemBuilder {
     /**
      @param newLine is if you want a new line for the lore-value that you're adding.
      */
-    public ItemBuilder addLore(String value, String color, boolean newLine){
-        if(color == null) color = SleepyPalette.VANILLA.getColor(true);
-
+    public ItemBuilder addLore(String value, TextColor textColor, boolean newLine){
         final ArrayList<Component> lore = new ArrayList<>();
 
         if(meta.lore() != null){ lore.addAll(meta.lore()); }
         if(lore.isEmpty() || newLine){ lore.add(Component.empty()); }
 
-        Component newText = ConstantFields.MINI_MESSAGE
-                .deserialize(color + value)
-                .decoration(TextDecoration.ITALIC,false);
+        Component newText = Component.empty()
+                .append(Component.text(value).color(textColor).decoration(TextDecoration.ITALIC,false));
 
         int lastIndex = lore.size() - 1;
         Component lastText = lore.get(lastIndex);
@@ -155,24 +156,21 @@ public class ItemBuilder {
         if(!newLine){ lastText = lastText.append(Component.text(" ")); }
 
         lastText = lastText.append(newText);
-
         lore.set(lastIndex,lastText);
-
         meta.lore(lore);
         return this;
     }
 
-    public ItemBuilder setLore(String value, String color){
-        if(color == null) color = SleepyPalette.VANILLA.getColor(true);
-
-        final List<Component> lore = splitLoreLines(value, color);
+    public ItemBuilder setLore(String value, TextColor textColor){
+        final List<Component> lore = splitLoreLines(value, textColor);
 
         meta.lore(lore);
+
         return this;
     }
 
     // This is commented because I forget easily T-T.
-    private @NotNull List<Component> splitLoreLines(String value, String color){
+    private @NotNull List<Component> splitLoreLines(String value, TextColor textColor){
         final ArrayList<Component> lore = new ArrayList<>(); // We declare our 'lore' list.
         final StringBuilder builder = new StringBuilder();
         final int max = 28; // Max characters per line.
@@ -182,9 +180,18 @@ public class ItemBuilder {
 
             // If the amount of chars we currently have is higher than the expected, we add it directly to the lore.
             if(builder.length() + word.length() > max && !builder.isEmpty()){
-                String prefix = lore.isEmpty() ? (BasicPalette.DARK_GRAY.tag(true) + "|" + color) : color;
+                Component prefix = lore.isEmpty()
+                        ?
+                        Component.empty()
+                        .append(Component.text("|")).color(NamedTextColor.DARK_GRAY)
+                        :
+                        Component.text(" ");
 
-                lore.add(ConstantFields.MINI_MESSAGE.deserialize(prefix + builder).decoration(TextDecoration.ITALIC,false));
+                lore.add(Component.empty()
+                        .append(prefix)
+                        .append(Component.text(builder.toString()).color(textColor)).decoration(TextDecoration.ITALIC,false)
+                );
+
                 builder.setLength(0); // We set our current characters to zero for the next line.
             }
 
@@ -196,7 +203,9 @@ public class ItemBuilder {
 
         // Add any word that was left on the builder.
         if(!builder.isEmpty()){
-            lore.add(ConstantFields.MINI_MESSAGE.deserialize(color + builder).decoration(TextDecoration.ITALIC, false));
+            lore.add(Component.empty()
+                    .append(Component.text(builder.toString()).color(textColor))
+            );
         }
 
         return lore; // We return the list (lore) properly.

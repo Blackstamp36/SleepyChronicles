@@ -20,11 +20,6 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class DownedClone {
-    // TODO:
-    // 2. teleport to the overworld if it's not in a run. exactly to the lobby (but if there's no schem, then don't do anything)
-    // 5. add listeners to prevent the 'downed' player from breaking things!
-    // 7. add listener to reset PDCs!
-    // 8. modify 'ChatManager' so it accepts Components.
 
     private final GameProfile fakeProfile;
     private final ServerPlayer fakePlayer;

@@ -25,6 +25,6 @@ public class DeathListener implements Listener {
         if(p.getLastDamageCause() == null) return;
 
         ChatManager.sendBroadcast(BasicPalette.RED + p.getName() + " has died...\n" +
-                SleepyPalette.SLEEPY + "«☠»" + BasicPalette.GRAY + " Cause of death: " + DamageUtils.getCauseString(p,cause) + ".");
+                SleepyPalette.SLEEPY + "«☠»" + BasicPalette.GRAY + " Cause of death: " + DamageUtils.getLastDamageCause(p,cause) + ".");
     }
 }

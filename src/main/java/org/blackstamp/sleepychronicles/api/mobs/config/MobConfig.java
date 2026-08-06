@@ -8,14 +8,14 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import org.blackstamp.sleepychronicles.api.mobs.movement.MovementType;
 import org.blackstamp.sleepychronicles.api.mobs.attacks.SleepyAttack;
+import org.blackstamp.sleepychronicles.api.text.SleepyText;
 
 import java.util.List;
 import java.util.Map;
 
 @Builder
 public record MobConfig(
-    String name,
-    String color,
+    SleepyText displayName,
     SoundEvent hurtSound,
     SoundEvent deathSound,
     List<ItemStack> drops,

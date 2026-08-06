@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
+import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.text.TextFormatter;
 import org.blackstamp.sleepychronicles.game.listener.interactions.GatekeeperInteraction;
 
@@ -14,9 +15,9 @@ import java.util.function.Function;
 
 public enum SleepyNPCs {
 
-    TEST_MOB("veil_guardian",level -> {
-        Villager npc = new Villager(EntityType.VILLAGER, level);
-        npc.setCustomName(TextFormatter.toComponent("Veil Guardian","#ebc934"));
+    VEIL_GUARDIAN(level -> {
+        Villager npc = new Villager(EntityType.VILLAGER, level); // "#ebc934"
+        npc.setCustomName(TextFormatter.toComponent("Veil Guardian", SleepyPalette.VANILLA));
         npc.setNoAi(true);
         npc.setInvulnerable(true);
         npc.setSpeed(0);
@@ -25,18 +26,18 @@ public enum SleepyNPCs {
     }, new GatekeeperInteraction()
     );
 
-    @Getter private final String id;
     @Getter private final Function<Level,Mob> mob;
     @Getter private final MobInteraction interaction;
 
     private static final Map<String,SleepyNPCs> REGISTRY = new HashMap<>();
 
     static {
-        for(SleepyNPCs type : values()){ REGISTRY.put(type.getId(), type); }
+        for(SleepyNPCs type : values()){
+            REGISTRY.put(type.name().toLowerCase(), type);
+        }
     }
 
-    SleepyNPCs(String id, Function<Level, Mob> mob, MobInteraction interaction){
-        this.id = id;
+    SleepyNPCs(Function<Level, Mob> mob, MobInteraction interaction){
         this.mob = mob;
         this.interaction = interaction;
     }
