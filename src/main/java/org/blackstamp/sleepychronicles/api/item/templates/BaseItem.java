@@ -1,4 +1,4 @@
-package org.blackstamp.sleepychronicles.api.item;
+package org.blackstamp.sleepychronicles.api.item.templates;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemBuilder<T extends ItemBuilder<T>> {
+public class BaseItem<T extends BaseItem<T>> {
     private final ItemStack item;
     private final ItemMeta meta;
 
@@ -37,14 +37,14 @@ public class ItemBuilder<T extends ItemBuilder<T>> {
         return (T) this;
     }
 
-    public ItemBuilder(ItemStack item) throws IllegalArgumentException {
+    public BaseItem(ItemStack item) throws IllegalArgumentException {
         if(item == null) throw new IllegalArgumentException("Item cannot be null!");
 
         this.item = item;
         this.meta = item.getItemMeta();
     }
 
-    public ItemBuilder(Material material) throws IllegalArgumentException {
+    public BaseItem(Material material) throws IllegalArgumentException {
         if(material == null) throw new IllegalArgumentException("Material cannot be null!");
 
         this.item = ItemStack.of(material);
@@ -129,7 +129,7 @@ public class ItemBuilder<T extends ItemBuilder<T>> {
         return this.getPersistentData(SleepyKeys.ITEM_OWNER.get());
     }
 
-    public ItemBuilder setCustomModelData(String... value){
+    public BaseItem setCustomModelData(String... value){
         ArrayList<String> valueArray = new ArrayList<>(Arrays.asList(value));
         CustomModelDataComponent cmdComponent = meta.getCustomModelDataComponent();
         cmdComponent.setStrings(valueArray);

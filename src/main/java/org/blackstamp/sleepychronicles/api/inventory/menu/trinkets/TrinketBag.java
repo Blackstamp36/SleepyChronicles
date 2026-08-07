@@ -8,9 +8,9 @@ import org.blackstamp.sleepychronicles.api.data.base64.Base64Utils;
 import org.blackstamp.sleepychronicles.api.data.PersistentData;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
 import org.blackstamp.sleepychronicles.api.inventory.MenuTemplate;
-import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.templates.BaseItem;
 import org.blackstamp.sleepychronicles.api.item.ItemManager;
-import org.blackstamp.sleepychronicles.api.item.trinket.TrinketManager;
+import org.blackstamp.sleepychronicles.api.item.templates.VanillaItem;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class TrinketBag extends MenuTemplate {
     }
 
     @Override
-    public void initInventory(){
+    public void initInventory() {
         super.empty();
         String trinketData = this.get();
 
@@ -47,7 +47,7 @@ public class TrinketBag extends MenuTemplate {
 
         ItemStack[] trinketInv = (ItemStack[]) Base64Utils.fromBase64(trinketData);
 
-        for(int i = 0; i < getTrinketSlots().length; i++){
+        for(int i = 0; i < getTrinketSlots().length; i++) {
             ItemStack trinket = trinketInv[i];
             final int currentSlot = getTrinketSlots()[i];
 
@@ -56,7 +56,7 @@ public class TrinketBag extends MenuTemplate {
     }
 
     @EventHandler
-    public void click(InventoryClickEvent e){
+    public void click(InventoryClickEvent e) {
         Inventory clicked = e.getClickedInventory();
 
         if(clicked != getInventory() || clicked == null) return;
@@ -64,13 +64,13 @@ public class TrinketBag extends MenuTemplate {
         ItemStack cursorStack = e.getCursor() != null ? e.getCursor() : new ItemStack(Material.AIR);
         ItemStack currentStack = e.getCurrentItem() != null ? e.getCurrentItem() : new ItemStack(Material.AIR);
 
-        final ItemBuilder cursorItem = new ItemBuilder(cursorStack);
-        final ItemBuilder currentItem = new ItemBuilder(currentStack);
+        final BaseItem<VanillaItem> cursorItem = new BaseItem<>(cursorStack);
+        final BaseItem<VanillaItem> currentItem = new BaseItem<>(currentStack);
 
         if(this.isForbidden(cursorItem) || this.isForbidden(currentItem)) e.setCancelled(true);
     }
 
-    private boolean isForbidden(@NotNull ItemBuilder builder){
+    private boolean isForbidden(@NotNull BaseItem builder){
         if(builder.build().getType().equals(Material.AIR)) return false;
         if(builder.hasID() && builder.getID().equals(MenuItems.BLANK.getID())) return true;
         if(!builder.hasFamily()) return true;
@@ -79,9 +79,9 @@ public class TrinketBag extends MenuTemplate {
     }
 
     @EventHandler
-    public void open(InventoryOpenEvent e){
+    public void open(InventoryOpenEvent e) {
         if(e.getInventory() != super.inventory) return;
-        ChatManager.sendMessage(p, false,"Showing trinkets!");
+        ChatManager.sendMessage(p, "Showing trinkets!");
         p.playSound(Sound.sound(Key.key("ui.cartography_table.take_result"), Sound.Source.MASTER, 1.0F, 0.75F));
     }
 
@@ -98,6 +98,7 @@ public class TrinketBag extends MenuTemplate {
         ItemStack[] savedTrinkets = new ItemStack[getTrinketSlots().length];
         List<String> memoryTrinkets = new ArrayList<>();
 
+        // This is a for-loop that adds every trinket's ID to a List. (Although it seems it would be empty..?)
         for(ItemStack item : savedTrinkets){
             if(item == null || !item.hasItemMeta()) continue;
 
@@ -109,11 +110,15 @@ public class TrinketBag extends MenuTemplate {
 
             String family = ItemManager.getFamily(meta);
 
-            if(family.equals(ItemFamily.TRINKETS.getName())){ memoryTrinkets.add(id); }
+            if(family.equals(ItemFamily.TRINKETS.getName())) {
+                memoryTrinkets.add(id);
+            }
         }
 
-        if(!memoryTrinkets.isEmpty()) TrinketManager.CACHE.put(p.getUniqueId(), memoryTrinkets);
+        // If the list (memoryTrinkets) is NOT empty. Then put the list individually to a static Map. (UUID, List<String>)
+        if(!memoryTrinkets.isEmpty()) TrinketManager.trinketsCache.put(p.getUniqueId(), memoryTrinkets);
 
+        // We now get the
         for(int i = 0; i < savedTrinkets.length ; i++){
             final int currentSlot = getTrinketSlots()[i];
 
@@ -127,14 +132,6 @@ public class TrinketBag extends MenuTemplate {
     @Nullable
     private String get(){
         return PersistentData.get(super.p, SleepyKeys.TRINKETS_INV.get(), PersistentDataType.STRING);
-    }
-
-    public static boolean hasTrinket(Player p, String value){
-        List<String> trinkets = TrinketManager.CACHE.get(p.getUniqueId());
-
-        if(trinkets.isEmpty()) return false;
-
-        return trinkets.contains(value);
     }
 
     private int[] getTrinketSlots(){ return new int[]{4, 12, 14, 22}; }

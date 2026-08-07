@@ -6,7 +6,7 @@ import org.blackstamp.sleepychronicles.api.dungeon.DungeonType;
 import org.blackstamp.sleepychronicles.api.dungeon.RunManager;
 import org.blackstamp.sleepychronicles.api.inventory.MenuItems;
 import org.blackstamp.sleepychronicles.api.inventory.MenuTemplate;
-import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.templates.BaseItem;
 import org.blackstamp.sleepychronicles.api.party.PartyManager;
 import org.blackstamp.sleepychronicles.api.party.SleepyParty;
 import org.bukkit.entity.Player;
@@ -47,7 +47,7 @@ public class DungeonSelector extends MenuTemplate {
         final ItemStack currentItem = e.getCurrentItem();
         if(currentItem == null || currentItem.getType().isAir()) return;
 
-        final ItemBuilder clickedItem = new ItemBuilder(currentItem);
+        final BaseItem clickedItem = new BaseItem(currentItem);
         String id = clickedItem.getID();
 
         if(id == null || MenuItems.isMenuItem(id)) return;

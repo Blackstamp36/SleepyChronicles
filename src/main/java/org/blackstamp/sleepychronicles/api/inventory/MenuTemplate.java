@@ -3,7 +3,7 @@ package org.blackstamp.sleepychronicles.api.inventory;
 import lombok.Getter;
 import org.blackstamp.sleepychronicles.SleepyChronicles;
 import org.blackstamp.sleepychronicles.api.constant.ConstantFields;
-import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.templates.BaseItem;
 import org.blackstamp.sleepychronicles.global.utils.registrable.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,7 +26,7 @@ public abstract class MenuTemplate implements Listener, Cloneable {
     protected final Player p;
     protected final String owner;
 
-    public MenuTemplate(Player p, String owner, String name, int size){
+    protected MenuTemplate(Player p, String owner, String name, int size){
         this.inventory = Bukkit.createInventory(p, size, ConstantFields.MINI_MESSAGE.deserialize(name));
         this.p = p;
         this.owner = owner;
@@ -41,20 +41,20 @@ public abstract class MenuTemplate implements Listener, Cloneable {
     public void close(){ this.close(p); }
     public void close(@NotNull Player p){ p.closeInventory(); }
 
-    public void addItem(@NotNull ItemBuilder manager) { this.addItem(manager.build()); }
+    public void addItem(@NotNull BaseItem manager) { this.addItem(manager.build()); }
     public void addItem(@NotNull ItemStack item) { inventory.addItem(item); }
 
-    public void setItem(@NotNull ItemBuilder manager, int slot) { this.setItem(manager.build(), slot); }
+    public void setItem(@NotNull BaseItem manager, int slot) { this.setItem(manager.build(), slot); }
     public void setItem(@NotNull ItemStack item, int slot) { inventory.setItem(slot, item); }
 
-    public void setItems(@NotNull ItemBuilder manager, int... slots){ setItems(manager.build(), slots); }
+    public void setItems(@NotNull BaseItem manager, int... slots){ setItems(manager.build(), slots); }
     public void setItems(@NotNull ItemStack item, int... slots){ for(int slot : slots) inventory.setItem(slot, item); }
 
-    public void setRow(@NotNull ItemBuilder manager, int from, int to){ setRow(manager.build(), from, to); }
+    public void setRow(@NotNull BaseItem manager, int from, int to){ setRow(manager.build(), from, to); }
     public void setRow(@NotNull ItemStack item, int from, int to){ for(int i = from; i <= to; i++) inventory.setItem(i, item); }
     public void setRow(@NotNull Material material, int from, int to){ for(int i = from; i <= to; i++) inventory.setItem(i, ItemStack.of(material)); }
 
-    public void setOutline(ItemBuilder manager){ setOutline(manager.build()); }
+    public void setOutline(BaseItem manager){ setOutline(manager.build()); }
     public void setOutline(ItemStack item){
         final int size = inventory.getSize();
         final int rows = size / 9;
@@ -70,20 +70,29 @@ public abstract class MenuTemplate implements Listener, Cloneable {
         }
     }
 
-    public void fill(ItemBuilder manager) { fill(manager.build()); }
-    public void fill(ItemStack item){
+    public void fill(BaseItem manager) {
+        fill(manager.build());
+    }
+    public void fill(ItemStack item) {
         final int size = inventory.getSize();
 
-        for(int i = 0; i < size; i++) setItem(item, i);
+        for(int i = 0; i < size; i++) {
+            setItem(item, i);
+        }
     }
 
-    public void empty(){ for(int i = 0; i < inventory.getSize(); i++) inventory.setItem(i, new ItemStack(Material.AIR)); }
+    public void empty() {
+        for(int i = 0; i < inventory.getSize(); i++) {
+            inventory.setItem(i, new ItemStack(Material.AIR));
+        }
+    }
 
+    // Essential methods.
     public abstract void initInventory();
+    public abstract void click(InventoryClickEvent e);
 
     public void open(InventoryOpenEvent e){}
     public void close(InventoryCloseEvent e){}
-    public abstract void click(InventoryClickEvent e);
 
     @EventHandler
     public final void onInventoryOpen(InventoryCloseEvent e){
@@ -101,7 +110,9 @@ public abstract class MenuTemplate implements Listener, Cloneable {
 
     @EventHandler
     public final void onInventoryClick(InventoryClickEvent e){
-        if(this.getInventory().equals(e.getInventory())){ this.click(e); }
+        if(this.getInventory().equals(e.getInventory())) {
+            this.click(e);
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.blackstamp.sleepychronicles.api.inventory;
 
-import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.templates.BaseItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,16 +8,16 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public enum MenuItems {
-    BLANK(() -> new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE)
+    BLANK(() -> new BaseItem(Material.WHITE_STAINED_GLASS_PANE)
             .setDisplay("")
     ),
-    HOLLOW(() -> new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
+    HOLLOW(() -> new BaseItem(Material.BLACK_STAINED_GLASS_PANE)
             .setDisplay("")
     ),
-    NEXT(() -> new ItemBuilder(Material.LIME_DYE)
+    NEXT(() -> new BaseItem(Material.LIME_DYE)
             .setDisplay("<#43eb34>Next")
     ),
-    PREVIOUS(() -> new ItemBuilder(Material.RED_DYE)
+    PREVIOUS(() -> new BaseItem(Material.RED_DYE)
             .setDisplay("<#eb4034>Previous?")
     );
 
@@ -27,9 +27,9 @@ public enum MenuItems {
         for(MenuItems item : values()){ MENU_ITEMS.put(item.getID(),item); }
     }
 
-    private final Supplier<ItemBuilder> template;
+    private final Supplier<BaseItem> template;
 
-    MenuItems(Supplier<ItemBuilder> template){ this.template = template; }
+    MenuItems(Supplier<BaseItem> template){ this.template = template; }
 
     public ItemStack build(){ return template.get().setID(this.getID()).build(); }
     public String getID(){ return this.name().toLowerCase(); }

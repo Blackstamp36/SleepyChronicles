@@ -1,12 +1,11 @@
-package org.blackstamp.sleepychronicles.api.item;
+package org.blackstamp.sleepychronicles.api.item.templates;
 
 import net.kyori.adventure.text.format.TextColor;
-import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class SleepyItem extends ItemBuilder<SleepyItem> {
+public class SleepyItem extends BaseItem<SleepyItem> {
 
     public SleepyItem(Material material, @NotNull ItemFamily family) {
         this(material);

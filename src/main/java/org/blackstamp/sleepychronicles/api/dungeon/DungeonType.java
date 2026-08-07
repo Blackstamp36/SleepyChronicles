@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
-import org.blackstamp.sleepychronicles.api.item.SleepyItem;
+import org.blackstamp.sleepychronicles.api.item.templates.SleepyItem;
 import org.blackstamp.sleepychronicles.api.mobs.boss.SleepyBosses;
 import org.blackstamp.sleepychronicles.api.mobs.config.DungeonConfig;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;

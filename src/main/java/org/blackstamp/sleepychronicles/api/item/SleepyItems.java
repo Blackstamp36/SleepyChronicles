@@ -3,6 +3,7 @@ package org.blackstamp.sleepychronicles.api.item;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.blackstamp.sleepychronicles.api.color.SleepyPalette;
 import org.blackstamp.sleepychronicles.api.constant.SleepyIcons;
+import org.blackstamp.sleepychronicles.api.item.templates.SleepyItem;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketAbility;
 import org.blackstamp.sleepychronicles.game.items.ItemFamily;
 import org.bukkit.Material;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public enum SleepyItems{
+public enum SleepyItems{ // TODO: add method-overloading to the BaseItem (.setDisplay())!
     NULL_POWDER(() -> new SleepyItem(Material.GUNPOWDER)
             .setDisplay("Null-powder", SleepyPalette.NULL)
             .setGlint(true),

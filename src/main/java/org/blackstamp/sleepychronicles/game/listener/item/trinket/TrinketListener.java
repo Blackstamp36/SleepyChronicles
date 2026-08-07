@@ -2,7 +2,6 @@ package org.blackstamp.sleepychronicles.game.listener.item.trinket;
 
 import org.blackstamp.sleepychronicles.api.item.SleepyItems;
 import org.blackstamp.sleepychronicles.api.item.trinket.TrinketAbility;
-import org.blackstamp.sleepychronicles.api.item.trinket.TrinketManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

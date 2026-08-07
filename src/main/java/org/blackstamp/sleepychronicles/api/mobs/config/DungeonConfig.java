@@ -1,7 +1,7 @@
 package org.blackstamp.sleepychronicles.api.mobs.config;
 
 import lombok.Builder;
-import org.blackstamp.sleepychronicles.api.item.ItemBuilder;
+import org.blackstamp.sleepychronicles.api.item.templates.BaseItem;
 import org.bukkit.Location;
 
 import java.util.function.Supplier;
@@ -14,5 +14,5 @@ public record DungeonConfig(
         int maxPlayers,
         double radius,
         int timeLimitSeconds,
-        Supplier<ItemBuilder> icon
+        Supplier<BaseItem> icon
 ){}
