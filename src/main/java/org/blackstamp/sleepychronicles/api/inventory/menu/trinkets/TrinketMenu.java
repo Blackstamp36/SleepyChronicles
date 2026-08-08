@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class TrinketMenu extends MenuTemplate {
 
+    protected static final int[] TRINKET_SLOTS = new int[]{4, 12, 14, 22};
+
     public TrinketMenu(Player p, String owner) {
         super(p, owner, "trinkets_menu", 27);
     }
@@ -39,6 +41,9 @@ public class TrinketMenu extends MenuTemplate {
 
         if(clickedInventory != getInventory() || clickedInventory == null) return;
 
+    }
 
+    protected static int[] getTrinketSlots() {
+        return TRINKET_SLOTS;
     }
 }
