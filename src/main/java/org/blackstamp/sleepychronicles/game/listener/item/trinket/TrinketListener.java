@@ -14,7 +14,7 @@ public class TrinketListener implements Listener {
     public void onDamageTaken(EntityDamageEvent e){
         if(!(e.getEntity() instanceof Player p)) return;
 
-        List<String> trinketList = TrinketManager.CACHE.get(p.getUniqueId());
+        Set<String> trinketList = TrinketManager.CACHE.get(p.getUniqueId());
 
         if(trinketList.isEmpty()) return;
 

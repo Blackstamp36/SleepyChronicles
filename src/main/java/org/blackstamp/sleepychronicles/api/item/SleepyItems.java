@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public enum SleepyItems{ // TODO: add method-overloading to the BaseItem (.setDisplay())!
+public enum SleepyItems{
     NULL_POWDER(() -> new SleepyItem(Material.GUNPOWDER)
             .setDisplay("Null-powder", SleepyPalette.NULL)
             .setGlint(true),
@@ -44,11 +44,14 @@ public enum SleepyItems{ // TODO: add method-overloading to the BaseItem (.setDi
     private final TrinketAbility trinketAbility;
     private final Supplier<SleepyItem> template;
 
+    private static final Map<String, SleepyItems> ITEM_MAP = new HashMap<>();
     private static final Map<String, ItemAbility> ABILITY_MAP = new HashMap<>();
     private static final Map<String, TrinketAbility> TRINKET_ABILITY_MAP = new HashMap<>();
 
     static {
         for(SleepyItems item : values()) {
+            ITEM_MAP.put(item.getID(), item);
+
             if(item.ability != null) {
                 ABILITY_MAP.put(item.getID(), item.ability);
             }
@@ -74,10 +77,14 @@ public enum SleepyItems{ // TODO: add method-overloading to the BaseItem (.setDi
         return template.get().setID(this.getID()).build();
     }
 
-    public static ItemAbility getAbility(String id) {
-        return ABILITY_MAP.get(id);
+    // Searchers.
+    public static SleepyItems getItem(String itemID) {
+        return ITEM_MAP.get(itemID);
     }
-    public static TrinketAbility getTrinketAbility(String id) {
-        return TRINKET_ABILITY_MAP.get(id);
+    public static ItemAbility getAbility(String itemID) {
+        return ABILITY_MAP.get(itemID);
+    }
+    public static TrinketAbility getTrinketAbility(String itemID) {
+        return TRINKET_ABILITY_MAP.get(itemID);
     }
 }

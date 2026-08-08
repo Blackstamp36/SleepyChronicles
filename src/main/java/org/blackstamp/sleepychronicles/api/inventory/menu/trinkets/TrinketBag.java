@@ -116,7 +116,7 @@ public class TrinketBag extends MenuTemplate {
         }
 
         // If the list (memoryTrinkets) is NOT empty. Then put the list individually to a static Map. (UUID, List<String>)
-        if(!memoryTrinkets.isEmpty()) TrinketManager.trinketsCache.put(p.getUniqueId(), memoryTrinkets);
+        if(!memoryTrinkets.isEmpty()) TrinketManager.TRINKETS_CACHE.put(p.getUniqueId(), memoryTrinkets);
 
         // We now get the
         for(int i = 0; i < savedTrinkets.length ; i++){
